@@ -6,10 +6,14 @@ class WordGon(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     letters = db.Column(db.String(25), nullable=False, unique=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     shape = db.Column(db.Enum('square','trapezoid','pentagon'), nullable=False)
     num_attempts = db.Column(db.Integer, min=1, max=12)
     puzzle_day = db.Column(db.Date, default=None)
+
+    sessions = db.relationship("WordGonSession", back_populates="puzzle")
+    user = db.relationship("User", back_populates='puzzles')
+    comments = db.relationship("Comment", back_populates='puzzle')
 
     def to_dict(self):
         return {
