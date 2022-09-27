@@ -9,17 +9,17 @@ class Comment(db.Model):
     puzzle_id = db.Column(db.Integer, db.ForeignKey('word_gons.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     body = db.Column(db.String(255), nullable=False)
-    reply_to = db.Column(db.Integer, db.ForeignKey('comments.id'), )
+    # reply_to = db.Column(db.Integer, db.ForeignKey('comments.id'), )
     created_at = db.Column(db.Date, default=datetime.now())
     updated_at = db.Column(db.Date, default=datetime.now(), onupdate=datetime.now())
 
     puzzle = db.relationship("WordGon", back_populates="comments")
     user = db.relationship("User", back_populates="comments")
-    parent = db.relationship("Comment", back_populates="children")
-    children = db.relationship("Comment", back_populates="parent")
+    # parent = db.relationship("Comment", back_populates="children")
+    # children = db.relationship("Comment", back_populates="parent")
 
     def to_dict(self):
-        children = self.children
+        # children = self.children
         response = {
             "id": self.id,
             "puzzleId": self.puzzle_id,
@@ -29,7 +29,7 @@ class Comment(db.Model):
             'createdAt': self.created_at,
             'updatedAt': self.updated_at,
             'user': self.user.to_dict(comment=True),
-            'children': children.to_dict() if len(children) > 0 else None
+            # 'children': children.to_dict() if len(children) > 0 else None
         }
 
         return response

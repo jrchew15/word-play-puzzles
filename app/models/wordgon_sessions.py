@@ -8,14 +8,14 @@ class WordGonSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     puzzle_id = db.Column(db.Integer, db.ForeignKey('word_gons.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    guesses = db.Column(db.String(255), nullable=False)
-    num_guesses = db.Column(db.Integer)
-    completed = db.Column(db.Boolean)
+    guesses = db.Column(db.String(255), default='')
+    num_guesses = db.Column(db.Integer, default=0)
+    completed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.Date, default=datetime.now())
     updated_at = db.Column(db.Date, default=datetime.now(), onupdate=datetime.now())
 
     user = db.relationship("User", back_populates="sessions")
-    puzzle = db.relationship("Wordgon", back_populates="sessions")
+    puzzle = db.relationship("WordGon", back_populates="sessions")
 
     def to_dict(self):
         return {
