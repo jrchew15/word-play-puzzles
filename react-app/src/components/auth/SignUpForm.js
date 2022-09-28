@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { Redirect } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import { signUp } from '../../store/session';
 
 const SignUpForm = () => {
   const [errors, setErrors] = useState([]);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const user = useSelector(state => state.session.user);
@@ -15,10 +16,12 @@ const SignUpForm = () => {
   const onSignUp = async (e) => {
     e.preventDefault();
     if (password === repeatPassword) {
-      const data = await dispatch(signUp(username, email, password));
+      const data = await dispatch(signUp(username, email, password, profilePicture));
       if (data) {
         setErrors(data)
       }
+    } else {
+      setErrors(['Passwords do not match'])
     }
   };
 
@@ -28,6 +31,10 @@ const SignUpForm = () => {
 
   const updateEmail = (e) => {
     setEmail(e.target.value);
+  };
+
+  const updateProfilePicture = (e) => {
+    setProfilePicture(e.target.value)
   };
 
   const updatePassword = (e) => {
@@ -43,50 +50,66 @@ const SignUpForm = () => {
   }
 
   return (
-    <form onSubmit={onSignUp}>
-      <div>
+    <form onSubmit={onSignUp} className='auth-form'>
+      <div className='errors-container'>
         {errors.map((error, ind) => (
-          <div key={ind}>{error}</div>
+          <div className='errors-container' key={ind}>{error}</div>
         ))}
       </div>
       <div>
-        <label>User Name</label>
+        <label className='required'>User Name</label>
         <input
           type='text'
           name='username'
+          placeholder='Required'
           onChange={updateUsername}
           value={username}
         ></input>
       </div>
       <div>
-        <label>Email</label>
+        <label className='required'>Email</label>
         <input
           type='text'
           name='email'
+          placeholder='your_email@domain.com'
           onChange={updateEmail}
           value={email}
         ></input>
       </div>
       <div>
-        <label>Password</label>
+        <label>Profile Picture</label>
+        <input
+          type='text'
+          name='ProfilePicture'
+          placeholder='https:// ... { .jpg, .jpeg, .png, .gif, .tiff }'
+          onChange={updateProfilePicture}
+          value={profilePicture}
+        ></input>
+      </div>
+      <div>
+        <label className='required'>Password</label>
         <input
           type='password'
           name='password'
+          placeholder='at least 6 characters'
           onChange={updatePassword}
           value={password}
         ></input>
       </div>
       <div>
-        <label>Repeat Password</label>
+        <label className='required'>Repeat Password</label>
         <input
           type='password'
           name='repeat_password'
+          placeholder='at least 6 characters'
           onChange={updateRepeatPassword}
           value={repeatPassword}
           required={true}
         ></input>
       </div>
-      <button type='submit'>Sign Up</button>
+      <button className='submit-button' type='submit'>Create an Account</button>
+      <div className='sep'><span>or</span></div>
+      <NavLink to='/login'>I already have an account</NavLink>
     </form>
   );
 };

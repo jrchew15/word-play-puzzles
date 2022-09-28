@@ -11,10 +11,10 @@ def email_exists(form, field):
     if user:
         raise ValidationError('Email address is already in use.')
 
-def themes(form, field):
-    allowed_themes = ['light', 'dark']
-    if not any([field.data is theme for theme in allowed_themes]):
-        raise ValidationError(f'The only allowed themes are {", ".join(allowed_themes)}')
+# def themes(form, field):
+#     allowed_themes = ['light', 'dark']
+#     if not any([field.data is theme for theme in allowed_themes]):
+#         raise ValidationError(f'The only allowed themes are {", ".join(allowed_themes)}')
 
 
 def username_exists(form, field):
@@ -38,4 +38,3 @@ class SignUpForm(FlaskForm):
     email = StringField('email', validators=[DataRequired(), Email(), email_exists])
     password = StringField('password', validators=[DataRequired(), Length(min=8)])
     profilePicture = StringField('profile_picture', validators=[image_extensions])
-    theme = StringField('theme', default='light')

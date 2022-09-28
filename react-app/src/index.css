@@ -1,1 +1,32 @@
-/* TODO Add site wide styles */
+:root {
+    --header-font: georgia, "times new roman", times, serif;
+    --body-font: helvetica, arial, sans-serif;
+    --off-black: rgb(18, 18, 18)
+}
+
+* {
+    font-family: var(--body-font)
+}
+
+h2,
+h3 {
+    font-family: var(--header-font);
+}
+
+.errors-container {
+    color: red;
+}
+
+.auth-form .sep {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-direction: row;
+}
+
+.sep::before,
+.sep::after {
+    content: "";
+    flex-grow: 1;
+    border-bottom: 1px solid rgb(226, 226, 226);
+}
