@@ -5,13 +5,14 @@ from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_login import LoginManager
 
-from .models import db, User
+from .models import db, User, Comment
 from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 
 from .seeds import seed_commands
 
 from .config import Config
+
 
 app = Flask(__name__)
 
@@ -37,7 +38,13 @@ Migrate(app, db)
 # Application Security
 CORS(app)
 
+# def read_children():
+#     with app.app_context:
+#         comment = Comment.query.get(1)
 
+#         dictionary = comment.to_dict()
+#         print(dictionary)
+# read_children()
 # Since we are deploying with Docker and Flask,
 # we won't be using a buildpack when we deploy to Heroku.
 # Therefore, we need to make sure that in production any
@@ -70,3 +77,11 @@ def react_root(path):
     if path == 'favicon.ico':
         return app.send_static_file('favicon.ico')
     return app.send_static_file('index.html')
+
+@app.route('/specific-url')
+def read_children():
+    comment = Comment.query.get(1)
+    print('---------------------',comment, comment.to_dict)
+    dictionary = comment.to_dict()
+    print(dictionary)
+    return dictionary

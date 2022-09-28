@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 518a894c21ca
+Revision ID: 1c69fd3a2c15
 Revises: 
-Create Date: 2022-09-27 16:05:25.936474
+Create Date: 2022-09-27 21:34:43.131414
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '518a894c21ca'
+revision = '1c69fd3a2c15'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,9 +52,11 @@ def upgrade():
     sa.Column('puzzle_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('body', sa.String(length=255), nullable=False),
+    sa.Column('reply_to', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.Date(), nullable=True),
     sa.Column('updated_at', sa.Date(), nullable=True),
     sa.ForeignKeyConstraint(['puzzle_id'], ['word_gons.id'], ),
+    sa.ForeignKeyConstraint(['reply_to'], ['comments.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -62,7 +64,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('puzzle_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('guesses', sa.String(length=255), nullable=False),
+    sa.Column('guesses', sa.String(length=255), nullable=True),
     sa.Column('num_guesses', sa.Integer(), nullable=True),
     sa.Column('completed', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.Date(), nullable=True),
