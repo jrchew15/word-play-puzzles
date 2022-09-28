@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1c69fd3a2c15
+Revision ID: 1a02bc89c8ca
 Revises: 
-Create Date: 2022-09-27 21:34:43.131414
+Create Date: 2022-09-28 16:48:03.738786
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1c69fd3a2c15'
+revision = '1a02bc89c8ca'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('username', sa.String(length=40), nullable=False),
     sa.Column('hashed_password', sa.String(length=255), nullable=False),
     sa.Column('profile_picture', sa.String(length=255), nullable=True),
-    sa.Column('theme', sa.Enum('light', 'dark'), nullable=True),
+    sa.Column('theme', sa.Enum('light', 'dark', name='themes'), nullable=True),
     sa.Column('created_at', sa.Date(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
@@ -40,7 +40,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('letters', sa.String(length=25), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('shape', sa.Enum('square', 'trapezoid', 'pentagon'), nullable=False),
+    sa.Column('shape', sa.Enum('square', 'trapezoid', 'pentagon', name='shapes'), nullable=False),
     sa.Column('num_attempts', sa.Integer(), nullable=True),
     sa.Column('puzzle_day', sa.Date(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),

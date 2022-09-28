@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(40), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
     profile_picture = db.Column(db.String(255))
-    theme = db.Column(db.Enum('light','dark'), default='light')
+    theme = db.Column(db.Enum('light','dark', name='themes'), default='light')
     created_at = db.Column(db.Date, default=date.today())
 
     sessions = db.relationship("WordGonSession", back_populates="user")

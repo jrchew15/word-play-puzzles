@@ -7,7 +7,7 @@ class WordGon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     letters = db.Column(db.String(25), nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    shape = db.Column(db.Enum('square','trapezoid','pentagon'), nullable=False)
+    shape = db.Column(db.Enum('square','trapezoid','pentagon',name='shapes'), nullable=False)
     num_attempts = db.Column(db.Integer)
     puzzle_day = db.Column(db.Date, default=None)
 
