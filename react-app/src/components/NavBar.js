@@ -28,6 +28,11 @@ const NavBar = () => {
           </NavLink>
         </li>
         <li>
+          <NavLink to='/wordgons' exact>
+            Word-Gons
+          </NavLink>
+        </li>
+        <li>
           <LogoutButton />
         </li>
       </ul>

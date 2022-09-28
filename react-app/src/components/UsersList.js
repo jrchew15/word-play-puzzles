@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import UserDetailModal from './UserDetailModal';
 
 function UsersList() {
   const [users, setUsers] = useState([]);
@@ -15,16 +16,17 @@ function UsersList() {
 
   const userComponents = users.map((user) => {
     return (
-      <li key={user.id}>
-        <NavLink to={`/users/${user.id}`}>{user.username}</NavLink>
-      </li>
+      <div key={user.id}>
+        {/* <NavLink to={`/users/${user.id}`}>{user.username}</NavLink> */}
+        <UserDetailModal userId={user.id}>{user.username}</UserDetailModal>
+      </div>
     );
   });
 
   return (
     <>
       <h1>User List: </h1>
-      <ul>{userComponents}</ul>
+      <div>{userComponents}</div>
     </>
   );
 }

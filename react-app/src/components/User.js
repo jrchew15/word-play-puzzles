@@ -1,37 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
-function User() {
-  const [user, setUser] = useState({});
-  const { userId }  = useParams();
+import { defaultImg } from '../store/utils/image_urls';
+import './user.css'
+
+function User({ userId }) {
+  const [user, setUser] = useState(null);
+  const currentUser = useSelector(state => state.session.user);
+  const history = useHistory();
 
   useEffect(() => {
-    if (!userId) {
-      return;
-    }
     (async () => {
-      const response = await fetch(`/api/users/${userId}`);
-      const user = await response.json();
-      setUser(user);
-    })();
-  }, [userId]);
+      let res = await fetch(`/api/users/${userId}`);
+      if (res.ok) {
+        let found = await res.json();
+        setUser(found);
+      }
+    })()
+  }, [userId])
+
+  function directToSettings() {
+    history.push('/settings')
+  }
 
   if (!user) {
     return null;
   }
 
   return (
-    <ul>
-      <li>
-        <strong>User Id</strong> {userId}
-      </li>
-      <li>
-        <strong>Username</strong> {user.username}
-      </li>
-      <li>
-        <strong>Email</strong> {user.email}
-      </li>
-    </ul>
-  );
+    <div id='user-details'>
+      <img src={user.profilePicture} alt={user.username} onError={(e) => e.target.src = defaultImg} />
+      <ul>
+        <li>{user.username}</li>
+        <li>Puzzles Solved: {user.totalPuzzlesSolved}</li>
+      </ul>
+      {currentUser.id === user.id && <button onClick={directToSettings}>
+        Edit Settings
+      </button>}
+    </div>
+  )
 }
 export default User;

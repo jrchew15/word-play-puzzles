@@ -1,6 +1,7 @@
 // constants
 const SET_USER = 'session/SET_USER';
 const REMOVE_USER = 'session/REMOVE_USER';
+const EDIT_USER = 'session/EDIT_USER';
 
 const setUser = (user) => ({
   type: SET_USER,
@@ -24,24 +25,24 @@ export const authenticate = () => async (dispatch) => {
     if (data.errors) {
       return;
     }
-  
+
     dispatch(setUser(data));
   }
 }
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (credential, password) => async (dispatch) => {
   const response = await fetch('/api/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      email,
+      credential,
       password
     })
   });
-  
-  
+
+
   if (response.ok) {
     const data = await response.json();
     dispatch(setUser(data))
@@ -69,8 +70,33 @@ export const logout = () => async (dispatch) => {
   }
 };
 
+export const editUserThunk = (userId, username, email, profilePicture) => async (dispatch) => {
+  const res = await fetch(`/api/users/${userId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username,
+      email,
+      profilePicture
+    })
+  });
 
-export const signUp = (username, email, password) => async (dispatch) => {
+  if (res.ok) {
+    const data = await res.json()
+    dispatch(setUser(data))
+    return null
+  }
+  const data = await res.json();
+  if (data.errors) {
+    return data.errors
+  } else {
+    return ['An error occurred. Please try again']
+  }
+}
+
+export const signUp = (username, email, password, profilePicture) => async (dispatch) => {
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
     headers: {
@@ -80,9 +106,10 @@ export const signUp = (username, email, password) => async (dispatch) => {
       username,
       email,
       password,
+      profilePicture
     }),
   });
-  
+
   if (response.ok) {
     const data = await response.json();
     dispatch(setUser(data))

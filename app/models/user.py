@@ -1,3 +1,4 @@
+from datetime import date
 from .db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -7,9 +8,16 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
+    username = db.Column(db.String(40), nullable=False, unique=True)
     hashed_password = db.Column(db.String(255), nullable=False)
+    profile_picture = db.Column(db.String(255))
+    theme = db.Column(db.Enum('light','dark'), default='light')
+    created_at = db.Column(db.Date, default=date.today())
+
+    sessions = db.relationship("WordGonSession", back_populates="user")
+    puzzles = db.relationship("WordGon", back_populates='user')
+    comments = db.relationship("Comment", back_populates='user')
 
     @property
     def password(self):
@@ -22,9 +30,19 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def to_dict(self):
-        return {
+    def to_dict(self, comment=False, current=False, total=False):
+        response = {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'profilePicture': self.profile_picture,
         }
+        if comment:
+            return response
+        response['createdAt'] = self.created_at
+        if current:
+            response['email'] = self.email
+            response['theme'] = self.theme
+            response['openSessions'] = [ session.to_dict() for session in self.sessions if not session.completed]
+        if total:
+            response['totalPuzzlesSolved'] = len([session for session in self.sessions if session.completed])
+        return response
