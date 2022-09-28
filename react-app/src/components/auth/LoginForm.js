@@ -43,11 +43,11 @@ const LoginForm = () => {
         ))}
       </div>
       <div>
-        <label htmlFor='credential' className='required'>E-mail or Username</label>
+        <label htmlFor='credential' className='required'>Email or Username</label>
         <input
           name='credential'
           type='text'
-          placeholder='E-mail or Username'
+          placeholder='Email or Username'
           value={credential}
           onChange={updateCredential}
           required

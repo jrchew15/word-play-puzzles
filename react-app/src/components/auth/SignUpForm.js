@@ -59,7 +59,7 @@ const SignUpForm = () => {
         ))}
       </div>
       <div>
-        <label className='required'>User Name</label>
+        <label className='required'>Username</label>
         <input
           type='text'
           name='username'
