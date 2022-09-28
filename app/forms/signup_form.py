@@ -38,3 +38,9 @@ class SignUpForm(FlaskForm):
     email = StringField('email', validators=[DataRequired(), Email(), email_exists])
     password = StringField('password', validators=[DataRequired(), Length(min=6, message='Password must be at least 6 characters long')])
     profilePicture = StringField('profile_picture', validators=[image_extensions])
+
+class EditUserForm(FlaskForm):
+    username = StringField(
+        'username', validators=[DataRequired()])
+    email = StringField('email', validators=[DataRequired(), Email(), email_exists])
+    profilePicture = StringField('profile_picture', validators=[image_extensions])

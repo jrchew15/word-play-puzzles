@@ -1,6 +1,7 @@
 // constants
 const SET_USER = 'session/SET_USER';
 const REMOVE_USER = 'session/REMOVE_USER';
+const EDIT_USER = 'session/EDIT_USER';
 
 const setUser = (user) => ({
   type: SET_USER,
@@ -69,6 +70,31 @@ export const logout = () => async (dispatch) => {
   }
 };
 
+export const editUserThunk = (userId, username, email, profilePicture) => async (dispatch) => {
+  const res = await fetch(`/api/users/${userId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username,
+      email,
+      profilePicture
+    })
+  });
+
+  if (res.ok) {
+    const data = await res.json()
+    dispatch(setUser(data))
+    return null
+  }
+  const data = await res.json();
+  if (data.errors) {
+    return data.errors
+  } else {
+    return ['An error occurred. Please try again']
+  }
+}
 
 export const signUp = (username, email, password, profilePicture) => async (dispatch) => {
   const response = await fetch('/api/auth/signup', {

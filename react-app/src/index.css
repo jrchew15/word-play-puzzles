@@ -43,3 +43,9 @@ h3 {
 .sep.dark::after {
     border-bottom: 1px solid rgb(30, 30, 30);
 }
+
+.preview-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+}

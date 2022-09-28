@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
+import { defaultImg } from '../store/utils/image_urls';
 import './user.css'
 
 function User({ userId }) {
@@ -28,7 +30,7 @@ function User({ userId }) {
 
   return (
     <div id='user-details'>
-      <img src={user.profilePicture} alt={user.username} />
+      <img src={user.profilePicture} alt={user.username} onError={(e) => e.target.src = defaultImg} />
       <ul>
         <li>{user.username}</li>
         <li>Puzzles Solved: {user.totalPuzzlesSolved}</li>
