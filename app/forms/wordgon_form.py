@@ -12,4 +12,4 @@ class WordGonForm(FlaskForm):
     userId = IntegerField('userId', validators = [DataRequired()])
     shape = StringField('shape', validators = [allowed_shapes])
     numAttempts = IntegerField('number_attempts', validators = [DataRequired()])
-    puzzleDay = DateField('puzzle_day')
+    puzzleDay = StringField('puzzle_day')
