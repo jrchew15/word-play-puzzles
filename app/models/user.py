@@ -42,7 +42,7 @@ class User(db.Model, UserMixin):
         if current:
             response['email'] = self.email
             response['theme'] = self.theme
-            response['openSessions'] = [ session.to_dict() for session in self.sessions]
+            response['openSessions'] = [ session.to_dict() for session in self.sessions if not session.completed]
         if total:
             response['totalPuzzlesSolved'] = len([session for session in self.sessions if session.completed])
         return response

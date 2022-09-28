@@ -7,6 +7,7 @@ import UserSettings from './components/UserSettings';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import UsersList from './components/UsersList';
+import AllWordGons from './components/WordGon/AllWordGons';
 import User from './components/User';
 import { authenticate } from './store/session';
 
@@ -43,6 +44,9 @@ function App() {
         <ProtectedRoute path='/settings' exact>
           <UserSettings />
         </ProtectedRoute>
+        <Route path='/wordgons' exact>
+          <AllWordGons />
+        </Route>
         <ProtectedRoute path='/' exact={true} >
           <h1>My Home Page</h1>
         </ProtectedRoute>
