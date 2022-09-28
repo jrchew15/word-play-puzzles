@@ -29,6 +29,9 @@ function User() {
         <strong>Username</strong> {user.username}
       </li>
       <li>
+        <strong>Puzzles Solved:</strong> {user.totalPuzzlesSolved}
+      </li>
+      <li>
         <strong>Profile Picture</strong> {user.profilePicture}
         <img src={user.profilePicture} alt={user.username} />
       </li>

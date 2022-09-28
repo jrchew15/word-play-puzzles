@@ -4,6 +4,8 @@ import { Redirect, NavLink } from 'react-router-dom';
 import { signUp } from '../../store/session';
 
 const SignUpForm = () => {
+  const theme = 'light';
+
   const [errors, setErrors] = useState([]);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -107,8 +109,8 @@ const SignUpForm = () => {
           required={true}
         ></input>
       </div>
-      <button className='submit-button' type='submit'>Create an Account</button>
-      <div className='sep'><span>or</span></div>
+      <button className={'submit-button ' + theme} type='submit'>Create an Account</button>
+      <div className={'sep ' + theme}><span>or</span></div>
       <NavLink to='/login'>I already have an account</NavLink>
     </form>
   );

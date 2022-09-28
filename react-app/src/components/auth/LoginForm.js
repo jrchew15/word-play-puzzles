@@ -6,6 +6,9 @@ import { login } from '../../store/session';
 import './auth.css'
 
 const LoginForm = () => {
+
+  const theme = 'light' // Will eventually use context
+
   const [errors, setErrors] = useState([]);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
@@ -61,8 +64,8 @@ const LoginForm = () => {
           required
         />
       </div>
-      <button className='submit-button'>Continue</button>
-      <div className='sep'><span style={{ padding: '0 2px' }}>or</span></div>
+      <button className={'submit-button ' + theme}>Continue</button>
+      <div className={'sep ' + theme}><span style={{ padding: '0 2px' }}>or</span></div>
       <NavLink to='/sign-up'>Sign Up as a New User</NavLink>
     </form>
   );

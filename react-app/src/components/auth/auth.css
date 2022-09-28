@@ -30,14 +30,17 @@
 }
 
 .submit-button {
-    background-color: var(--off-black);
-    color: whitesmoke;
     width: 100%;
     font-weight: bold;
     font-size: 1.2rem;
     padding: 8px;
     margin: 16px 0;
     box-sizing: border-box;
+}
+
+.submit-button.light {
+    background-color: var(--off-black);
+    color: whitesmoke;
 }
 
 #login-page a,

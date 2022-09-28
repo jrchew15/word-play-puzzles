@@ -30,7 +30,7 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    def to_dict(self, comment=False, current=False, login=False):
+    def to_dict(self, comment=False, current=False, total=False):
         response = {
             'id': self.id,
             'username': self.username,
@@ -42,6 +42,7 @@ class User(db.Model, UserMixin):
         if current:
             response['email'] = self.email
             response['theme'] = self.theme
-        if login:
             response['openSessions'] = [ session.to_dict() for session in self.sessions]
+        if total:
+            response['totalPuzzlesSolved'] = len([session for session in self.sessions if session.completed])
         return response

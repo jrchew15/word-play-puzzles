@@ -16,7 +16,7 @@ def authenticate():
     Authenticates a user.
     """
     if current_user.is_authenticated:
-        return current_user.to_dict()
+        return current_user.to_dict(current=True)
     return {'errors': ['Unauthorized']}
 
 
@@ -36,7 +36,7 @@ def login():
         # Add the user to the session, we are logged in!
         user = User.query.filter(db.or_(User.email == form.data['credential'], User.username == form.data['credential'])).first()
         login_user(user)
-        return user.to_dict()
+        return user.to_dict(current=True)
     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 @auth_routes.route('/logout')
@@ -66,7 +66,7 @@ def sign_up():
         db.session.add(user)
         db.session.commit()
         login_user(user)
-        return user.to_dict()
+        return user.to_dict(current=True)
     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 

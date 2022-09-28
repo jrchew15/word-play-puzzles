@@ -4,6 +4,10 @@
     --off-black: rgb(18, 18, 18)
 }
 
+#root.dark {
+    background-color: rgb(100, 100, 100);
+}
+
 * {
     font-family: var(--body-font)
 }
@@ -28,5 +32,14 @@ h3 {
 .sep::after {
     content: "";
     flex-grow: 1;
+}
+
+.sep.light::before,
+.sep.light::after {
     border-bottom: 1px solid rgb(226, 226, 226);
+}
+
+.sep.dark::before,
+.sep.dark::after {
+    border-bottom: 1px solid rgb(30, 30, 30);
 }
