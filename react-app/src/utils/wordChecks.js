@@ -1,29 +1,15 @@
+export async function checkWordsAPI(word, key, host) {
+    console.log('------in api check--------', console.log(process.env))
 
-
-export async function checkWordsAPI(word) {
-    console.log('------in api check--------')
-    let res
-    try {
-
-        res = await fetch(`https://wordsapiv1.p.mashape.com/words/${word}/frequency`, {
-            method: 'GET',
-            headers: {
-                "X-Mashape-Key": "2d33b23feamshceed8e99269aaa0p10f47fjsn0d99b218466f",
-                "Content-Type": 'application/json',
-                "Accept": "application/json"
-            }
-        });
-        res = unirest.get("https://wordsapiv1.p.mashape.com/words/apartment/frequency")
-            .header("X-Mashape-Key", "<required>")
-            .header("Accept", "application/json")
-            .end(function (result) {
-                console.log(result.status, result.headers, result.body);
-            });
-    } catch (e) {
-        console.log(e)
-    }
-    return false
-    console.log('------after api fetch check--------')
+    const res = await fetch(`https://wordsapiv1.p.rapidapi.com/words/${word}/frequency`, {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': key,
+            'X-RapidAPI-Host': host
+        }
+    });
+    const data = await res.json()
+    console.log('------after api fetch check--------', data)
     if (res.ok) {
         await fetch(`/api/words`, {
             method: 'POST',
@@ -42,8 +28,9 @@ export async function checkWordsTable(word) {
     if (res.ok) {
         return true
     }
+    const { key, host } = await res.json()
     console.log('------before api check--------')
-    const api_check = await checkWordsAPI(word)
+    const api_check = await checkWordsAPI(word, key, host)
     console.log('------after api check--------')
     return api_check
 }
