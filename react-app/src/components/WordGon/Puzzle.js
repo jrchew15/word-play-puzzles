@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { checkWordsTable } from "../../utils/wordChecks";
 
 import './wordgon.css';
 
@@ -41,11 +42,16 @@ export default function Puzzle() {
 
     const { up, left, right, down } = letters_parse(puzzle.letters);
 
-    function handleFormSubmit(e) {
+    async function handleFormSubmit(e) {
         e.preventDefault()
         // check guess
-        setGuesses(arr => [...arr, currentGuess])
-        setCurrentGuess(word => word[word.length - 1])
+        const valid = await checkWordsTable(currentGuess)
+        if (valid) {
+            setGuesses(arr => [...arr, currentGuess])
+            setCurrentGuess(word => word[word.length - 1])
+            return
+        }
+        // inform user that they have an invalid word
     }
 
     function handleFormKeyDown(e) {
