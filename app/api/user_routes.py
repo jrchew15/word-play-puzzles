@@ -46,3 +46,8 @@ def edit_user(id):
         return user.to_dict(current=True)
     errors.extend(validation_errors_to_error_messages(form.errors))
     return {'errors': errors}, 401
+
+@user_routes.route('/current/sessions')
+@login_required
+def get_user_sessions():
+    return {'sessions': [session.to_dict() for session in current_user.sessions]}

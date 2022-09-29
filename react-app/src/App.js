@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import UserSettings from './components/UserSettings';
@@ -12,6 +12,7 @@ import OneWordGon from './components/WordGon/OneWordGon';
 import Puzzle from './components/WordGon/Puzzle';
 import User from './components/User';
 import { authenticate } from './store/session';
+import { thunkLoadWordgonSessions } from './store/wordgon';
 
 import './index.css'
 
@@ -19,12 +20,20 @@ function App() {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
 
+  const currentUser = useSelector(state => state.session.user)
+
   useEffect(() => {
     (async () => {
       await dispatch(authenticate());
       setLoaded(true);
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (currentUser) {
+      dispatch(thunkLoadWordgonSessions())
+    }
+  }, [currentUser])
 
   if (!loaded) {
     return null;
@@ -50,7 +59,7 @@ function App() {
           <AllWordGons />
         </Route>
         <Route path='/wordgons/:wordgonId'>
-          <OneWordGon />
+          {/* <OneWordGon /> */}
           <Puzzle />
         </Route>
         <ProtectedRoute path='/' exact={true} >
