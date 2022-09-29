@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flask_login import login_required
 from ..models import db, WordGon
 from ..forms.wordgon_form import WordGonForm
 from datetime import date
@@ -6,7 +7,8 @@ from datetime import date
 wordgon_routes = Blueprint('wordgon',__name__)
 
 
-@wordgon_routes.route('/',methods=['POST'])
+@wordgon_routes.route('',methods=['POST'])
+@login_required
 def dev_create_wordgon():
     form = WordGonForm()
     if form.validate_on_submit():
@@ -21,12 +23,14 @@ def dev_create_wordgon():
         db.session.add(puzzle)
         db.session.commit()
 
-@wordgon_routes.route('/')
+@wordgon_routes.route('')
+@login_required
 def all_wordgons():
     puzzles = WordGon.query.all()
     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 
 @wordgon_routes.route('/<int:id>')
+@login_required
 def one_wordgon(id):
     puzzle = WordGon.query.get(id)
     return puzzle.to_dict()
