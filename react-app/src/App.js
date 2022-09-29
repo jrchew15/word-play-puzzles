@@ -9,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import UsersList from './components/UsersList';
 import AllWordGons from './components/WordGon/AllWordGons';
 import OneWordGon from './components/WordGon/OneWordGon';
+import Puzzle from './components/WordGon/Puzzle';
 import User from './components/User';
 import { authenticate } from './store/session';
 
@@ -50,6 +51,7 @@ function App() {
         </Route>
         <Route path='/wordgons/:wordgonId'>
           <OneWordGon />
+          <Puzzle />
         </Route>
         <ProtectedRoute path='/' exact={true} >
           <h1>My Home Page</h1>

@@ -42,5 +42,5 @@ class SignUpForm(FlaskForm):
 class EditUserForm(FlaskForm):
     username = StringField(
         'username', validators=[DataRequired()])
-    email = StringField('email', validators=[DataRequired(), Email(), email_exists])
+    email = StringField('email', validators=[DataRequired(), Email(message='Invalid Email')])
     profilePicture = StringField('profile_picture', validators=[image_extensions])

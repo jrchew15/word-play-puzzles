@@ -23,6 +23,14 @@ const LoginForm = () => {
     }
   };
 
+  const onDemoLogin = async (e) => {
+    e.preventDefault();
+    const data = await dispatch(login('Demo', 'password'));
+    if (data) {
+      setErrors(data);
+    }
+  };
+
   const updateCredential = (e) => {
     setCredential(e.target.value);
   };
@@ -65,8 +73,10 @@ const LoginForm = () => {
         />
       </div>
       <button className={'submit-button ' + theme}>Continue</button>
-      <div className={'sep ' + theme}><span style={{ padding: '0 2px' }}>or</span></div>
+      <div className={'sep ' + theme}><span style={{ padding: '0 5px' }}>or</span></div>
       <NavLink to='/sign-up'>Sign Up as a New User</NavLink>
+      <div className={'sep ' + theme} style={{ paddingTop: 10 }}><span style={{ padding: '0 5px' }}>or</span></div>
+      <button type='button' onClick={onDemoLogin} className={'submit-button ' + theme}>Log in as Demo User</button>
     </form>
   );
 };

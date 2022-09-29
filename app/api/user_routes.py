@@ -28,11 +28,21 @@ def edit_user(id):
     form = EditUserForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
-    if form.validate_on_submit():
+    repeat_username = User.query.filter(User.username == form.username.data)
+    repeat_email = User.query.filter(User.email == form.email.data)
+
+    errors = []
+    if any([user.id is not id for user in repeat_username]):
+        errors.append('The username is associated with another account')
+    if any([user.id is not id for user in repeat_email]):
+        errors.append('The email is associated with another account')
+
+    if len(errors) == 0 and form.validate_on_submit():
         user = User.query.get(id)
         user.username = form.username.data
         user.email = form.email.data
         user.profile_picture = form.profilePicture.data
         db.session.commit()
         return user.to_dict(current=True)
-    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
+    errors.extend(validation_errors_to_error_messages(form.errors))
+    return {'errors': errors}, 401

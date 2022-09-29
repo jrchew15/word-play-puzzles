@@ -1,0 +1,43 @@
+:root {
+    --unit-length: 10px;
+}
+
+#puzzle-container {
+    width: calc(40 * var(--unit-length));
+    height: calc(40 * var(--unit-length));
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#puzzle-container .letters {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#up-letters,
+#down-letters {
+    width: calc(24 * var(--unit-length));
+    height: calc(2 * var(--unit-length));
+}
+
+#left-letters,
+#right-letters {
+    width: calc(2 * var(--unit-length));
+    height: calc(20 * var(--unit-length));
+    flex-direction: column;
+}
+
+#puzzle-square {
+    width: calc(20 * var(--unit-length));
+    height: calc(20 * var(--unit-length));
+    box-sizing: border-box;
+    background-color: rgb(250, 128, 114);
+    border: var(--unit-length) solid rgb(255, 64, 42);
+}
+
+#puzzle-middle {
+    display: flex;
+}
