@@ -1,45 +1,67 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { thunkAddWordgonSession, thunkUpdateWordgonSession } from "../../store/wordgon";
 import { checkWordsTable } from "../../utils/wordChecks";
 
 import './wordgon.css';
 
 export default function Puzzle() {
+    const dispatch = useDispatch()
     const puzzleId = useParams().wordgonId
     const [puzzle, setPuzzle] = useState(null)
     const [connections, setConnections] = useState([])
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
     const [completed, setCompleted] = useState(false)
-    const [sessionId, setSessionId] = useState(null)
+    const [session, setSession] = useState(null)
 
     const currentUser = useSelector(state => state.session.user)
-    const sessions = useSelector(state => state.session.wordgon)
+    const sessions = useSelector(state => state.wordgon)
 
     useEffect(() => {
         (async () => {
             let res = await fetch(`/api/wordgons/${puzzleId}`);
             let data = await res.json();
+
             if (res.ok) {
                 setPuzzle(data)
-                let foundSession
-                for (let key in sessions) {
-                    if (sessions[key].puzzleId == puzzleId) {
-                        foundSession = sessions[key]
-                    }
-                }
-                if (foundSession) {
-                    setSessionId(foundSession.id)
-                }
                 return
             }
         })()
     }, [])
 
     useEffect(() => {
-        
-    },[sessionId])
+        (async () => {
+            if (!puzzle) return
+            let foundSession
+            for (let key in sessions) {
+                if (sessions[key].puzzleId == puzzleId) {
+                    foundSession = sessions[key]
+                }
+            }
+            if (foundSession) {
+                // set current session using sessions store
+                setSession(foundSession)
+            } else {
+                let newSession = await dispatch(thunkAddWordgonSession(puzzleId))
+                if (newSession.errors) {
+                    return
+                }
+                setSession(newSession)
+            }
+        })()
+    }, [puzzle, sessions])
+
+    useEffect(() => {
+        if (session && session.guesses.length) {
+            setGuesses(session.guesses.split(','))
+            setCurrentGuess(session.guesses[session.guesses.length - 1])
+        }
+    }, [session])
+
+
 
     if (!puzzle) return null
 
@@ -49,9 +71,17 @@ export default function Puzzle() {
         e.preventDefault()
         // check guess
         const valid = await checkWordsTable(currentGuess)
+
         if (valid) {
-            setGuesses(arr => [...arr, currentGuess])
-            setCurrentGuess(word => word[word.length - 1])
+            const res = await dispatch(thunkUpdateWordgonSession({
+                puzzleId,
+                sessionId: session.id,
+                guesses: [...guesses, currentGuess],
+                completed: false
+            }))
+            // if (res) {
+            //     setCurrentGuess(word => word[word.length - 1])
+            // }
             return
         }
         // inform user that they have an invalid word
@@ -102,7 +132,7 @@ export default function Puzzle() {
                 <ul>
                     {
                         guesses.map((word, idx) => (
-                            <li key={idx}>
+                            word.length > 0 && <li key={idx}>
                                 {word}
                             </li>
                         ))

@@ -6,7 +6,6 @@ export async function checkWordsAPI(word, key, host) {
             'X-RapidAPI-Host': host
         }
     });
-    const data = await res.json()
 
     if (res.ok) {
         await fetch(`/api/words`, {

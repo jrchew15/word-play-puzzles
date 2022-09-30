@@ -12,26 +12,34 @@ const actionLoadWordgonSessions = (sessionsArr) => ({
 })
 
 export const thunkAddWordgonSession = (puzzleId) => async (dispatch) => {
-    const res = await fetch(`/api/wordgons/${puzzleId}/sessions`)
+    const res = await fetch(`/api/wordgons/${puzzleId}/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
     const data = await res.json()
     if (res.ok) {
-        dispatch(actionSetWordgonSession(data))
-        return null
+        await dispatch(actionSetWordgonSession(data))
+        return data
     }
     return data
 }
 
-export const thunkUpdateWordgonSession = (sessionObj) => async (dispatch) => {
-    const { puzzleId, sessionId } = sessionObj;
+export const thunkUpdateWordgonSession = ({ puzzleId, sessionId, guesses, completed }) => async (dispatch) => {
+
+    const payload = {
+        guesses: guesses.join(','),
+        numGuesses: guesses.length,
+        completed: completed
+    }
     const res = await fetch(`/api/wordgons/${puzzleId}/sessions/${sessionId}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(sessionObj)
+        body: JSON.stringify(payload)
     });
-    const data = res.json();
+    const data = await res.json();
     if (res.ok) {
         dispatch(actionSetWordgonSession(data))
-        return null
+        return data
     }
     return data
 }
@@ -39,9 +47,9 @@ export const thunkUpdateWordgonSession = (sessionObj) => async (dispatch) => {
 export const thunkLoadWordgonSessions = () => async (dispatch) => {
     const res = await fetch(`/api/users/current/sessions`);
     const data = await res.json()
-    console.log(data)
+
     if (res.ok) {
-        dispatch(actionLoadWordgonSessions(data.sessions))
+        dispatch(actionLoadWordgonSessions(data))
         return null
     }
     return data
@@ -57,8 +65,8 @@ export default function reducer(state = initialState, action) {
             newState[action.payload.id] = action.payload
             return newState
         case LOAD_WORDGONS:
-            newState = {}
-            action.payload.forEach(session => newState[session.id] = session);
+            newState = { ...action.payload }
+            // action.payload.forEach(session => newState[session.id] = session);
             return newState;
         default:
             return state;

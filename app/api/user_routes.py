@@ -50,4 +50,4 @@ def edit_user(id):
 @user_routes.route('/current/sessions')
 @login_required
 def get_user_sessions():
-    return {'sessions': [session.to_dict() for session in current_user.sessions]}
+    return {session.id: session.to_dict() for session in current_user.sessions}

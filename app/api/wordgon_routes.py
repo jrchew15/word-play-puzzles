@@ -47,11 +47,11 @@ def add_session(id):
         return {'errors':['Puzzle not found']}, 401
 
     new_session = WordGonSession(
-        puzzleId=id,
+        puzzle_id=id,
         user_id=current_user.id
     )
     db.session.add(new_session)
-    db.commit()
+    db.session.commit()
     return new_session.to_dict()
 
 @wordgon_routes.route('/<int:puzzleId>/sessions/<int:sessionId>', methods=['PUT'])
