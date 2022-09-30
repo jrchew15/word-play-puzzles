@@ -6,6 +6,7 @@ import { thunkUpdateWordgonSession, thunkDeleteWordgonSession } from "../../stor
 import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
+import { BoxAndLetters } from "./WordGonBox";
 
 import './wordgon.css';
 
@@ -167,7 +168,7 @@ export default function Puzzle() {
                 </ul>
                 <button onClick={deleteHandler}>Start Over?</button>
             </div>
-            <div id='puzzle-container'>
+            {/* <div id='puzzle-container'>
                 <div id='up-letters' className="letters">
                     {up.map((x, idx) => (
                         <span
@@ -190,7 +191,6 @@ export default function Puzzle() {
                         ))}
                     </div>
                     <div id='puzzle-square'>
-                        {/* <PuzzleDrawing connections={connections}/> */}
                     </div>
                     <div id='right-letters' className="letters">
                         {right.map((x, idx) => (
@@ -213,7 +213,8 @@ export default function Puzzle() {
                         </span>
                     ))}
                 </div>
-            </div>
+            </div> */}
+            <BoxAndLetters letters={puzzle.letters} />
         </div>
     )
 }
