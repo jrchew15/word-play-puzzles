@@ -7,10 +7,10 @@
 #a-to-o {
     content: '';
     background-color: black;
-    height: calc(0.5 * var(--circle-width));
+    height: calc(0.25 * var(--circle-width));
     width: calc(1.414 * var(--unit-length) + 1.414 * var(--circle-width));
     position: absolute;
-    bottom: calc(var(--unit-length) + var(--circle-width));
+    bottom: calc(var(--unit-length) + var(--circle-width) + 0.25 * var(--circle-width));
     /* bottom: calc(1.5 * var(--circle-width) + var(--unit-length) + var(--letter-box-length)); */
     left: calc(0.5 * var(--letter-box-length) + 0.5 * var(--circle-width));
     z-index: 2;
