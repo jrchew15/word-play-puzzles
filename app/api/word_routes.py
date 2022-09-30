@@ -9,6 +9,9 @@ word_routes = Blueprint('words', __name__)
 
 @word_routes.route('/<word>')
 def get_word(word):
+    if len(word) <= 1:
+        return ({'errors':['word must be more than one letter']}, 400)
+
     found = Word.query.filter(Word.word == word).first()
 
     if found:
@@ -26,9 +29,15 @@ def get_word(word):
     res = conn.getresponse()
     data = res.read()
 
-    new_word = data.decode("utf-8")
-    print(new_word)
-    return ({'word':word}, 200) if new_word else ({'errors':'word not found'}, 400)
+    decoded = data.decode("utf-8")
+
+    if decoded.find(f'"word":"{word}"') > 0:
+        new_word = Word(word=word, length=len(word))
+        db.session.add(new_word)
+        db.session.commit()
+        return ({'word':word}, 200)
+
+    return ({'errors':['word not found']}, 400)
 
 @word_routes.route('', methods=['POST'])
 def add_word():

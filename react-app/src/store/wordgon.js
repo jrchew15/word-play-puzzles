@@ -1,5 +1,6 @@
 const SET_WORDGON = 'wordgon/SET_WORDGON';
 const LOAD_WORDGONS = 'wordgon/LOAD_WORDGONS';
+const DELETE_WORDGON = 'wordgon/DELETE_WORDGON';
 
 const actionSetWordgonSession = (puzzleSession) => ({
     type: SET_WORDGON,
@@ -9,6 +10,11 @@ const actionSetWordgonSession = (puzzleSession) => ({
 const actionLoadWordgonSessions = (sessionsArr) => ({
     type: LOAD_WORDGONS,
     payload: sessionsArr
+})
+
+const actionDeleteWordgonSession = (sessionId) => ({
+    type: DELETE_WORDGON,
+    payload: sessionId
 })
 
 export const thunkAddWordgonSession = (puzzleId) => async (dispatch) => {
@@ -55,6 +61,17 @@ export const thunkLoadWordgonSessions = () => async (dispatch) => {
     return data
 }
 
+export const thunkDeleteWordgonSession = (puzzleId, sessionId) => async (dispatch) => {
+    const res = await fetch(`/api/wordgons/${puzzleId}/sessions/${sessionId}`, { method: 'DELETE' });
+    const data = await res.json()
+
+    if (res.ok) {
+        dispatch(actionDeleteWordgonSession(sessionId))
+        return
+    }
+    return data
+}
+
 const initialState = {}
 
 export default function reducer(state = initialState, action) {
@@ -68,6 +85,10 @@ export default function reducer(state = initialState, action) {
             newState = { ...action.payload }
             // action.payload.forEach(session => newState[session.id] = session);
             return newState;
+        case DELETE_WORDGON:
+            newState = { ...state }
+            delete newState[action.payload]
+            return newState
         default:
             return state;
     }

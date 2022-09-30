@@ -20,7 +20,9 @@
 
 export async function checkWordsTable(word) {
 
-    const res = await fetch(`/api/words/${word}`)
+    const res = await fetch(`/api/words/${word}`);
+    const data = await res.json()
+    console.log('data', data)
 
     return res.ok
     // if (res.ok) {

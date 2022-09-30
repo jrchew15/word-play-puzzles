@@ -68,3 +68,14 @@ def edit_session(puzzleId, sessionId):
         session.completed = form.completed.data
         db.session.commit()
         return session.to_dict()
+
+@wordgon_routes.route('/<int:puzzleId>/sessions/<int:sessionId>', methods=['DELETE'])
+@login_required
+def delete_session(puzzleId,sessionId):
+    session = WordGonSession.query.get(sessionId)
+
+    if session.user_id is current_user.id:
+        db.session.delete(session)
+        db.session.commit()
+        return {"message":"successfully deleted"}, 201
+    return {"errors":["Unauthorized"]}, 405

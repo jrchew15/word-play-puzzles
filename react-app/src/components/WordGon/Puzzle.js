@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
-import { thunkAddWordgonSession, thunkUpdateWordgonSession } from "../../store/wordgon";
+import { thunkUpdateWordgonSession, thunkDeleteWordgonSession } from "../../store/wordgon";
 import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
+import StartPuzzleModal from "./StartPuzzleModal";
 
 import './wordgon.css';
 
@@ -12,13 +13,14 @@ export default function Puzzle() {
     const dispatch = useDispatch()
     const puzzleId = useParams().wordgonId
     const [puzzle, setPuzzle] = useState(null)
-    const [connections, setConnections] = useState([])
+    // const [connections, setConnections] = useState([])
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
     // const [completed, setCompleted] = useState(false)
     const [session, setSession] = useState(null)
+    const [showModal, setShowModal] = useState(false)
 
-    const currentUser = useSelector(state => state.session.user)
+    // const currentUser = useSelector(state => state.session.user)
     const sessions = useSelector(state => state.wordgon)
 
 
@@ -48,11 +50,7 @@ export default function Puzzle() {
                 // set current session using sessions store
                 setSession(foundSession)
             } else {
-                let newSession = await dispatch(thunkAddWordgonSession(puzzleId))
-                if (newSession.errors) {
-                    return
-                }
-                // setSession(newSession)
+                setShowModal(true)
             }
         })()
     }, [puzzle, sessions, dispatch, puzzleId])
@@ -77,6 +75,8 @@ export default function Puzzle() {
 
     async function handleFormSubmit(e) {
         e.preventDefault()
+        // Disable further submits
+
         // check guess is word
         const valid = await checkWordsTable(currentGuess)
 
@@ -123,6 +123,11 @@ export default function Puzzle() {
         }
     }
 
+    async function deleteHandler(e) {
+        setShowModal(true)
+        const data = await dispatch(thunkDeleteWordgonSession(puzzleId, session.id))
+    }
+
     function usedLetter(char) {
         return guesses.join('').includes(char.toLowerCase()) || currentGuess.includes(char.toLowerCase()) ? 'used' : ''
     }
@@ -134,6 +139,7 @@ export default function Puzzle() {
 
     return (
         <div id='session-container'>
+            <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
             <div id='guesses-container'>
                 <form onSubmit={handleFormSubmit}>
                     <label htmlFor="guess">
@@ -159,6 +165,7 @@ export default function Puzzle() {
                         ))
                     }
                 </ul>
+                <button onClick={deleteHandler}>Start Over?</button>
             </div>
             <div id='puzzle-container'>
                 <div id='up-letters' className="letters">
