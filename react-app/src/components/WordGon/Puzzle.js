@@ -34,6 +34,7 @@ export default function Puzzle() {
         })()
     }, [puzzleId])
 
+    // find session
     useEffect(() => {
         (async () => {
             if (!puzzle) return
@@ -82,7 +83,7 @@ export default function Puzzle() {
         if (valid) {
             const allGuesses = [...guesses, currentGuess];
             let completed = true;
-            console.log('joined', allGuesses)
+
             // Check if puzzle complete
             for (let i = 0; i < puzzle.letters.length; i++) {
                 let char = puzzle.letters[i];
