@@ -77,6 +77,8 @@ export default function Puzzle() {
 
     async function handleFormSubmit(e) {
         e.preventDefault()
+        // Disable further submits
+        
         // check guess is word
         const valid = await checkWordsTable(currentGuess)
 
