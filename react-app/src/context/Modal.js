@@ -41,3 +41,20 @@ export function Modal({ onClose, children }) {
         modalNode
     );
 }
+
+export function NonClickModal({ onClose, children }) {
+    const theme = 'light';
+
+    const modalNode = useContext(ModalContext);
+    if (!modalNode) return null;
+
+    return ReactDOM.createPortal(
+        <div id="modal">
+            <div id="modal-background" />
+            <div id="modal-content" className={theme}>
+                {children}
+            </div>
+        </div>,
+        modalNode
+    );
+}
