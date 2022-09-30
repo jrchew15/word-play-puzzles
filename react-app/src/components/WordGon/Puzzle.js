@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { thunkAddWordgonSession, thunkUpdateWordgonSession } from "../../store/wordgon";
 import { checkWordsTable } from "../../utils/wordChecks";
+import { lettersParse } from "../../utils/puzzleFunctions";
 
 import './wordgon.css';
 
@@ -14,11 +15,12 @@ export default function Puzzle() {
     const [connections, setConnections] = useState([])
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
-    const [completed, setCompleted] = useState(false)
+    // const [completed, setCompleted] = useState(false)
     const [session, setSession] = useState(null)
 
     const currentUser = useSelector(state => state.session.user)
     const sessions = useSelector(state => state.wordgon)
+
 
     useEffect(() => {
         (async () => {
@@ -30,14 +32,14 @@ export default function Puzzle() {
                 return
             }
         })()
-    }, [])
+    }, [puzzleId])
 
     useEffect(() => {
         (async () => {
             if (!puzzle) return
             let foundSession
             for (let key in sessions) {
-                if (sessions[key].puzzleId == puzzleId) {
+                if (sessions[key].puzzleId === +puzzleId) {
                     foundSession = sessions[key]
                 }
             }
@@ -49,10 +51,10 @@ export default function Puzzle() {
                 if (newSession.errors) {
                     return
                 }
-                setSession(newSession)
+                // setSession(newSession)
             }
         })()
-    }, [puzzle, sessions])
+    }, [puzzle, sessions, dispatch, puzzleId])
 
     useEffect(() => {
         if (session && session.guesses.length) {
@@ -65,41 +67,58 @@ export default function Puzzle() {
 
     if (!puzzle) return null
 
-    const { up, left, right, down } = letters_parse(puzzle.letters);
+
+    const allowedKeys = new Set(puzzle.letters)
+    allowedKeys.add('enter')
+    allowedKeys.add('backspace')
+
+    const { up, left, right, down } = lettersParse(puzzle.letters);
 
     async function handleFormSubmit(e) {
         e.preventDefault()
-        // check guess
+        // check guess is word
         const valid = await checkWordsTable(currentGuess)
 
         if (valid) {
-            const res = await dispatch(thunkUpdateWordgonSession({
+            const allGuesses = [...guesses, currentGuess];
+            let completed = true;
+            console.log('joined', allGuesses)
+            // Check if puzzle complete
+            for (let i = 0; i < puzzle.letters.length; i++) {
+                let char = puzzle.letters[i];
+                if (!allGuesses.join('').includes(char)) {
+                    completed = false;
+                    break
+                }
+            }
+            await dispatch(thunkUpdateWordgonSession({
                 puzzleId,
                 sessionId: session.id,
-                guesses: [...guesses, currentGuess],
-                completed: false
+                guesses: allGuesses,
+                completed
             }))
-            // if (res) {
-            //     setCurrentGuess(word => word[word.length - 1])
-            // }
             return
         }
         // inform user that they have an invalid word
     }
 
     function handleFormKeyDown(e) {
-        console.log('KEYDOWN', e.key)
-        const allowedKeys = new Set(puzzle.letters)
-        allowedKeys.add('enter')
-        allowedKeys.add('backspace')
         if (!allowedKeys.has(e.key.toLowerCase())) {
             e.preventDefault()
         }
+
         if (e.key === 'Backspace' && currentGuess.length <= 1 && guesses.length > 0) {
             e.preventDefault()
+            const last = guesses.pop()
+            setCurrentGuess(last)
         }
-        if (currentGuess.length >= 1 && [up, left, right, down].some(span => span.includes(e.key.toUpperCase()) && span.includes(currentGuess[currentGuess.length - 1].toUpperCase()))) {
-            e.preventDefault()
+
+        if (currentGuess.length >= 1) {
+            for (let side of [up, left, right, down]) {
+                if (side.includes(e.key.toUpperCase()) && side.includes(currentGuess[currentGuess.length - 1].toUpperCase())) {
+                    e.preventDefault()
+                }
+            }
         }
     }
 
@@ -125,6 +144,7 @@ export default function Puzzle() {
                         value={currentGuess}
                         onKeyDown={handleFormKeyDown}
                         onChange={e => setCurrentGuess(e.target.value)}
+                        autoComplete='off'
                     >
                     </input>
                 </form>
@@ -188,14 +208,4 @@ export default function Puzzle() {
             </div>
         </div>
     )
-}
-
-function letters_parse(letters) {
-    const lettersArr = letters.toUpperCase().split('');
-    const up = lettersArr.slice(0, 3);
-    const right = lettersArr.slice(3, 6);
-    const down = lettersArr.slice(6, 9).reverse();
-    const left = lettersArr.slice(9).reverse();
-
-    return { up, left, right, down }
 }
