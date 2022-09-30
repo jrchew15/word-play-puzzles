@@ -37,6 +37,9 @@ export default function Puzzle() {
         })()
     }, [])
 
+    useEffect(() => {
+        
+    },[sessionId])
 
     if (!puzzle) return null
 
@@ -62,7 +65,7 @@ export default function Puzzle() {
         if (!allowedKeys.has(e.key.toLowerCase())) {
             e.preventDefault()
         }
-        if (e.key === 'Backspace' && currentGuess.length <= 1) {
+        if (e.key === 'Backspace' && currentGuess.length <= 1 && guesses.length > 0) {
             e.preventDefault()
         }
         if (currentGuess.length >= 1 && [up, left, right, down].some(span => span.includes(e.key.toUpperCase()) && span.includes(currentGuess[currentGuess.length - 1].toUpperCase()))) {

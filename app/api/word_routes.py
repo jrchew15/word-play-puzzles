@@ -21,4 +21,4 @@ def add_word():
         db.session.add(new_word)
         db.session.commit()
         return {'word':word}, 200
-    return {'errors':'Unauthorized'}, 405
+    return {'errors':['Unauthorized']}, 405
