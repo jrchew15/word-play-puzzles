@@ -81,11 +81,3 @@ def react_root(path):
     if path == 'favicon.ico':
         return app.send_static_file('favicon.ico')
     return app.send_static_file('index.html')
-
-@app.route('/specific-url')
-def read_children():
-    comment = Comment.query.get(1)
-    print('---------------------',comment, comment.to_dict)
-    dictionary = comment.to_dict()
-    print(dictionary)
-    return dictionary

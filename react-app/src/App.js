@@ -30,9 +30,11 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (currentUser) {
-      dispatch(thunkLoadWordgonSessions())
-    }
+    (async () => {
+      if (currentUser && currentUser.id) {
+        dispatch(thunkLoadWordgonSessions())
+      }
+    })()
   }, [currentUser])
 
   if (!loaded) {
@@ -55,13 +57,13 @@ function App() {
         <ProtectedRoute path='/settings' exact>
           <UserSettings />
         </ProtectedRoute>
-        <Route path='/wordgons' exact>
+        <ProtectedRoute path='/wordgons' exact>
           <AllWordGons />
-        </Route>
-        <Route path='/wordgons/:wordgonId'>
+        </ProtectedRoute>
+        <ProtectedRoute path='/wordgons/:wordgonId'>
           {/* <OneWordGon /> */}
           <Puzzle />
-        </Route>
+        </ProtectedRoute>
         <ProtectedRoute path='/' exact={true} >
           <h1>My Home Page</h1>
         </ProtectedRoute>
