@@ -3,13 +3,32 @@ from flask import Blueprint, request
 from app.models import db, Word
 import os
 from ..forms.word_form import WordForm
+import http.client
 
 word_routes = Blueprint('words', __name__)
 
 @word_routes.route('/<word>')
 def get_word(word):
     found = Word.query.filter(Word.word == word).first()
-    return ({'word':word}, 200) if found else ({'key':os.environ.get('RAPIDAPI_KEY'),'host':os.environ.get('RAPIDAPI_HOST')}, 400)
+
+    if found:
+        return {'word':word}, 200
+
+    conn = http.client.HTTPSConnection("wordsapiv1.p.rapidapi.com")
+
+    headers = {
+        'X-RapidAPI-Key': "0e76769061msh1affd841b6293c1p114f0ejsn5072e6ef9223",
+        'X-RapidAPI-Host': "wordsapiv1.p.rapidapi.com"
+        }
+
+    conn.request("GET", f"/words/{word}/frequency", headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+
+    new_word = data.decode("utf-8")
+    print(new_word)
+    return ({'word':word}, 200) if new_word else ({'errors':'word not found'}, 400)
 
 @word_routes.route('', methods=['POST'])
 def add_word():
