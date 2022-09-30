@@ -1,8 +1,9 @@
-from flask import Blueprint
-from flask_login import login_required
-from ..models import db, WordGon
+from flask import Blueprint, request
+from flask_login import login_required, current_user
+from ..models import db, WordGon, WordGonSession
 from ..forms.wordgon_form import WordGonForm
-from datetime import date
+from ..forms.wordgon_session_form import WordGonSessionForm
+from datetime import date, datetime
 
 wordgon_routes = Blueprint('wordgon',__name__)
 
@@ -11,6 +12,8 @@ wordgon_routes = Blueprint('wordgon',__name__)
 @login_required
 def dev_create_wordgon():
     form = WordGonForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
     if form.validate_on_submit():
         data = form.data
         puzzle = WordGon(
@@ -33,4 +36,35 @@ def all_wordgons():
 @login_required
 def one_wordgon(id):
     puzzle = WordGon.query.get(id)
-    return puzzle.to_dict()
+    return puzzle and puzzle.to_dict()
+
+@wordgon_routes.route('/<int:id>/sessions', methods=['POST'])
+@login_required
+def add_session(id):
+    puzzle = WordGon.query.get(id)
+
+    if puzzle is None:
+        return {'errors':['Puzzle not found']}, 401
+
+    new_session = WordGonSession(
+        puzzleId=id,
+        user_id=current_user.id
+    )
+    db.session.add(new_session)
+    db.commit()
+    return new_session.to_dict()
+
+@wordgon_routes.route('/<int:puzzleId>/sessions/<int:sessionId>', methods=['PUT'])
+@login_required
+def edit_session(puzzleId, sessionId):
+    session = WordGonSession.query.get(sessionId)
+
+    form = WordGonSessionForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if session.puzzle_id is puzzleId and form.validate_on_submit():
+        session.guesses = form.guesses.data
+        session.num_guesses = form.numGuesses.data
+        session.completed = form.completed.data
+        db.session.commit()
+        return session.to_dict()
