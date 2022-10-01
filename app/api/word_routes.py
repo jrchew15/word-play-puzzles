@@ -31,7 +31,7 @@ def get_word(word):
 
     decoded = data.decode("utf-8")
 
-    if decoded.find(f'"word":"{word}"') > 0:
+    if decoded.find(f'"word":') > 0:
         new_word = Word(word=word, length=len(word))
         db.session.add(new_word)
         db.session.commit()

@@ -6,6 +6,7 @@ import { thunkUpdateWordgonSession, thunkDeleteWordgonSession } from "../../stor
 import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
+import { BoxAndLetters } from "./WordGonBox";
 
 import './wordgon.css';
 
@@ -19,6 +20,7 @@ export default function Puzzle() {
     // const [completed, setCompleted] = useState(false)
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
 
     // const currentUser = useSelector(state => state.session.user)
     const sessions = useSelector(state => state.wordgon)
@@ -59,64 +61,87 @@ export default function Puzzle() {
         if (session && session.guesses.length) {
             setGuesses(session.guesses.split(','))
             setCurrentGuess(session.guesses[session.guesses.length - 1])
+            return
         }
+
+        setGuesses([])
+        setCurrentGuess('')
     }, [session])
 
+    // Submission of new guess happens in useEffect triggered by submitting boolean
+    useEffect(() => {
+        // break useEffect if running on initial render
+        if (!submitting) {
+            return
+        }
 
+        (async () => {
+            // Check internal table, then if not found check WordsAPI.
+            const valid = await checkWordsTable(currentGuess)
+
+            if (valid) {
+                const allGuesses = [...guesses, currentGuess];
+                let completed = true;
+
+                // Check if puzzle complete
+                for (let i = 0; i < puzzle.letters.length; i++) {
+                    let char = puzzle.letters[i];
+                    if (!allGuesses.join('').includes(char)) {
+                        completed = false;
+                        // If any character is not among guesses, then break loop; no need to keep checking
+                        break
+                    }
+                }
+                // Update the user's session
+                await dispatch(thunkUpdateWordgonSession({
+                    puzzleId,
+                    sessionId: session.id,
+                    guesses: allGuesses,
+                    completed
+                }))
+            }
+            // Reset submitting status regardless of validity of word
+            setSubmitting(false)
+        })()
+    }, [submitting])
 
     if (!puzzle) return null
 
 
     const allowedKeys = new Set(puzzle.letters)
-    allowedKeys.add('enter')
-    allowedKeys.add('backspace')
+    allowedKeys.add('Enter')
+    allowedKeys.add('Backspace')
 
     const { up, left, right, down } = lettersParse(puzzle.letters);
 
     async function handleFormSubmit(e) {
         e.preventDefault()
+        // no need to check if word length is too short
+        if (currentGuess.length <= 1) return
+
         // Disable further submits
-
-        // check guess is word
-        const valid = await checkWordsTable(currentGuess)
-
-        if (valid) {
-            const allGuesses = [...guesses, currentGuess];
-            let completed = true;
-
-            // Check if puzzle complete
-            for (let i = 0; i < puzzle.letters.length; i++) {
-                let char = puzzle.letters[i];
-                if (!allGuesses.join('').includes(char)) {
-                    completed = false;
-                    break
-                }
-            }
-            await dispatch(thunkUpdateWordgonSession({
-                puzzleId,
-                sessionId: session.id,
-                guesses: allGuesses,
-                completed
-            }))
-            return
-        }
-        // inform user that they have an invalid word
+        setSubmitting(true);
     }
 
+
     function handleFormKeyDown(e) {
-        if (!allowedKeys.has(e.key.toLowerCase())) {
+        // prevent any input if form is submitting or if any unallowed keys are pressed
+        if (submitting || !allowedKeys.has(e.key)) {
             e.preventDefault()
+            return
         }
 
+        // backspace allows you to alter past guesses
         if (e.key === 'Backspace' && currentGuess.length <= 1 && guesses.length > 0) {
             e.preventDefault()
             const last = guesses.pop()
             setCurrentGuess(last)
         }
 
+        //
         if (currentGuess.length >= 1) {
             for (let side of [up, left, right, down]) {
-                if (side.includes(e.key.toUpperCase()) && side.includes(currentGuess[currentGuess.length - 1].toUpperCase())) {
+                if (side.includes(e.key) && side.includes(currentGuess[currentGuess.length - 1])) {
                     e.preventDefault()
                 }
             }
@@ -124,18 +149,14 @@ export default function Puzzle() {
     }
 
     async function deleteHandler(e) {
-        setShowModal(true)
-        const data = await dispatch(thunkDeleteWordgonSession(puzzleId, session.id))
+        const data = await dispatch(thunkDeleteWordgonSession(puzzleId, session.id));
+
+        if (!data) {
+            setShowModal(true)
+        }
     }
 
-    function usedLetter(char) {
-        return guesses.join('').includes(char.toLowerCase()) || currentGuess.includes(char.toLowerCase()) ? 'used' : ''
-    }
 
-    function activeLetter(char) {
-        let n = currentGuess.length
-        return n > 0 && currentGuess[n - 1] === char.toLowerCase() ? 'active-letter' : ''
-    }
 
     return (
         <div id='session-container'>
@@ -155,65 +176,17 @@ export default function Puzzle() {
                     >
                     </input>
                 </form>
-                <h3>Guesses</h3>
-                <ul>
-                    {
-                        guesses.map((word, idx) => (
-                            word.length > 0 && <li key={idx}>
-                                {word}
-                            </li>
-                        ))
-                    }
-                </ul>
+                <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
+                {
+                    guesses.map((word, idx) => (
+                        word.length > 0 && <div key={idx}>
+                            {word}
+                        </div>
+                    ))
+                }
                 <button onClick={deleteHandler}>Start Over?</button>
             </div>
-            <div id='puzzle-container'>
-                <div id='up-letters' className="letters">
-                    {up.map((x, idx) => (
-                        <span
-                            key={'up' + idx}
-                            className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                        >
-                            {x}
-                        </span>
-                    ))}
-                </div>
-                <div id='puzzle-middle'>
-                    <div id='left-letters' className="letters">
-                        {left.map((x, idx) => (
-                            <span
-                                key={'left' + idx}
-                                className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                            >
-                                {x}
-                            </span>
-                        ))}
-                    </div>
-                    <div id='puzzle-square'>
-                        {/* <PuzzleDrawing connections={connections}/> */}
-                    </div>
-                    <div id='right-letters' className="letters">
-                        {right.map((x, idx) => (
-                            <span
-                                key={'right' + idx}
-                                className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                            >
-                                {x}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-                <div id='down-letters' className="letters">
-                    {down.map((x, idx) => (
-                        <span
-                            key={'down' + idx}
-                            className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                        >
-                            {x}
-                        </span>
-                    ))}
-                </div>
-            </div>
-        </div>
+            <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
+        </div >
     )
 }
