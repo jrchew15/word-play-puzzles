@@ -19,10 +19,11 @@
 #session-container {
     background-color: turquoise;
     position: relative;
+    display: flex;
 }
 
 #puzzle-container {
-    /* position: absolute; */
+    position: relative;
     box-sizing: border-box;
     width: calc(8 * var(--unit-length) + 5 * var(--circle-width) + 2 * var(--letter-box-length));
     height: calc(8 * var(--unit-length) + 5 * var(--circle-width) + 2 * var(--letter-box-length));
@@ -62,7 +63,7 @@
     border-radius: 50%;
     box-sizing: border-box;
     border: 2px solid black;
-    background-color: turquoise;
+    background-color: white;
     z-index: 3;
     /* position: absolute; */
 }
@@ -74,6 +75,7 @@
     width: 100%;
     height: 100%;
     font-size: 1.3rem;
+    color: white;
 }
 
 span.u1 {
@@ -221,13 +223,17 @@ div.r3 {
     align-items: center;
 } */
 
-#puzzle-container .used {
-    color: grey;
+#puzzle-container .letter.used {
+    color: black;
 }
 
-#puzzle-container .active-letter {
+#puzzle-container .letter.active-letter {
     font-weight: bolder;
-    /* text-shadow: #40e0d0 0px 0px 10px; */
+    color: black;
     border-radius: 50%;
     background: center border-box radial-gradient(circle at center, gold, 60%, #40e0d0);
+}
+
+#puzzle-container .circle.used {
+    background-color: #40e0d0;
 }

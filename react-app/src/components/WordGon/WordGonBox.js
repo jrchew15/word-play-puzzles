@@ -18,13 +18,16 @@ export function BoxAndLetters({ letters, guesses, currentGuess }) {
         <>
             <div id='puzzle-container'>
                 {letters.split('').map((x, idx) => (
-                    <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={idx}><span>{x.toUpperCase()}</span></span>
+                    <>
+                        <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={idx}><span>{x.toUpperCase()}</span></span>
+                        <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={idx} />
+                    </>
                 ))}
-                {letterClasses.map((x, idx) => (
+                {/* {letterClasses.map((x, idx) => (
                     <div className={x + ' circle'} key={idx} />
-                ))}
+                ))} */}
+                <div id='puzzle-square' />
             </div>
-            <div id='puzzle-square' />
         </>
     )
 }

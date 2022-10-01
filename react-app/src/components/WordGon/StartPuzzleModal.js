@@ -4,7 +4,6 @@ import { NonClickModal } from "../../context/Modal";
 import { thunkAddWordgonSession } from "../../store/wordgon";
 
 export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) {
-    // const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 

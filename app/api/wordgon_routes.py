@@ -71,7 +71,7 @@ def edit_session(puzzleId, sessionId):
 
 @wordgon_routes.route('/<int:puzzleId>/sessions/<int:sessionId>', methods=['DELETE'])
 @login_required
-def delete_session(puzzleId,sessionId):
+def delete_session(puzzleId, sessionId):
     session = WordGonSession.query.get(sessionId)
 
     if session.user_id is current_user.id:
