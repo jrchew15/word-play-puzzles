@@ -129,14 +129,7 @@ export default function Puzzle() {
         const data = await dispatch(thunkDeleteWordgonSession(puzzleId, session.id))
     }
 
-    function usedLetter(char) {
-        return guesses.join('').includes(char.toLowerCase()) || currentGuess.includes(char.toLowerCase()) ? 'used' : ''
-    }
 
-    function activeLetter(char) {
-        let n = currentGuess.length
-        return n > 0 && currentGuess[n - 1] === char.toLowerCase() ? 'active-letter' : ''
-    }
 
     return (
         <div id='session-container'>
@@ -168,53 +161,7 @@ export default function Puzzle() {
                 </ul>
                 <button onClick={deleteHandler}>Start Over?</button>
             </div>
-            {/* <div id='puzzle-container'>
-                <div id='up-letters' className="letters">
-                    {up.map((x, idx) => (
-                        <span
-                            key={'up' + idx}
-                            className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                        >
-                            {x}
-                        </span>
-                    ))}
-                </div>
-                <div id='puzzle-middle'>
-                    <div id='left-letters' className="letters">
-                        {left.map((x, idx) => (
-                            <span
-                                key={'left' + idx}
-                                className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                            >
-                                {x}
-                            </span>
-                        ))}
-                    </div>
-                    <div id='puzzle-square'>
-                    </div>
-                    <div id='right-letters' className="letters">
-                        {right.map((x, idx) => (
-                            <span
-                                key={'right' + idx}
-                                className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                            >
-                                {x}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-                <div id='down-letters' className="letters">
-                    {down.map((x, idx) => (
-                        <span
-                            key={'down' + idx}
-                            className={'letter ' + (activeLetter(x) || usedLetter(x))}
-                        >
-                            {x}
-                        </span>
-                    ))}
-                </div>
-            </div> */}
-            <BoxAndLetters letters={puzzle.letters} />
+            <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
         </div>
     )
 }
