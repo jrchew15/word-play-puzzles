@@ -1,6 +1,8 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from ..models import db, WordGon, WordGonSession
+
+from ..models import db, WordGon, WordGonSession, Comment
+from ..forms.comment_form import CommentForm
 from ..forms.wordgon_form import WordGonForm
 from ..forms.wordgon_session_form import WordGonSessionForm
 from datetime import date, datetime
@@ -79,3 +81,37 @@ def delete_session(puzzleId, sessionId):
         db.session.commit()
         return {"message":"successfully deleted"}, 201
     return {"errors":["Unauthorized"]}, 405
+
+@wordgon_routes.route('/<int:puzzleId>/comments')
+@login_required
+def get_puzzle_comments(puzzleId):
+    puzzle = WordGon.query.get(puzzleId)
+    if puzzle is None:
+        return {'errors':['Puzzle not found']}, 401
+    comments = puzzle.comments
+
+    return {
+        "comments": {
+            comment.id: comment.to_dict() for comment in comments
+        }
+    }
+
+@wordgon_routes.route('/<int:puzzleId>/comments')
+@login_required
+def add_comment(puzzleId):
+    form = CommentForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+
+    if form.validate_on_submit():
+        comment = Comment(
+            puzzle_id=puzzleId,
+            user_id=current_user.id,
+            body=form.body.data,
+            reply_to=form.replyTo.data
+        )
+
+        db.session.add(comment)
+        db.session.commit()
+        return comment.to_dict(), 201
+
+    return {'errors':['Unauthorized']}, 405
