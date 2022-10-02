@@ -19,8 +19,8 @@ export function BoxAndLetters({ letters, guesses, currentGuess }) {
             <div id='puzzle-container'>
                 {letters.split('').map((x, idx) => (
                     <>
-                        <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={idx}><span>{x.toUpperCase()}</span></span>
-                        <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={idx} />
+                        <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
+                        <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} />
                     </>
                 ))}
                 {/* {letterClasses.map((x, idx) => (

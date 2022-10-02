@@ -10,6 +10,7 @@ from .api.user_routes import user_routes
 from .api.auth_routes import auth_routes
 from .api.wordgon_routes import wordgon_routes
 from .api.word_routes import word_routes
+from .api.comment_routes import comment_routes
 
 from .seeds import seed_commands
 
@@ -36,6 +37,7 @@ app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(wordgon_routes, url_prefix='/api/wordgons')
 app.register_blueprint(word_routes, url_prefix='/api/words')
+app.register_blueprint(comment_routes, url_prefix='/api/comments')
 db.init_app(app)
 Migrate(app, db)
 

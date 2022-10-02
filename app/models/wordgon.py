@@ -15,7 +15,7 @@ class WordGon(db.Model):
     user = db.relationship("User", back_populates='puzzles')
     comments = db.relationship("Comment", back_populates='puzzle')
 
-    def to_dict(self):
+    def to_dict(self, comments=False):
         return {
             "id": self.id,
             "letters": self.letters,
@@ -23,5 +23,5 @@ class WordGon(db.Model):
             "shape": self.shape,
             "numAttempts": self.num_attempts,
             "puzzleDay": self.puzzle_day,
-            "user": self.user.to_dict()
+            "user": self.user.to_dict(),
         }
