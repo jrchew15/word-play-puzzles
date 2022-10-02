@@ -28,7 +28,7 @@ class Comment(db.Model):
             'createdAt': self.created_at,
             'updatedAt': self.updated_at,
             'user': self.user.to_dict(comment=True),
-            'children': [child.to_dict() for child in children] if len(children) > 0 else None
+            'children': [child.to_dict() for child in children] if len(children) > 0 else []
         }
 
         return response

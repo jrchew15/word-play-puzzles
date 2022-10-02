@@ -111,7 +111,7 @@ def add_comment(puzzleId):
             puzzle_id=puzzleId,
             user_id=current_user.id,
             body=form.body.data,
-            reply_to=form.replyTo.data
+            reply_to=form.replyTo.data or None
         )
 
         db.session.add(comment)

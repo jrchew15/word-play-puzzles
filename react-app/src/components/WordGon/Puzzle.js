@@ -7,6 +7,7 @@ import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
+import CommentsContainer from "../Comments/CommentsContainer";
 
 import './wordgon.css';
 
@@ -159,34 +160,37 @@ export default function Puzzle() {
 
 
     return (
-        <div id='session-container'>
-            <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
-            <div id='guesses-container'>
-                <form onSubmit={handleFormSubmit}>
-                    <label htmlFor="guess">
-                        Type a word:
-                    </label>
-                    <input
-                        type="text"
-                        name="guess"
-                        value={currentGuess}
-                        onKeyDown={handleFormKeyDown}
-                        onChange={e => setCurrentGuess(e.target.value)}
-                        autoComplete='off'
-                    >
-                    </input>
-                </form>
-                <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
-                {
-                    guesses.map((word, idx) => (
-                        word.length > 0 && <div key={idx}>
-                            {word}
-                        </div>
-                    ))
-                }
-                <button onClick={deleteHandler}>Start Over?</button>
-            </div>
-            <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
-        </div >
+        <>
+            <div id='session-container'>
+                <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
+                <div id='guesses-container'>
+                    <form onSubmit={handleFormSubmit}>
+                        <label htmlFor="guess">
+                            Type a word:
+                        </label>
+                        <input
+                            type="text"
+                            name="guess"
+                            value={currentGuess}
+                            onKeyDown={handleFormKeyDown}
+                            onChange={e => setCurrentGuess(e.target.value)}
+                            autoComplete='off'
+                        >
+                        </input>
+                    </form>
+                    <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
+                    {
+                        guesses.map((word, idx) => (
+                            word.length > 0 && <div key={word}>
+                                {word}
+                            </div>
+                        ))
+                    }
+                    <button onClick={deleteHandler}>Start Over?</button>
+                </div>
+                <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
+            </div >
+            <CommentsContainer puzzleId={puzzleId} />
+        </>
     )
 }
