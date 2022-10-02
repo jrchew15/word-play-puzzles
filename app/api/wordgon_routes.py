@@ -5,6 +5,8 @@ from ..models import db, WordGon, WordGonSession, Comment
 from ..forms.comment_form import CommentForm
 from ..forms.wordgon_form import WordGonForm
 from ..forms.wordgon_session_form import WordGonSessionForm
+from .utils import validation_errors_to_error_messages
+
 from datetime import date, datetime
 
 wordgon_routes = Blueprint('wordgon',__name__)
@@ -27,6 +29,7 @@ def dev_create_wordgon():
             )
         db.session.add(puzzle)
         db.session.commit()
+    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 @wordgon_routes.route('')
 @login_required
@@ -70,6 +73,7 @@ def edit_session(puzzleId, sessionId):
         session.completed = form.completed.data
         db.session.commit()
         return session.to_dict()
+    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 @wordgon_routes.route('/<int:puzzleId>/sessions/<int:sessionId>', methods=['DELETE'])
 @login_required
@@ -96,7 +100,7 @@ def get_puzzle_comments(puzzleId):
         }
     }
 
-@wordgon_routes.route('/<int:puzzleId>/comments')
+@wordgon_routes.route('/<int:puzzleId>/comments', methods=['POST'])
 @login_required
 def add_comment(puzzleId):
     form = CommentForm()
@@ -114,4 +118,4 @@ def add_comment(puzzleId):
         db.session.commit()
         return comment.to_dict(), 201
 
-    return {'errors':['Unauthorized']}, 405
+    return {'errors':validation_errors_to_error_messages(form.errors)}, 401
