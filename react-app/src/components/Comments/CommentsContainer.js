@@ -12,6 +12,7 @@ export default function CommentsContainer({ puzzleId }) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [replyingTo, setReplyingTo] = useState(null);
     const [editCommentId, setEditCommentId] = useState(null);
+    const [resetting, setResetting] = useState(false);
 
     useEffect(() => {
         if (isLoaded) return
@@ -24,7 +25,14 @@ export default function CommentsContainer({ puzzleId }) {
             }
             setIsLoaded(true)
         })()
-    }, [dispatch, isLoaded])
+    }, [dispatch, isLoaded, puzzleId])
+
+    useEffect(() => {
+        if (resetting) {
+            resetCommentForm()
+            setResetting(false)
+        }
+    }, [resetting])
 
     const parentComments = [];
     const childComments = [];
@@ -63,31 +71,26 @@ export default function CommentsContainer({ puzzleId }) {
                 body: JSON.stringify(reqBody)
             })
         }
-        // if (res.ok) {
-        resetCommentForm();
-        setIsLoaded(false)
-        // }
-    }
-
-    async function handleDelete(e) {
-        console.log('deleteing')
-        e.preventDefault();
-
-        const res = await fetch(`/api/comments/${editCommentId}`, { method: 'DELETE' });
-
         if (res.ok) {
+            resetCommentForm();
             setIsLoaded(false)
-            resetCommentForm()
         }
     }
 
-    function resetCommentForm() {
-        setTimeout(() => {
-            setShowCommentForm(false)
-            setCommentBody('')
-            setReplyingTo(null)
-            setEditCommentId(null)
-        }, 500)
+    async function handleDelete(id) {
+
+        const res = await fetch(`/api/comments/${id}`, { method: 'DELETE' });
+
+        if (res.ok) {
+            setIsLoaded(false)
+        }
+    }
+
+    function resetCommentForm(e) {
+        setShowCommentForm(false)
+        setCommentBody('')
+        setReplyingTo(null)
+        setEditCommentId(null)
     }
 
     return (
@@ -101,15 +104,14 @@ export default function CommentsContainer({ puzzleId }) {
                             <div key={'div' + comment.id} className='body-container'>
                                 <span key={'username' + comment.id}>{comment.user.username}</span>
                                 {editCommentId === comment.id ?
-                                    <form onSubmit={handleCommentSubmit} onBlur={resetCommentForm} key={'editcommentform' + comment.id}>
+                                    <form onSubmit={handleCommentSubmit} onBlur={() => setResetting(true)} key={'editcommentform' + comment.id}>
                                         <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} key={'editcommentinput' + comment.id} />
-                                        <i className="fas fa-trash-alt" onClick={handleDelete} />
                                     </form>
                                     : <span key={'comment span' + comment.id}>
                                         {comment.body}
-                                        {comment.user.id == currentUser.id && <i className="fas fa-pen" onClick={() => { setShowCommentForm(true); setEditCommentId(comment.id); setCommentBody(comment.body) }} />}
+                                        {comment.user.id === currentUser.id && <i className="fas fa-pen" onClick={() => { setShowCommentForm(true); setEditCommentId(comment.id); setCommentBody(comment.body) }} />}
                                     </span>}
-                                {/* <span key={'span' + comment.id}>{comment.body}</span> */}
+                                {comment.user.id === currentUser.id && <i className="fas fa-trash-alt" onClick={() => handleDelete(comment.id)} />}
                                 <button className='reply-to' onClick={() => { setShowCommentForm(true); setReplyingTo(comment.id) }}>Reply...</button>
                                 <ul key={'ul' + comment.id}>
                                     {comment.children.map(child => (
@@ -118,19 +120,18 @@ export default function CommentsContainer({ puzzleId }) {
                                             <div key={'child div' + child.id} className='body-container'>
                                                 <span key={'child username' + child.id}>{child.user.username}</span>
                                                 {editCommentId === child.id ?
-                                                    <form onSubmit={handleCommentSubmit} onBlur={resetCommentForm} key={'editchildform' + child.id}>
+                                                    <form onSubmit={handleCommentSubmit} onBlur={() => setResetting(true)} key={'editchildform' + child.id}>
                                                         <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} key={'editchildinput' + child.id} />
-                                                        <i className="fas fa-trash-alt" onClick={handleDelete} />
                                                     </form>
                                                     : <span key={'child span' + child.id}>
                                                         {child.body}
-                                                        {child.user.id == currentUser.id && <i className="fas fa-pen" onClick={() => { setShowCommentForm(true); setEditCommentId(child.id); setCommentBody(child.body) }} />}
+                                                        {child.user.id === currentUser.id && <i className="fas fa-pen" onClick={() => { setShowCommentForm(true); setEditCommentId(child.id); setCommentBody(child.body) }} />}
                                                     </span>}
+                                                {child.user.id === currentUser.id && <i className="fas fa-trash-alt" onClick={() => handleDelete(child.id)} />}
                                             </div>
-                                            {/* <span key={'child span' + child.id}>{child.body}</span> */}
                                         </li>
                                     ))}
-                                    {showCommentForm && replyingTo === comment.id && <form onSubmit={handleCommentSubmit} onBlur={resetCommentForm} key={'form' + comment.id}>
+                                    {showCommentForm && replyingTo === comment.id && <form onSubmit={handleCommentSubmit} onBlur={() => setResetting(true)} key={'form' + comment.id}>
                                         <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} key={'input' + comment.id} />
                                     </form>}
                                 </ul>
@@ -142,7 +143,7 @@ export default function CommentsContainer({ puzzleId }) {
             }
             <button onClick={() => { setShowCommentForm(true); setReplyingTo(null) }} style={{ display: showCommentForm ? 'none' : 'block' }}>Add Comment</button>
             {
-                showCommentForm && !replyingTo && !editCommentId && <form onSubmit={handleCommentSubmit} onBlur={resetCommentForm} >
+                showCommentForm && !replyingTo && !editCommentId && <form onSubmit={handleCommentSubmit} onBlur={() => setResetting(true)} >
                     <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} />
                 </form>
             }
