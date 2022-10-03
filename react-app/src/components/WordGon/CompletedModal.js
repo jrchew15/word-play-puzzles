@@ -1,8 +1,6 @@
 import { Modal } from "../../context/Modal";
-import { useDispatch } from "react-redux";
 
 export default function CompleteModal({ numGuesses, numAttempts, commentsRef, showModal, setShowModal, completed }) {
-    const dispatch = useDispatch();
 
     return showModal && completed && (
         <Modal onClose={() => setShowModal(false)}>
