@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import './comments.css';
 
-export default function CommentsContainer({ puzzleId }) {
+export default function CommentsContainer({ puzzleId, commentsRef }) {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state.session.user);
 
@@ -94,7 +94,7 @@ export default function CommentsContainer({ puzzleId }) {
     }
 
     return (
-        <ul id='comments-container'>
+        <ul id='comments-container' ref={commentsRef}>
             {
                 parentComments.map((commentId) => {
                     let comment = comments[commentId]
