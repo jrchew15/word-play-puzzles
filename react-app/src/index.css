@@ -77,3 +77,10 @@ h3 {
     /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
 }
+
+.carousel {
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    width: 80vw;
+}

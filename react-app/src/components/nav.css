@@ -23,11 +23,13 @@ nav img.logo {
     top: var(--nav-height);
     border: 1px solid lightgray;
     padding: 5px 0;
+    background-color: whitesmoke;
 }
 
 #omni-container {
     min-width: 100vw;
     min-height: 100vh;
+    background-color: whitesmoke;
 }
 
 #left-nav {

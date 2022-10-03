@@ -27,7 +27,3 @@ export default function UserDropdown({ showDropdown, setShowDropdown }) {
         </ul >
         : null)
 }
-
-// Profile
-// Open Puzzles
-// Logout

@@ -9,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import UsersList from './components/UsersList';
 import AllWordGons from './components/WordGon/AllWordGons';
 import Puzzle from './components/WordGon/Puzzle';
+import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
 
@@ -67,6 +68,7 @@ function App() {
           </ProtectedRoute>
           <ProtectedRoute path='/' exact={true} >
             <h1>My Home Page</h1>
+            <PuzzlesOfTheDay />
           </ProtectedRoute>
         </Switch>
       </div>

@@ -1,32 +1,23 @@
 :root {
-    --unit-length: 40px;
-    --circle-width: 30px;
-    --letter-box-length: 30px;
+    --unit-length: 4em;
+    --circle-width: 4em;
+    --letter-box-length: 3em;
 }
-
-/* #a-to-o {
-    content: '';
-    background-color: black;
-    height: calc(0.25 * var(--circle-width));
-    width: calc(1.414 * var(--unit-length) + 1.414 * var(--circle-width));
-    position: absolute;
-    bottom: calc(var(--unit-length) + var(--circle-width) + 0.25 * var(--circle-width));
-    left: calc(0.5 * var(--letter-box-length) + 0.5 * var(--circle-width));
-    z-index: 2;
-    rotate: 45deg;
-} */
 
 #session-container {
     background-color: turquoise;
     position: relative;
     display: flex;
+    font-size: 20px;
 }
 
 #puzzle-container {
+    font-size: 10px;
     position: relative;
-    box-sizing: border-box;
-    width: calc(8 * var(--unit-length) + 5 * var(--circle-width) + 2 * var(--letter-box-length));
-    height: calc(8 * var(--unit-length) + 5 * var(--circle-width) + 2 * var(--letter-box-length));
+    /* box-sizing: border-box; */
+    padding: 1em;
+    width: calc(6 * var(--unit-length) + 5 * var(--circle-width) + 2 * var(--letter-box-length));
+    height: calc(6 * var(--unit-length) + 5 * var(--circle-width) + 2 * var(--letter-box-length));
     display: grid;
     grid-template-areas:
         " .  .  .  u1 .  u2 .  u3 .  .  ."
@@ -40,17 +31,17 @@
         " .  .  b  b  b  b  b  b  b  .  ."
         " .  .  . dd3 . dd2 . dd1 .  .  ."
         " .  .  .  d3 . d2  .  d1 .  .  .";
-    grid-template-columns: var(--letter-box-length) var(--circle-width) var(--unit-length) var(--circle-width) calc(3 * var(--unit-length)) var(--circle-width) calc(3 * var(--unit-length)) var(--circle-width) var(--unit-length) var(--circle-width) var(--letter-box-length);
-    grid-template-rows: var(--letter-box-length) var(--circle-width) var(--unit-length) var(--circle-width) calc(3 * var(--unit-length)) var(--circle-width) calc(3 * var(--unit-length)) var(--circle-width) var(--unit-length) var(--circle-width) var(--letter-box-length);
+    grid-template-columns: var(--letter-box-length) var(--circle-width) var(--unit-length) var(--circle-width) calc(2 * var(--unit-length)) var(--circle-width) calc(2 * var(--unit-length)) var(--circle-width) var(--unit-length) var(--circle-width) var(--letter-box-length);
+    grid-template-rows: var(--letter-box-length) var(--circle-width) var(--unit-length) var(--circle-width) calc(2 * var(--unit-length)) var(--circle-width) calc(2 * var(--unit-length)) var(--circle-width) var(--unit-length) var(--circle-width) var(--letter-box-length);
 }
 
 #puzzle-square {
     position: absolute;
-    width: calc(8 * var(--unit-length) + 3 * var(--circle-width) + var(--letter-box-length) - 2px);
-    height: calc(8 * var(--unit-length) + 3 * var(--circle-width) + var(--letter-box-length) - 2px);
+    width: calc(6 * var(--unit-length) + 4 * var(--circle-width) - 2px);
+    height: calc(6 * var(--unit-length) + 4 * var(--circle-width) - 2px);
     content: '';
-    bottom: calc(var(--letter-box-length) + 0.5 * var(--circle-width));
-    left: calc(var(--letter-box-length) + 0.5 * var(--circle-width));
+    top: calc(var(--letter-box-length) + 0.5 * var(--circle-width) + 1em);
+    left: calc(var(--letter-box-length) + 0.5 * var(--circle-width) + 1em);
     background-color: white;
     border: 2px solid black;
     z-index: 1;
@@ -74,7 +65,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    font-size: 1.3rem;
+    font-size: 3em;
     color: white;
 }
 

@@ -22,6 +22,6 @@ class WordGon(db.Model):
             "userId": self.user_id,
             "shape": self.shape,
             "numAttempts": self.num_attempts,
-            "puzzleDay": self.puzzle_day,
+            "puzzleDay": str(self.puzzle_day),
             "user": self.user.to_dict(),
         }
