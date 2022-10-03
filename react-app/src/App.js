@@ -8,9 +8,7 @@ import NavBar from './components/NavBar';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import UsersList from './components/UsersList';
 import AllWordGons from './components/WordGon/AllWordGons';
-import OneWordGon from './components/WordGon/OneWordGon';
 import Puzzle from './components/WordGon/Puzzle';
-import User from './components/User';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
 
@@ -19,6 +17,8 @@ import './index.css'
 function App() {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
+
+  const [showDropdown, setShowDropdown] = useState(false)
 
   const currentUser = useSelector(state => state.session.user)
 
@@ -43,31 +43,33 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar />
-      <Switch>
-        <Route path='/login' exact={true}>
-          <LoginPage />
-        </Route>
-        <Route path='/sign-up' exact={true}>
-          <SignUpPage />
-        </Route>
-        <ProtectedRoute path='/users' exact={true} >
-          <UsersList />
-        </ProtectedRoute>
-        <ProtectedRoute path='/settings' exact>
-          <UserSettings />
-        </ProtectedRoute>
-        <ProtectedRoute path='/wordgons' exact>
-          <AllWordGons />
-        </ProtectedRoute>
-        <ProtectedRoute path='/wordgons/:wordgonId'>
-          {/* <OneWordGon /> */}
-          <Puzzle />
-        </ProtectedRoute>
-        <ProtectedRoute path='/' exact={true} >
-          <h1>My Home Page</h1>
-        </ProtectedRoute>
-      </Switch>
+      <div id='omni-container' onClick={() => setShowDropdown(false)}>
+        <NavBar showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
+        <Switch>
+          <Route path='/login' exact={true}>
+            <LoginPage />
+          </Route>
+          <Route path='/sign-up' exact={true}>
+            <SignUpPage />
+          </Route>
+          <ProtectedRoute path='/users' exact={true} >
+            <UsersList />
+          </ProtectedRoute>
+          <ProtectedRoute path='/settings' exact>
+            <UserSettings />
+          </ProtectedRoute>
+          <ProtectedRoute path='/wordgons' exact>
+            <AllWordGons />
+          </ProtectedRoute>
+          <ProtectedRoute path='/wordgons/:wordgonId'>
+            {/* <OneWordGon /> */}
+            <Puzzle />
+          </ProtectedRoute>
+          <ProtectedRoute path='/' exact={true} >
+            <h1>My Home Page</h1>
+          </ProtectedRoute>
+        </Switch>
+      </div>
     </BrowserRouter>
   );
 }

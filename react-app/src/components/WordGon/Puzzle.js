@@ -186,6 +186,7 @@ export default function Puzzle() {
                             onChange={e => setCurrentGuess(e.target.value)}
                             autoComplete='off'
                             id='guess-box'
+                            autoFocus
                         >
                         </input>
                     </form>
