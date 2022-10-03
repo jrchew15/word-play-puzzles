@@ -72,6 +72,11 @@ nav img.logo {
     padding: 0 20px;
 }
 
+#user-dropdown li:hover,
+#developer-dropdown p:hover {
+    background-color: var(--highlight-color);
+}
+
 #user-dropdown #puzzle-select {
     flex-direction: column;
     cursor: unset;
