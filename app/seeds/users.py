@@ -1,8 +1,18 @@
 from app.models import db, User
-
+import os
 
 # Adds a demo user, you can add other users here if you want
 def seed_users():
+    puzzler = User(
+        username='PuzzleMaster',
+        email='puzzlemaster@aa.io',
+        password=os.environ.get('PUZZLE_SECRET'),
+        profile_picture='https://www.nicepng.com/png/detail/6-61288_picture-library-library-free-vector-icon-designed-by.png'
+    )
+
+    db.session.add(puzzler)
+    db.session.commit()
+
     demo = User(
         username='Demo',
         email='demo@aa.io',
