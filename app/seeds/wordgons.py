@@ -1,4 +1,6 @@
 from app.models import db, WordGon, WordGonSession
+from json import load
+from datetime import datetime
 
 def seed_wordgons():
     puzzle = WordGon(
@@ -29,4 +31,35 @@ def seed_wordgons():
 def undo_wordgons():
     db.session.execute('TRUNCATE word_gons RESTART IDENTITY CASCADE;')
     db.session.execute('TRUNCATE word_gons_sessions RESTART IDENTITY CASCADE;')
+    db.session.commit()
+
+
+
+def puzzles_of_the_day():
+    json_obj = open('app/seeds/puzzle-seeds.txt','r')
+
+    dct = load(json_obj)
+    puzzles = dct['puzzles']
+
+    all_sets = []
+    idx = 0
+    for puzzle in puzzles:
+        new_set = set(puzzle['letters'])
+        if all_sets.count(new_set) > 0:
+            print('REPEAT AT ', idx, puzzle)
+            continue
+        all_sets.append(new_set)
+
+
+        new_date = datetime.strptime(puzzle['puzzleDay'],'%Y-%m-%d %H:%M:%S')
+        wordgon = WordGon(
+            letters = puzzle['letters'],
+            user_id = 1,
+            shape = 'square',
+            num_attempts = puzzle['numAttempts'],
+            puzzle_day = new_date
+        )
+
+        db.session.add(wordgon)
+        idx += 1
     db.session.commit()

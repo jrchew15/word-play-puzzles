@@ -164,6 +164,13 @@ export default function Puzzle() {
             <div id='session-container'>
                 <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
                 <div id='guesses-container'>
+                    <div>
+                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
+                        Made By {puzzle.user.username}
+                        <div>
+                            {puzzle.numAttempts - guesses.length} words remaining
+                        </div>
+                    </div>
                     <form onSubmit={handleFormSubmit}>
                         <label htmlFor="guess">
                             Type a word:
