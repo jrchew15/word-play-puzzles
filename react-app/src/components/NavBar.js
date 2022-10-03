@@ -1,8 +1,9 @@
-import { NavLink, useHistory } from 'react-router-dom';
-import { useState } from 'react';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import UserDropdown from './UserDropdown';
-import LogoutButton from './auth/LogoutButton';
+import { Modal } from '../context/Modal';
+import User from './User';
 
 import './nav.css'
 
@@ -12,7 +13,7 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
 
   const [imageSrc, setImageSrc] = useState('/static/images/icon_1-cropped.svg')
   const [whichDropdown, setWhichDropdown] = useState('')
-
+  const [showModal, setShowModal] = useState(false)
 
   function userDropdownToggle(e) {
     e.stopPropagation();
@@ -27,18 +28,18 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
     setShowDropdown(x => !x)
   }
 
-  return (
+  return (<>
     <nav id='my-nav'>
       <div id='left-nav'>
-        {currentUser?.id > 0 ?
+        {currentUser?.id > 0 &&
           <div id='dropdown-selector' onClick={userDropdownToggle} >
             {(showDropdown && whichDropdown === 'user') ? <i className="fas fa-times" /> : <i className="fas fa-bars" />}
-          </div>
-          : (<div id='auth-buttons-container'>
+          </div>}
+        {/* : (<div id='auth-buttons-container'>
             <button id='nav-login'>Login</button>
             <button id='nav-signup'>Sign Up</button>
-          </div>)}
-        {(showDropdown && whichDropdown === 'user') && <UserDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} />}
+          </div>)} */}
+        {(showDropdown && whichDropdown === 'user') && <UserDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setShowModal={setShowModal} />}
         <img src={imageSrc} alt='logo' className='logo'
           onMouseEnter={() => setImageSrc('/static/images/icon_2-cropped.svg')}
           onMouseLeave={() => setImageSrc('/static/images/icon_1-cropped.svg')}
@@ -54,7 +55,10 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
         </div>}
       </div>
     </nav>
-  );
+    {showModal && <Modal onClose={() => setShowModal(false)}>
+      <User userId={currentUser.id} setShowModal={setShowModal} />
+    </Modal>}
+  </>);
 }
 
 export default NavBar;

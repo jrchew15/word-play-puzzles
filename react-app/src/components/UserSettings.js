@@ -31,7 +31,7 @@ export default function UserSettings() {
             setErrors(data)
             return
         }
-        history.push('/users')
+        history.push('/')
     }
 
     function refreshPreview(e) {

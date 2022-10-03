@@ -24,6 +24,7 @@ nav img.logo {
     border: 1px solid lightgray;
     padding: 5px 0;
     background-color: whitesmoke;
+    z-index: 1;
 }
 
 #omni-container {
