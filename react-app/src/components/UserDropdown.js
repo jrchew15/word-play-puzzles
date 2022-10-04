@@ -12,12 +12,12 @@ export default function UserDropdown({ showDropdown, setShowDropdown, setShowMod
             <li onClick={() => setShowModal(true)}>My Profile</li>
             <div className="navbar-sep" />
             <li id='puzzle-select'>
-                {currentUser.openSessions.length < 0 ? (<span>Start a Puzzle</span>) :
-                    (<span>Open Puzzles
+                {currentUser.openSessions.length < 1 ? (<span>Start a Puzzle</span>) :
+                    (<>Open Puzzles
                         {currentUser.openSessions.map(sesh => (
                             <NavLink to={`/wordgons/${wordgons[sesh].puzzleId}`} >
                                 {wordgons[sesh].puzzleId}</NavLink>
-                        ))}</span>)
+                        ))}</>)
                 }
             </li>
             <div className="navbar-sep" />

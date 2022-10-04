@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
+import { authenticate } from "../../store/session";
 import { thunkUpdateWordgonSession, thunkDeleteWordgonSession } from "../../store/wordgon";
 import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
@@ -102,6 +103,7 @@ export default function Puzzle() {
                     guesses: allGuesses,
                     completed
                 }))
+                await dispatch(authenticate())
             }
             // Reset submitting status regardless of validity of word
             setSubmitting(false)
@@ -153,7 +155,7 @@ export default function Puzzle() {
 
     async function deleteHandler(e) {
         const data = await dispatch(thunkDeleteWordgonSession(puzzleId, session.id));
-
+        await dispatch(authenticate())
         if (!data) {
             setShowModal(true)
         }

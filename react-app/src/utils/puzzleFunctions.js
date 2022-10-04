@@ -29,6 +29,8 @@ export function puzzleDifficulty(puzzle) {
             return 'medium'
         case 8:
             return 'hard'
+        case 9:
+            return 'hard'
         default:
             return 'medium'
     }

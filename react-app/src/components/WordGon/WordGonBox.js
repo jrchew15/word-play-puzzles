@@ -62,7 +62,7 @@ export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
 export function DetailsByStatus({ puzzleId }) {
     const wordgons = useSelector(state => state.wordgon);
     const history = useHistory()
-    const status = wordgons[puzzleId]
+    const status = wordgons[puzzleId]?.completed
     if (status === undefined || status === null) {
         return <button className="list-button" onClick={PuzzleRedirect}>
             Start

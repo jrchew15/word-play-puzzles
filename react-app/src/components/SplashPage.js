@@ -44,7 +44,7 @@ export default function SplashPage() {
                 </div>
             </div>
             <div className='splash-card'>
-                <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '15px 15px 0 0' }} onClick={() => history.push('/signup')}>Sign Up</div>
+                <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '15px 15px 0 0' }} onClick={() => history.push('/sign-up')}>Sign Up</div>
                 <div className="splash-card-sep" />
                 <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '0 0 15px 15px' }} onClick={() => history.push('/login')}>Log In</div>
             </div>

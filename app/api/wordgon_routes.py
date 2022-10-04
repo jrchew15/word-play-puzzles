@@ -44,8 +44,11 @@ def get_puzzles_of_the_day():
 @wordgon_routes.route('/difficulty/<diff>')
 @login_required
 def get_puzzles_by_difficulty(diff):
-    reader = {'easy':6,'medium':7,'hard':8}
-    puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts == reader[diff], WordGon.puzzle_day == None))
+    reader = {'easy':6,'medium':7}
+    if diff == 'hard':
+        puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts >= 8, WordGon.puzzle_day == None))
+    else:
+        puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts == reader[diff], WordGon.puzzle_day == None))
 
     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 

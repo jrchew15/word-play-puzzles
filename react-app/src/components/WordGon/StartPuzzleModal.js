@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { NonClickModal } from "../../context/Modal";
+import { authenticate } from "../../store/session";
 import { thunkAddWordgonSession } from "../../store/wordgon";
 
 export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) {
@@ -12,6 +13,7 @@ export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) 
         if (newSession.errors) {
             return
         }
+        await dispatch(authenticate())
         setShowModal(false)
     }
 
