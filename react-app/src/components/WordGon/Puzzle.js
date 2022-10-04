@@ -10,6 +10,7 @@ import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
 import CompleteModal from "./CompletedModal";
 import CommentsContainer from "../Comments/CommentsContainer";
+import { color_dict, puzzleDifficulty } from '../../utils/puzzleFunctions';
 
 import './wordgon.css';
 
@@ -161,20 +162,20 @@ export default function Puzzle() {
         }
     }
 
-
-
     return (
         <>
-            <div id='session-container'>
+            <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                 <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
                 {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />}
                 <div id='guesses-container'>
                     <div>
-                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
-                        Made By {puzzle.user.username}
-                        <div>
-                            {puzzle.numAttempts - guesses.length} words remaining
+                        <div id='puzzle-author'>
+                            <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
+                            Made By {puzzle.user.username}
+                            <div>
+                            </div>
                         </div>
+                        {puzzle.numAttempts - guesses.length} words remaining
                     </div>
                     <form onSubmit={handleFormSubmit}>
                         <label htmlFor="guess">
