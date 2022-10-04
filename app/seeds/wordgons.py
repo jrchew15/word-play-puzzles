@@ -28,6 +28,33 @@ def seed_wordgons():
     db.session.add(session2)
     db.session.commit()
 
+    json_obj = open('app/seeds/user-made-seeds.txt','r')
+
+    dct = load(json_obj)
+    puzzles = dct['puzzles']
+
+    all_sets = []
+    idx = 0
+    for puzzle in puzzles:
+        new_set = set(puzzle['letters'])
+        if all_sets.count(new_set) > 0:
+            print('REPEAT AT ', idx, puzzle)
+            continue
+        all_sets.append(new_set)
+
+
+        wordgon = WordGon(
+            letters = puzzle['letters'],
+            user_id = (idx % 10) + 2,
+            shape = 'square',
+            num_attempts = puzzle['numAttempts']
+        )
+
+        db.session.add(wordgon)
+        idx += 1
+    db.session.commit()
+
+
 def undo_wordgons():
     db.session.execute('TRUNCATE word_gons RESTART IDENTITY CASCADE;')
     db.session.execute('TRUNCATE word_gons_sessions RESTART IDENTITY CASCADE;')
