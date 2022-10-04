@@ -170,7 +170,7 @@ div.r3 {
     color: black;
 }
 
-#puzzle-container .letter.active-letter {
+/* #puzzle-container .letter.active-letter {
     font-weight: bolder;
     color: black;
     border-radius: 50%;
@@ -179,4 +179,15 @@ div.r3 {
 
 #puzzle-container .circle.used {
     background-color: #40e0d0;
+} */
+
+#puzzle-author {
+    display: flex;
+    align-items: center;
+    background-color: white;
+}
+
+#guesses-container {
+    padding: 8px;
+    box-sizing: border-box;
 }
