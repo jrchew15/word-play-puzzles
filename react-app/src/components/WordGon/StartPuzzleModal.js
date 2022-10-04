@@ -23,7 +23,7 @@ export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) 
                         <h2>Word-Gon</h2>
                         <h3>Use all the letters around the square</h3>
                         <button onClick={createSession}>Play</button>
-                        <button onClick={() => history.push('/wordgons')}>Back to Puzzles</button>
+                        <button onClick={() => history.push('/')}>Back to Puzzles</button>
                     </div>
                 </NonClickModal>
             )}

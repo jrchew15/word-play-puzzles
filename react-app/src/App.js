@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginPage from './components/auth/LoginPage';
 import SignUpPage from './components/auth/SignUpPage';
 import UserSettings from './components/UserSettings';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import UsersList from './components/UsersList';
-import AllWordGons from './components/WordGon/AllWordGons';
+import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
 import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
@@ -45,8 +44,9 @@ function App() {
 
   return (
     <BrowserRouter>
+      <NavBar showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
+      <div id='nav-spacer' />
       <div id='omni-container' onClick={() => setShowDropdown(false)}>
-        <NavBar showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
         <Switch>
           <Route path='/login' exact={true}>
             <LoginPage />
@@ -54,26 +54,25 @@ function App() {
           <Route path='/sign-up' exact={true}>
             <SignUpPage />
           </Route>
-          <ProtectedRoute path='/users' exact={true} >
-            <UsersList />
-          </ProtectedRoute>
           <ProtectedRoute path='/settings' exact>
             <UserSettings />
           </ProtectedRoute>
-          <ProtectedRoute path='/wordgons' exact>
-            <AllWordGons />
-          </ProtectedRoute>
-          <ProtectedRoute path='/wordgons/:wordgonId'>
+          <Route path='/wordgons/:wordgonId' exact>
             {/* <OneWordGon /> */}
             <Puzzle />
-          </ProtectedRoute>
+          </Route>
           <ProtectedRoute path='/' exact={true} >
-            <h1>My Home Page</h1>
-            <PuzzlesOfTheDay />
-            <PuzzlesByDifficulty difficulty={'easy'} />
-            <PuzzlesByDifficulty difficulty={'med'} />
-            <PuzzlesByDifficulty difficulty={'hard'} />
+            {currentUser?.id ? <>
+              <PuzzlesOfTheDay />
+              <PuzzlesByDifficulty difficulty={'easy'} />
+              <PuzzlesByDifficulty difficulty={'medium'} />
+              <PuzzlesByDifficulty difficulty={'hard'} />
+            </> : <Redirect to='/welcome' />
+            }
           </ProtectedRoute>
+          <Route path='/welcome' exact>
+            <SplashPage />
+          </Route>
         </Switch>
       </div>
     </BrowserRouter>

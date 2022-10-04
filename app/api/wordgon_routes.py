@@ -31,30 +31,25 @@ def dev_create_wordgon():
         db.session.commit()
     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
-@wordgon_routes.route('')
-@login_required
-def all_wordgons():
-    puzzles = WordGon.query.all()
-    return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
+# @wordgon_routes.route('')
+# def all_wordgons():
+#     puzzles = WordGon.query.all()
+#     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 
 @wordgon_routes.route('/puzzles_of_the_day')
-@login_required
 def get_puzzles_of_the_day():
     puzzles = WordGon.query.filter(WordGon.user_id == 1).order_by(WordGon.puzzle_day.desc())
-
     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles if not_future_day(puzzle.puzzle_day)]}
 
 @wordgon_routes.route('/difficulty/<diff>')
 @login_required
 def get_puzzles_by_difficulty(diff):
-    reader = {'easy':6,'med':7,'hard':8}
+    reader = {'easy':6,'medium':7,'hard':8}
     puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts == reader[diff], WordGon.puzzle_day == None))
 
-    print('HITTING ROUTE***************', puzzles)
     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 
 @wordgon_routes.route('/<int:id>')
-@login_required
 def one_wordgon(id):
     puzzle = WordGon.query.get(id)
     return puzzle and puzzle.to_dict()
@@ -82,8 +77,7 @@ def edit_session(puzzleId, sessionId):
 
     form = WordGonSessionForm()
     form['csrf_token'].data = request.cookies['csrf_token']
-
-    if session.puzzle_id is puzzleId and form.validate_on_submit():
+    if session.puzzle_id == puzzleId and form.validate_on_submit():
         session.guesses = form.guesses.data
         session.num_guesses = form.numGuesses.data
         session.completed = form.completed.data

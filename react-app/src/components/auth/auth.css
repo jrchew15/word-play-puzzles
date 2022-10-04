@@ -41,7 +41,7 @@
 
 .submit-button.light {
     background-color: var(--off-black);
-    color: whitesmoke;
+    color: white;
 }
 
 #login-page a,
@@ -51,7 +51,7 @@
     cursor: pointer;
     display: flex;
     justify-content: center;
-    background-color: rgb(226, 226, 226);
+    background-color: white;
     text-decoration: none;
     padding: 8px;
     box-sizing: border-box;

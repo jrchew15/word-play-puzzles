@@ -2,6 +2,7 @@
     --nav-height: 65px;
 }
 
+
 nav#my-nav {
     display: flex;
     height: var(--nav-height);
@@ -10,6 +11,10 @@ nav#my-nav {
     align-items: center;
     border-bottom: 2px solid lightgrey;
     box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    background-color: white;
+    z-index: 100;
 }
 
 nav img.logo {
@@ -23,14 +28,21 @@ nav img.logo {
     top: var(--nav-height);
     border: 1px solid lightgray;
     padding: 5px 0;
-    background-color: whitesmoke;
+    background-color: white;
     z-index: 1;
 }
 
 #omni-container {
     min-width: 100vw;
-    min-height: 100vh;
-    background-color: whitesmoke;
+    min-height: calc(100vh - var(--nav-height));
+    background-color: white;
+}
+
+#nav-spacer {
+    content: '';
+    min-height: var(--nav-height);
+    height: var(--nav-height);
+    width: 100vw;
 }
 
 #left-nav {
