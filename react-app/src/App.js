@@ -12,6 +12,7 @@ import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
 import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
+import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
 
 import './index.css'
 
@@ -58,8 +59,10 @@ function App() {
             <UserSettings />
           </ProtectedRoute>
           <Route path='/wordgons/:wordgonId' exact>
-            {/* <OneWordGon /> */}
-            <Puzzle />
+            {currentUser ?
+              <Puzzle /> :
+              <UnregisteredPuzzle />
+            }
           </Route>
           <ProtectedRoute path='/' exact={true} >
             {currentUser?.id ? <>

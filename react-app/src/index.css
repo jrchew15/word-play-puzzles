@@ -125,10 +125,10 @@ h3 {
 
 #splash {
     width: 100vw;
-    height: calc(100vh - var(--nav-height));
+    height: calc(80vh - var(--nav-height));
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
 }
 

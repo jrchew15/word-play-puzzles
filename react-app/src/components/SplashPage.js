@@ -38,15 +38,15 @@ export default function SplashPage() {
                 <div style={{ backgroundColor: 'rgb(253 181 21 / 64%)', width: '100%', display: 'flex', justifyContent: 'center', padding: '5px 0', borderTop: '2px solid black' }}>
                     <span style={{ margin: '5px 0' }}>{parseDate(puzzle.puzzleDay)}</span>
                 </div>
-                <div style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', backgroundColor: 'rgb(253 181 21 / 64%)' }}>
+                <div style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', backgroundColor: 'rgb(253 181 21 / 64%)', borderRadius: '0 0 15px 15px' }}>
                     <ListableBoxAndLetters letters={puzzle.letters} puzzleId={puzzle.id} />
                     <DetailsByStatus puzzleId={puzzle.id} />
                 </div>
             </div>
             <div className='splash-card'>
-                <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '15px 15px 0 0' }}>Sign Up</div>
+                <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '15px 15px 0 0' }} onClick={() => history.push('/signup')}>Sign Up</div>
                 <div className="splash-card-sep" />
-                <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '0 0 15px 15px' }}>Log In</div>
+                <div className='auth-buttons' style={{ fontSize: '1.6em', borderRadius: '0 0 15px 15px' }} onClick={() => history.push('/login')}>Log In</div>
             </div>
         </div>
     </div>

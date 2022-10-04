@@ -35,10 +35,6 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
           <div id='dropdown-selector' onClick={userDropdownToggle} >
             {(showDropdown && whichDropdown === 'user') ? <i className="fas fa-times" /> : <i className="fas fa-bars" />}
           </div>}
-        {/* : (<div id='auth-buttons-container'>
-            <button id='nav-login'>Login</button>
-            <button id='nav-signup'>Sign Up</button>
-          </div>)} */}
         {(showDropdown && whichDropdown === 'user') && <UserDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setShowModal={setShowModal} />}
         <img src={imageSrc} alt='logo' className='logo'
           onMouseEnter={() => setImageSrc('/static/images/icon_2-cropped.svg')}
@@ -48,11 +44,20 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
       </div>
       <div id='right-nav' onClick={developerDropdownToggle}>
         <span >About the Developer</span>
-        {(showDropdown && whichDropdown === 'developer') && <div id='developer-dropdown'>
-          <p>Project Github</p>
-          <p>Developer's Github</p>
-          <p>Developer's LinkedIn</p>
-        </div>}
+        {(showDropdown && whichDropdown === 'developer') && <ul id='developer-dropdown'>
+          <li onClick={() => history.push('/')}>
+            Project Github
+            <img src='/static/images/icon_square.svg' alt='project_github' />
+          </li>
+          <li onClick={() => history.push('https://github.com/jrchew15')}>
+            Dev Github
+            <img src='/static/images/GitHub-Mark-64px.png' alt='github' />
+          </li>
+          <li onClick={() => history.push('https://www.linkedin.com/in/jason-chew-20867a207/')}>
+            Dev LinkedIn
+            <img src='https://cdn-icons-png.flaticon.com/512/49/49408.png' alt='linkedin' />
+          </li>
+        </ul>}
       </div>
     </nav>
     {showModal && <Modal onClose={() => setShowModal(false)}>
