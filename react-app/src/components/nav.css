@@ -1,0 +1,110 @@
+:root {
+    --nav-height: 65px;
+}
+
+nav#my-nav {
+    display: flex;
+    height: var(--nav-height);
+    width: 100vw;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid lightgrey;
+    box-sizing: border-box;
+}
+
+nav img.logo {
+    height: var(--nav-height);
+    cursor: pointer;
+}
+
+#user-dropdown {
+    position: absolute;
+    left: 0;
+    top: var(--nav-height);
+    border: 1px solid lightgray;
+    padding: 5px 0;
+    background-color: whitesmoke;
+    z-index: 1;
+}
+
+#omni-container {
+    min-width: 100vw;
+    min-height: 100vh;
+    background-color: whitesmoke;
+}
+
+#left-nav {
+    display: flex;
+}
+
+#right-nav {
+    position: relative;
+    font-size: 20px;
+    padding: 0 20px;
+    border-left: 2px solid lightgray;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#dropdown-selector {
+    cursor: pointer;
+    width: var(--nav-height);
+    height: var(--nav-height);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#dropdown-selector i {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#user-dropdown li,
+#user-dropdown a {
+    cursor: pointer;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+#user-dropdown li:hover,
+#developer-dropdown p:hover {
+    background-color: var(--highlight-color);
+}
+
+#user-dropdown #puzzle-select {
+    flex-direction: column;
+    cursor: unset;
+    padding-top: 10px;
+}
+
+#user-dropdown a {
+    text-decoration: none;
+    color: black;
+}
+
+#logout {
+    width: 100%;
+    height: 100%;
+}
+
+.navbar-sep {
+    content: '';
+    background-color: lightgray;
+    width: 100%;
+    height: 1px;
+}
+
+#developer-dropdown {
+    position: absolute;
+    top: var(--nav-height);
+    right: 0;
+    width: 222.35px;
+    border-left: 2px solid lightgray;
+    border-bottom: 2px solid lightgray;
+}

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { defaultImg } from '../store/utils/image_urls';
 import './user.css'
 
-function User({ userId }) {
+function User({ userId, setShowModal }) {
   const [user, setUser] = useState(null);
   const currentUser = useSelector(state => state.session.user);
   const history = useHistory();
@@ -21,6 +21,9 @@ function User({ userId }) {
   }, [userId])
 
   function directToSettings() {
+    if (setShowModal) {
+      setShowModal(false)
+    }
     history.push('/settings')
   }
 

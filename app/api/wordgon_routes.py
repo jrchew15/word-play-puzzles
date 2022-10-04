@@ -5,9 +5,9 @@ from ..models import db, WordGon, WordGonSession, Comment
 from ..forms.comment_form import CommentForm
 from ..forms.wordgon_form import WordGonForm
 from ..forms.wordgon_session_form import WordGonSessionForm
-from .utils import validation_errors_to_error_messages
+from .utils import validation_errors_to_error_messages, db_date_to_datetime, not_future_day
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 wordgon_routes = Blueprint('wordgon',__name__)
 
@@ -35,6 +35,22 @@ def dev_create_wordgon():
 @login_required
 def all_wordgons():
     puzzles = WordGon.query.all()
+    return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
+
+@wordgon_routes.route('/puzzles_of_the_day')
+@login_required
+def get_puzzles_of_the_day():
+    puzzles = WordGon.query.filter(WordGon.user_id == 1).order_by(WordGon.puzzle_day.desc())
+
+    return {'puzzles':[puzzle.to_dict() for puzzle in puzzles if not_future_day(puzzle.puzzle_day)]}
+
+@wordgon_routes.route('/difficulty/<diff>')
+@login_required
+def get_puzzles_by_difficulty(diff):
+    reader = {'easy':6,'med':7,'hard':8}
+    puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts == reader[diff], WordGon.puzzle_day == None))
+
+    print('HITTING ROUTE***************', puzzles)
     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 
 @wordgon_routes.route('/<int:id>')

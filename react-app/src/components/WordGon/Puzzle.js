@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -7,6 +7,7 @@ import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
+import CompleteModal from "./CompletedModal";
 import CommentsContainer from "../Comments/CommentsContainer";
 
 import './wordgon.css';
@@ -25,7 +26,7 @@ export default function Puzzle() {
 
     // const currentUser = useSelector(state => state.session.user)
     const sessions = useSelector(state => state.wordgon)
-
+    const commentsRef = useRef(null)
 
     useEffect(() => {
         (async () => {
@@ -73,6 +74,7 @@ export default function Puzzle() {
     useEffect(() => {
         // break useEffect if running on initial render
         if (!submitting) {
+            if (session && session.completed) { setShowModal(true) }
             return
         }
 
@@ -163,6 +165,7 @@ export default function Puzzle() {
         <>
             <div id='session-container'>
                 <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
+                {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />}
                 <div id='guesses-container'>
                     <div>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
@@ -182,6 +185,8 @@ export default function Puzzle() {
                             onKeyDown={handleFormKeyDown}
                             onChange={e => setCurrentGuess(e.target.value)}
                             autoComplete='off'
+                            id='guess-box'
+                            autoFocus
                         >
                         </input>
                     </form>
@@ -197,7 +202,9 @@ export default function Puzzle() {
                 </div>
                 <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
             </div >
-            <CommentsContainer puzzleId={puzzleId} />
+            <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
+                <CommentsContainer puzzleId={puzzleId} commentsRef={commentsRef} />
+            </div>
         </>
     )
 }
