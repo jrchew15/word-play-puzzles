@@ -81,13 +81,12 @@ export const editUserThunk = (userId, username, email, profilePicture) => async 
       profilePicture
     })
   });
+  const data = await res.json();
 
   if (res.ok) {
-    const data = await res.json()
     dispatch(setUser(data))
     return null
   }
-  const data = await res.json();
   if (data.errors) {
     return data.errors
   } else {
@@ -124,6 +123,7 @@ export const signUp = (username, email, password, profilePicture) => async (disp
 }
 
 export default function reducer(state = initialState, action) {
+  let newState
   switch (action.type) {
     case SET_USER:
       return { user: action.payload }

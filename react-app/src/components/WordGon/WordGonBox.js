@@ -1,3 +1,8 @@
+import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { color_dict } from "../../utils/puzzleFunctions";
+
 export function BoxAndLetters({ letters, guesses, currentGuess }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
 
@@ -29,21 +34,15 @@ export function BoxAndLetters({ letters, guesses, currentGuess }) {
     )
 }
 
-export function ListableBoxAndLetters({ letters, puzzleId }) {
+export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
+    const history = useHistory()
 
-    const color_dict = {
-        '0': '#f06868',
-        '1': '#fab57a',
-        '2': '#edf798',
-        '3': '#80d6ff',
-        '4': '#118a73',
-        '5': '#7c73e6'
-    }
+    const wordgons = useSelector(state => state.wordgon)
 
     return (
         <>
-            <div id='puzzle-container' style={{ fontSize: '3.5px', backgroundColor: color_dict[puzzleId % 6], margin: '5px' }}>
+            <div id='puzzle-container' className="puzzle-list" onClick={PuzzleRedirect} style={{ fontSize: '3.5px', backgroundColor: color_dict[difficulty], cursor: 'pointer' }}>
                 {letters.split('').map((x, idx) => (
                     <>
                         <span className={letterClasses[idx] + ' letter'} key={'letter' + x + idx} style={{ color: 'black' }}>{x.toUpperCase()}</span>
@@ -54,4 +53,30 @@ export function ListableBoxAndLetters({ letters, puzzleId }) {
             </div>
         </>
     )
+
+    function PuzzleRedirect(e) {
+        history.push(`/wordgons/${puzzleId}`)
+    }
+}
+
+export function DetailsByStatus({ puzzleId }) {
+    const wordgons = useSelector(state => state.wordgon);
+    const history = useHistory()
+    const status = wordgons[puzzleId]?.completed
+    if (status === undefined || status === null) {
+        return <button className="list-button" onClick={PuzzleRedirect}>
+            Start
+        </button>
+    }
+    if (status === 'complete') {
+        return <button className="list-button" onClick={PuzzleRedirect}>
+            See Comments or Retry
+        </button>
+    }
+    return <button className="list-button" onClick={PuzzleRedirect}>
+        Continue Puzzle
+    </button>
+    function PuzzleRedirect(e) {
+        history.push(`/wordgons/${puzzleId}`)
+    }
 }

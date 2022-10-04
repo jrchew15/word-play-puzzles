@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import { ListableBoxAndLetters } from "../WordGon/WordGonBox";
+import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
+import { color_dict } from '../../utils/puzzleFunctions';
 
 export default function PuzzlesByDifficulty({ difficulty }) {
     const [puzzles, setPuzzles] = useState([]);
@@ -22,10 +23,12 @@ export default function PuzzlesByDifficulty({ difficulty }) {
             <h2>{difficulty[0].toUpperCase() + difficulty.slice(1)} Puzzles</h2>
             <div id='pod-carousel' className="carousel">
                 {puzzles.map(puzzle => (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <h3 style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{puzzle.id} by {puzzle.user.username}</h3>
-                        <div onClick={() => history.push(`/wordgons/${puzzle.id}`)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <ListableBoxAndLetters letters={puzzle.letters} puzzleId={puzzle.id} />
+                    <div className='puzzle-card' onClick={() => history.push(`/wordgons/${puzzle.id}`)} >
+                        <div className='puzzle-title' style={{ backgroundColor: color_dict[difficulty] }}>Word-Gon #{puzzle.id}</div>
+                        <div style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <ListableBoxAndLetters letters={puzzle.letters} puzzleId={puzzle.id} difficulty={difficulty} />
+                            <span style={{ margin: '5px 0 0 0', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', width: '180px' }}>Puzzle made by {puzzle.user.username}</span>
+                            <DetailsByStatus puzzleId={puzzle.id} />
                         </div>
                     </div>
                 ))}

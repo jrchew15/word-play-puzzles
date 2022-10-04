@@ -1,9 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
 
-import { authenticate } from "../../store/session";
-import { thunkUpdateWordgonSession, thunkDeleteWordgonSession } from "../../store/wordgon";
 import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
@@ -13,69 +10,45 @@ import CommentsContainer from "../Comments/CommentsContainer";
 
 import './wordgon.css';
 
-export default function Puzzle() {
-    const dispatch = useDispatch()
+export default function UnregisteredPuzzle() {
     const puzzleId = useParams().wordgonId
+    const history = useHistory();
     const [puzzle, setPuzzle] = useState(null)
-    // const [connections, setConnections] = useState([])
+
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
-    // const [completed, setCompleted] = useState(false)
-    const [session, setSession] = useState(null)
+    const [completed, setCompleted] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
 
-    // const currentUser = useSelector(state => state.session.user)
-    const sessions = useSelector(state => state.wordgon)
-    const commentsRef = useRef(null)
+    const today_date = new Date();
 
+    console.log('UNREGISTERED')
     useEffect(() => {
         (async () => {
             let res = await fetch(`/api/wordgons/${puzzleId}`);
             let data = await res.json();
 
             if (res.ok) {
+                let puzzleDate = data.puzzleDay
+
+                let [year, month, day] = puzzleDate.split('-')
+                let isToday = day != today_date.getDate() || month != today_date.getMonth() + 1 || year != today_date.getFullYear();
+                if (isToday) {
+                    history.push('/')
+                }
+
                 setPuzzle(data)
                 return
             }
         })()
     }, [puzzleId])
 
-    // find session
-    useEffect(() => {
-        (async () => {
-            if (!puzzle) return
-            let foundSession
-            for (let key in sessions) {
-                if (sessions[key].puzzleId === +puzzleId) {
-                    foundSession = sessions[key]
-                }
-            }
-            if (foundSession) {
-                // set current session using sessions store
-                setSession(foundSession)
-            } else {
-                setShowModal(true)
-            }
-        })()
-    }, [puzzle, sessions, dispatch, puzzleId])
-
-    useEffect(() => {
-        if (session && session.guesses.length) {
-            setGuesses(session.guesses.split(','))
-            setCurrentGuess(session.guesses[session.guesses.length - 1])
-            return
-        }
-
-        setGuesses([])
-        setCurrentGuess('')
-    }, [session])
-
     // Submission of new guess happens in useEffect triggered by submitting boolean
     useEffect(() => {
         // break useEffect if running on initial render
         if (!submitting) {
-            if (session && session.completed) { setShowModal(true) }
+            if (completed) { /* Tell a user they won */ }
             return
         }
 
@@ -96,14 +69,9 @@ export default function Puzzle() {
                         break
                     }
                 }
-                // Update the user's session
-                await dispatch(thunkUpdateWordgonSession({
-                    puzzleId,
-                    sessionId: session.id,
-                    guesses: allGuesses,
-                    completed
-                }))
-                await dispatch(authenticate())
+                if (completed) setCompleted(true)
+                setGuesses(allGuesses)
+                setCurrentGuess(word => word[word.length - 1])
             }
             // Reset submitting status regardless of validity of word
             setSubmitting(false)
@@ -154,11 +122,8 @@ export default function Puzzle() {
     }
 
     async function deleteHandler(e) {
-        const data = await dispatch(thunkDeleteWordgonSession(puzzleId, session.id));
-        await dispatch(authenticate())
-        if (!data) {
-            setShowModal(true)
-        }
+        setGuesses([])
+        setCurrentGuess('')
     }
 
 
@@ -166,8 +131,8 @@ export default function Puzzle() {
     return (
         <>
             <div id='session-container'>
-                <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
-                {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />}
+                {/* <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
+                {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />} */}
                 <div id='guesses-container'>
                     <div>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
@@ -204,9 +169,9 @@ export default function Puzzle() {
                 </div>
                 <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
             </div >
-            <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
+            {/* <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
                 <CommentsContainer puzzleId={puzzleId} commentsRef={commentsRef} />
-            </div>
+            </div> */}
         </>
     )
 }

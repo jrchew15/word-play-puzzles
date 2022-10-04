@@ -12,6 +12,7 @@ def get_word(word):
     if len(word) <= 1:
         return ({'errors':['word must be more than one letter']}, 400)
 
+
     found = Word.query.filter(Word.word == word).first()
 
     if found:

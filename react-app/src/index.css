@@ -85,3 +85,62 @@ h3 {
     align-items: center;
     width: 80vw;
 }
+
+#splash-card-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 50vw;
+}
+
+.splash-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 2px solid black;
+    width: 220px;
+    border-radius: 15px;
+    background-color: rgb(255 255 255 / 64%);
+    z-index: 1;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.splash-card>h2 {
+    background-color: rgb(255 255 255 / 0%);
+}
+
+.splash-card>.auth-buttons {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.splash-card>.auth-buttons:hover {
+    background-color: rgb(253 181 21 / 64%);
+}
+
+#splash {
+    width: 100vw;
+    height: calc(80vh - var(--nav-height));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#splash-bkg {
+    position: absolute;
+    opacity: 0.2;
+    height: 88vh;
+}
+
+.splash-card-sep {
+    content: '';
+    height: 2px;
+    background-color: black;
+    width: 100%;
+}
