@@ -1,12 +1,34 @@
-:root {
-    --unit-length: 4em;
-    --circle-width: 4em;
-    --letter-box-length: 3em;
-    --puzzle-size: 9px;
+#puzzle-topbar {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    /* height: 50px; */
+    align-items: center;
+    padding: 0px 0 0 20px;
+}
+
+#puzzle-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #e2e2e2;
+    margin: 10px 5px 10px 0;
+}
+
+#restart-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
+    padding: 0 15px;
+}
+
+#restart-button:hover {
+    background-color: var(--highlight-color);
+    color: white;
 }
 
 #session-container {
-    background-color: turquoise;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -91,8 +113,8 @@
 #puzzle-container .letter.active-letter {
     font-weight: bolder;
     color: #fdb515;
-    text-shadow: -1px 1px 0 black, 1px 1px 0 black, 1px -1px 0 black,
-        -1px -1px 0 black;
+    text-shadow: -1.2px 1.2px 0 black, 1.2px 1.2px 0 black, 1.2px -1.2px 0 black,
+        -1.2px -1.2px 0 black;
     border-radius: 50%;
     background: center border-box radial-gradient(circle at center, gold);
 }
@@ -113,11 +135,16 @@
     display: flex;
     flex-direction: column;
     height: calc(50 * var(--puzzle-size));
+    margin-top: 80px;
     margin-left: 50px;
+    align-items: center;
 }
 
 #guess-form {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #guess-box {
@@ -130,4 +157,14 @@
     justify-content: center;
     text-align: center;
     border-bottom: 3px solid black;
+}
+
+#past-guesses {
+    margin-top: 10px;
+    font-size: 1.3em;
+}
+
+#attempts-box {
+    margin-top: 10px;
+    font-size: 0.9em;
 }

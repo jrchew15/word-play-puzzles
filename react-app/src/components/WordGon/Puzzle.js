@@ -167,15 +167,16 @@ export default function Puzzle() {
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                 <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
                 {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />}
-                <div id='puzzle-author'>
-                    <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
-                    Made By {puzzle.user.username}
-                    <button onClick={deleteHandler}>Start Over?</button>
+                <div id='puzzle-topbar'>
+                    <div id='puzzle-author'>
+                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />
+                        By {puzzle.user.username}
+                    </div>
+                    <div id='restart-button' onClick={deleteHandler}>Restart</div>
                 </div>
                 <div id='guesses-puzzles'>
                     <div id='guesses-container'>
-                        {/* {puzzle.numAttempts - guesses.length} words remaining */}
-                        <form id='guess-form' onSubmit={handleFormSubmit}>
+                        {!session?.completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
                             {/* <label htmlFor="guess">
                             Type a word:
                         </label> */}
@@ -183,24 +184,22 @@ export default function Puzzle() {
                                 style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}
                                 type="text"
                                 name="guess"
-                                value={currentGuess}
+                                value={currentGuess.toUpperCase()}
                                 onKeyDown={handleFormKeyDown}
-                                onChange={e => setCurrentGuess(e.target.value)}
+                                onChange={e => setCurrentGuess(e.target.value.toLowerCase())}
                                 autoComplete='off'
                                 id='guess-box'
                                 autoFocus
                             >
                             </input>
-                        </form>
+                            <div id='attempts-box'>
+                                Try to solve in {puzzle.numAttempts} words
+                            </div>
+                        </form> : <div> Your Words:</div>}
                         <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
-                        {
-                            guesses.map((word, idx) => (
-                                word.length > 0 && <div key={word}>
-                                    {word}
-                                </div>
-                            ))
-                        }
-
+                        <div id='past-guesses'>
+                            {guesses.map(x => x.toUpperCase()).join('-')}
+                        </div>
                     </div>
                     <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
                 </div>

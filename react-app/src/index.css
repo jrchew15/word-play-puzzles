@@ -3,6 +3,10 @@
     --body-font: helvetica, arial, sans-serif;
     --off-black: rgb(18, 18, 18);
     --highlight-color: #fdb515;
+    --unit-length: 4em;
+    --circle-width: 4em;
+    --letter-box-length: 3em;
+    --puzzle-size: 7.5px;
 }
 
 #root.dark {
