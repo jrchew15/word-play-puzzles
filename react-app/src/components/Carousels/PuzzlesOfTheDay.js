@@ -4,7 +4,7 @@ import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
 import { color_dict, puzzleDifficulty } from "../../utils/puzzleFunctions";
 import '../WordGon/wordgon-list.css';
 
-export default function PuzzlesOfTheDay() {
+export default function PuzzlesOfTheDay({ setLoaded }) {
     const [puzzles, setPuzzles] = useState([])
     const history = useHistory();
 
@@ -15,6 +15,7 @@ export default function PuzzlesOfTheDay() {
 
             if (res.ok) {
                 setPuzzles(data.puzzles)
+                setLoaded(true)
             }
         })()
     }, [setPuzzles])

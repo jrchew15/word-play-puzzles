@@ -8,6 +8,7 @@ import NavBar from './components/NavBar';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
+import Homepage from './Homepage';
 import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
 import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
 import { authenticate } from './store/session';
@@ -20,7 +21,8 @@ function App() {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
 
-  const [showDropdown, setShowDropdown] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false)
+  const [showDeveloperDropdown, setShowDeveloperDropdown] = useState(false)
 
   const currentUser = useSelector(state => state.session.user)
 
@@ -45,9 +47,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar showDropdown={showDropdown} setShowDropdown={setShowDropdown} />
+      <NavBar showUserDropdown={showUserDropdown} setShowUserDropdown={setShowUserDropdown} showDeveloperDropdown={showDeveloperDropdown} setShowDeveloperDropdown={setShowDeveloperDropdown} />
       <div id='nav-spacer' />
-      <div id='omni-container' onClick={() => setShowDropdown(false)}>
+      <div id='omni-container' onClick={() => { setShowUserDropdown(false); setShowDeveloperDropdown(false) }}>
         <Switch>
           <Route path='/login' exact={true}>
             <LoginPage />
@@ -65,12 +67,7 @@ function App() {
             }
           </Route>
           <ProtectedRoute path='/' exact={true} >
-            {currentUser?.id ? <>
-              <PuzzlesOfTheDay />
-              <PuzzlesByDifficulty difficulty={'easy'} />
-              <PuzzlesByDifficulty difficulty={'medium'} />
-              <PuzzlesByDifficulty difficulty={'hard'} />
-            </> : <Redirect to='/welcome' />
+            {currentUser?.id ? <Homepage /> : <Redirect to='/welcome' />
             }
           </ProtectedRoute>
           <Route path='/welcome' exact>

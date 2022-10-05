@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
 import { color_dict } from '../../utils/puzzleFunctions';
 
-export default function PuzzlesByDifficulty({ difficulty }) {
+export default function PuzzlesByDifficulty({ difficulty, loaded, setLoaded }) {
     const [puzzles, setPuzzles] = useState([]);
     const history = useHistory();
 
@@ -14,6 +14,7 @@ export default function PuzzlesByDifficulty({ difficulty }) {
 
             if (res.ok) {
                 setPuzzles(data.puzzles)
+                setLoaded(true)
             }
         })()
     }, [setPuzzles])
