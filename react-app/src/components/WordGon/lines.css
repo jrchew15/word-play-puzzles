@@ -1,0 +1,12 @@
+.letter-line {
+    content: '';
+    position: absolute;
+    height: 1em;
+    background-color: black;
+    width: 50em;
+    transform-origin: left;
+}
+
+#puzzle-square {
+    overflow: hidden;
+}

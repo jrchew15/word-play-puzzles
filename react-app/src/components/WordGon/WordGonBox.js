@@ -3,6 +3,10 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { color_dict } from "../../utils/puzzleFunctions";
 
+import LetterLine from "./LetterLine";
+
+import './lines.css';
+
 export function BoxAndLetters({ letters, guesses, currentGuess }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
 
@@ -28,7 +32,9 @@ export function BoxAndLetters({ letters, guesses, currentGuess }) {
                         <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} />
                     </>
                 ))}
-                <div id='puzzle-square' />
+                <div id='puzzle-square'>
+                    {currentGuess.length > 1 && <LetterLine letters={letters} twoLetters={currentGuess.slice(currentGuess.length - 2)} />}
+                </div>
             </div>
         </>
     )
