@@ -14,8 +14,8 @@ seed_commands = AppGroup('seed')
 def seed():
     seed_users()
     seed_words()
-    puzzles_of_the_day()
     seed_wordgons()
+    puzzles_of_the_day()
     seed_comments()
     # Add other seed functions here
 

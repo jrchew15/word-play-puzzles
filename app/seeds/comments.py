@@ -5,7 +5,7 @@ def seed_comments():
     db.session.add(comment1)
     db.session.commit()
 
-    comment2 = Comment(puzzle_id=1, user_id=1, body='This comment shouldnt exist since puzzle is not complete', reply_to=1)
+    comment2 = Comment(puzzle_id=1, user_id=1, body='Nice Job!', reply_to=1)
     db.session.add(comment2)
     db.session.commit()
 
