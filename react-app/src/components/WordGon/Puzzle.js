@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -18,17 +18,16 @@ export default function Puzzle() {
     const dispatch = useDispatch()
     const puzzleId = useParams().wordgonId
     const [puzzle, setPuzzle] = useState(null)
-    // const [connections, setConnections] = useState([])
+
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
-    // const [completed, setCompleted] = useState(false)
+
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+    const [showComments, setShowComments] = useState(false)
 
-    // const currentUser = useSelector(state => state.session.user)
     const sessions = useSelector(state => state.wordgon)
-    const commentsRef = useRef(null)
 
     useEffect(() => {
         (async () => {
@@ -64,7 +63,7 @@ export default function Puzzle() {
     useEffect(() => {
         if (session && session.guesses.length) {
             setGuesses(session.guesses.split(','))
-            session.completed ? setCurrentGuess('') : setCurrentGuess(session.guesses[session.guesses.length - 1])
+            session.completed ? setCurrentGuess('') && setShowComments(true) : setCurrentGuess(session.guesses[session.guesses.length - 1])
             return
         }
 
@@ -76,7 +75,7 @@ export default function Puzzle() {
     useEffect(() => {
         // break useEffect if running on initial render
         if (!submitting) {
-            if (session && session.completed) { setShowModal(true) }
+            if (session && session.completed) { setShowModal(true); setShowComments(true) }
             return
         }
 
@@ -165,8 +164,9 @@ export default function Puzzle() {
     return (
         <>
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
-                <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
-                {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />}
+                {session && session.completed ?
+                    <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />
+                    : <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />}
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />
@@ -203,9 +203,9 @@ export default function Puzzle() {
                     </div>
                     <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
                 </div>
-                <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
-                    <CommentsContainer puzzleId={puzzleId} commentsRef={commentsRef} />
-                </div>
+                {/* <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}> */}
+                <CommentsContainer puzzleId={puzzleId} setShowComments={setShowComments} showComments={showComments} />
+                {/* </div> */}
             </div >
         </>
     )

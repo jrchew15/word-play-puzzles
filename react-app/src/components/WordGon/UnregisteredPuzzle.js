@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-
+import { color_dict, puzzleDifficulty } from "../../utils/puzzleFunctions";
 import { checkWordsTable } from "../../utils/wordChecks";
 import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
 import CompleteModal from "./CompletedModal";
-import CommentsContainer from "../Comments/CommentsContainer";
+import './puzzle-modal.css'
 
 import './wordgon.css';
 
@@ -48,7 +48,7 @@ export default function UnregisteredPuzzle() {
     useEffect(() => {
         // break useEffect if running on initial render
         if (!submitting) {
-            if (completed) { /* Tell a user they won */ }
+            if (completed) { setShowModal(true) }
             return
         }
 
@@ -130,48 +130,45 @@ export default function UnregisteredPuzzle() {
 
     return (
         <>
-            <div id='session-container'>
-                {/* <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
-                {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />} */}
-                <div id='guesses-container'>
-                    <div>
-                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
-                        Made By {puzzle.user.username}
-                        <div>
-                            {puzzle.numAttempts - guesses.length} words remaining
+            <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
+                <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
+                <div id='puzzle-topbar'>
+                    <div id='puzzle-author'>
+                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />
+                        By {puzzle.user.username}
+                    </div>
+                    <div id='restart-button' onClick={deleteHandler}>Restart</div>
+                </div>
+                <div id='guesses-puzzles'>
+                    <div id='guesses-container'>
+                        {!completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
+                            {/* <label htmlFor="guess">
+                            Type a word:
+                        </label> */}
+                            <input
+                                style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}
+                                type="text"
+                                name="guess"
+                                value={currentGuess.toUpperCase()}
+                                onKeyDown={handleFormKeyDown}
+                                onChange={e => setCurrentGuess(e.target.value.toLowerCase())}
+                                autoComplete='off'
+                                id='guess-box'
+                                autoFocus
+                            >
+                            </input>
+                            <div id='attempts-box'>
+                                Try to solve in {puzzle.numAttempts} words
+                            </div>
+                        </form> : <div> Your Words:</div>}
+                        <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
+                        <div id='past-guesses'>
+                            {guesses.map(x => x.toUpperCase()).join('-')}
                         </div>
                     </div>
-                    <form onSubmit={handleFormSubmit}>
-                        <label htmlFor="guess">
-                            Type a word:
-                        </label>
-                        <input
-                            type="text"
-                            name="guess"
-                            value={currentGuess}
-                            onKeyDown={handleFormKeyDown}
-                            onChange={e => setCurrentGuess(e.target.value)}
-                            autoComplete='off'
-                            id='guess-box'
-                            autoFocus
-                        >
-                        </input>
-                    </form>
-                    <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
-                    {
-                        guesses.map((word, idx) => (
-                            word.length > 0 && <div key={word}>
-                                {word}
-                            </div>
-                        ))
-                    }
-                    <button onClick={deleteHandler}>Start Over?</button>
+                    <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
                 </div>
-                <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
             </div >
-            {/* <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
-                <CommentsContainer puzzleId={puzzleId} commentsRef={commentsRef} />
-            </div> */}
         </>
     )
 }

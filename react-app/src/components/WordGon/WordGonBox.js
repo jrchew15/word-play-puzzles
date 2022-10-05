@@ -83,7 +83,7 @@ export function DetailsByStatus({ puzzleId }) {
 
     if (session.completed) {
         return <button className="list-button" onClick={PuzzleRedirect}>
-            See Comments or Retry
+            Play Again
         </button>
     }
     return <button className="list-button" onClick={PuzzleRedirect}>
