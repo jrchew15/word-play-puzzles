@@ -12,24 +12,24 @@ from datetime import date, datetime, timedelta
 wordgon_routes = Blueprint('wordgon',__name__)
 
 
-@wordgon_routes.route('',methods=['POST'])
-@login_required
-def dev_create_wordgon():
-    form = WordGonForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
+# @wordgon_routes.route('',methods=['POST'])
+# @login_required
+# def dev_create_wordgon():
+#     form = WordGonForm()
+#     form['csrf_token'].data = request.cookies['csrf_token']
 
-    if form.validate_on_submit():
-        data = form.data
-        puzzle = WordGon(
-            letters=data['letters'],
-            user_id=data['userId'],
-            shape=data['shape'],
-            num_attempts=data['num_attempts'],
-            puzzle_day=date(*data['puzzleDay'].split(','))
-            )
-        db.session.add(puzzle)
-        db.session.commit()
-    return {'errors': validation_errors_to_error_messages(form.errors)}, 401
+#     if form.validate_on_submit():
+#         data = form.data
+#         puzzle = WordGon(
+#             letters=data['letters'],
+#             user_id=data['userId'],
+#             shape=data['shape'],
+#             num_attempts=data['num_attempts'],
+#             puzzle_day=date(*data['puzzleDay'].split(','))
+#             )
+#         db.session.add(puzzle)
+#         db.session.commit()
+#     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
 
 # @wordgon_routes.route('')
 # def all_wordgons():

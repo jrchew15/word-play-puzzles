@@ -3,7 +3,13 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { color_dict } from "../../utils/puzzleFunctions";
 
-export function BoxAndLetters({ letters, guesses, currentGuess }) {
+import LineMaker from "./LineMaker";
+
+import './lines.css';
+import './gridareas.css';
+import './wordgon.css';
+
+export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
 
     function usedLetter(char) {
@@ -20,17 +26,17 @@ export function BoxAndLetters({ letters, guesses, currentGuess }) {
     }
 
     return (
-        <>
-            <div id='puzzle-container'>
-                {letters.split('').map((x, idx) => (
-                    <>
-                        <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
-                        <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} />
-                    </>
-                ))}
-                <div id='puzzle-square' />
+        <div id='puzzle-container'>
+            {letters.split('').map((x, idx) => (
+                <>
+                    <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
+                    <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} style={{ backgroundColor: usedLetter(x) ? backgroundColor : 'white' }} />
+                </>
+            ))}
+            <div id='puzzle-square'>
+                <LineMaker allLetters={letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={backgroundColor} />
             </div>
-        </>
+        </div>
     )
 }
 
@@ -62,13 +68,20 @@ export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
 export function DetailsByStatus({ puzzleId }) {
     const wordgons = useSelector(state => state.wordgon);
     const history = useHistory()
-    const status = wordgons[puzzleId]?.completed
-    if (status === undefined || status === null) {
+
+    const [session, setSession] = useState(null);
+
+    useEffect(() => {
+        setSession(Object.values(wordgons).find(ele => ele.puzzleId == puzzleId));
+    }, [])
+
+    if (!session) {
         return <button className="list-button" onClick={PuzzleRedirect}>
             Start
         </button>
     }
-    if (status === 'complete') {
+
+    if (session.completed) {
         return <button className="list-button" onClick={PuzzleRedirect}>
             See Comments or Retry
         </button>
