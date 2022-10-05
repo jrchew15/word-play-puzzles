@@ -48,7 +48,10 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
 
     function handleCommentSubmit(e) {
         e.preventDefault();
-
+        if (!commentBody) {
+            setShowCommentForm(false)
+            return
+        }
         submitComment(commentBody)
     }
 

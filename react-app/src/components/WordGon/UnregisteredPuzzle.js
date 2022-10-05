@@ -137,6 +137,7 @@ export default function UnregisteredPuzzle() {
         <>
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                 <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
+
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />

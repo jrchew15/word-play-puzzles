@@ -34,13 +34,13 @@ def image_extensions(form, field):
 
 class SignUpForm(FlaskForm):
     username = StringField(
-        'username', validators=[DataRequired(), username_exists])
-    email = StringField('email', validators=[DataRequired(), Email(), email_exists])
-    password = StringField('password', validators=[DataRequired(), Length(min=6, message='Password must be at least 6 characters long')])
+        'username', validators=[DataRequired(message='Username is required'), username_exists])
+    email = StringField('email', validators=[DataRequired(message='Email is required'), Email(), email_exists])
+    password = StringField('password', validators=[DataRequired(message='Password is required'), Length(min=6, message='Password must be at least 6 characters long')])
     profilePicture = StringField('profile_picture', validators=[image_extensions])
 
 class EditUserForm(FlaskForm):
     username = StringField(
-        'username', validators=[DataRequired()])
+        'username', validators=[DataRequired(message='Username is required')])
     email = StringField('email', validators=[DataRequired(), Email(message='Invalid Email')])
     profilePicture = StringField('profile_picture', validators=[image_extensions])
