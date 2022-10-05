@@ -9,13 +9,13 @@ export default function UserDropdown({ showDropdown, setShowDropdown, setShowMod
 
     return (currentUser?.id ?
         <ul id='user-dropdown' className="unselectable">
-            <li onClick={() => {setShowModal(true);closeDropdowns()}}>My Profile</li>
+            <li onClick={() => { setShowModal(true); closeDropdowns() }}>My Profile</li>
             <div className="navbar-sep" />
             <li id='puzzle-select'>
-                {currentUser.openSessions.length < 1 ? (<span onClick={()=>{closeDropdowns()}}>Start a Puzzle</span>) :
+                {currentUser.openSessions.length < 1 ? (<span onClick={() => { closeDropdowns() }}>Start a Puzzle</span>) :
                     (<>Open Puzzles
                         {currentUser.openSessions.map(sesh => (
-                            <span onClick={()=>{closeDropdowns()}}>
+                            <span onClick={() => { closeDropdowns() }}>
                                 <NavLink to={`/wordgons/${wordgons[sesh].puzzleId}`} >
                                     {wordgons[sesh].puzzleId}</NavLink>
                             </span>
@@ -23,9 +23,7 @@ export default function UserDropdown({ showDropdown, setShowDropdown, setShowMod
                 }
             </li>
             <div className="navbar-sep" />
-            <li onClick={()=>{closeDropdowns()}}>
-                <LogoutButton />
-            </li>
+            <LogoutButton closeDropdowns={closeDropdowns} />
         </ul >
         : null)
 }
