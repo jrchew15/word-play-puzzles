@@ -7,25 +7,30 @@ import User from './User';
 
 import './nav.css'
 
-const NavBar = ({ showDropdown, setShowDropdown }) => {
+const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, setShowDeveloperDropdown }) => {
   const currentUser = useSelector(state => state.session.user)
   const history = useHistory()
 
   const [imageSrc, setImageSrc] = useState('/static/images/icon_1-cropped.svg')
-  const [whichDropdown, setWhichDropdown] = useState('')
+
   const [showModal, setShowModal] = useState(false)
 
   function userDropdownToggle(e) {
-    e.stopPropagation();
+    // e.stopPropagation();
 
-    setWhichDropdown('user')
-    setShowDropdown(x => !x)
+    setShowUserDropdown(x => !x)
+    setShowDeveloperDropdown(false)
   }
   function developerDropdownToggle(e) {
-    e.stopPropagation();
+    // e.stopPropagation();
 
-    setWhichDropdown('developer')
-    setShowDropdown(x => !x)
+    setShowDeveloperDropdown(x => !x)
+    setShowUserDropdown(false)
+  }
+
+  function closeDropdowns() {
+    setShowDeveloperDropdown(false)
+    setShowUserDropdown(false)
   }
 
   return (<>
@@ -33,18 +38,18 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
       <div id='left-nav'>
         {currentUser?.id > 0 &&
           <div id='dropdown-selector' onClick={userDropdownToggle} >
-            {(showDropdown && whichDropdown === 'user') ? <i className="fas fa-times" /> : <i className="fas fa-bars" />}
+            {(showUserDropdown) ? <i className="fas fa-times" /> : <i className="fas fa-bars" />}
           </div>}
-        {(showDropdown && whichDropdown === 'user') && <UserDropdown showDropdown={showDropdown} setShowDropdown={setShowDropdown} setShowModal={setShowModal} />}
+        {(showUserDropdown) && <UserDropdown showDropdown={showUserDropdown} setShowDropdown={setShowUserDropdown} setShowModal={setShowModal} closeDropdowns={closeDropdowns} />}
         <img src={imageSrc} alt='logo' className='logo'
           onMouseEnter={() => setImageSrc('/static/images/icon_2-cropped.svg')}
           onMouseLeave={() => setImageSrc('/static/images/icon_1-cropped.svg')}
-          onClick={() => { history.push('/') }}
+          onClick={() => { history.push('/'); closeDropdowns() }}
         />
       </div>
       <div id='right-nav' onClick={developerDropdownToggle}>
         <span >About the Developer</span>
-        {(showDropdown && whichDropdown === 'developer') && <ul id='developer-dropdown'>
+        {(showDeveloperDropdown) && <ul id='developer-dropdown' onClick={() => setShowDeveloperDropdown(false)}>
           <li onClick={() => history.push('/')}>
             Project Github
             <img src='/static/images/icon_square.svg' alt='project_github' />
@@ -60,7 +65,7 @@ const NavBar = ({ showDropdown, setShowDropdown }) => {
         </ul>}
       </div>
     </nav>
-    {showModal && <Modal onClose={() => setShowModal(false)}>
+    {showModal && currentUser && <Modal onClose={() => setShowModal(false)}>
       <User userId={currentUser.id} setShowModal={setShowModal} />
     </Modal>}
   </>);
