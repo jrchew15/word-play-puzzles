@@ -20,6 +20,7 @@ export default function UnregisteredPuzzle() {
     const [completed, setCompleted] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+    const [showInvalidWord, setShowInvalidWord] = useState(false)
 
     const today_date = new Date();
 
@@ -72,7 +73,11 @@ export default function UnregisteredPuzzle() {
                 if (completed) setCompleted(true)
                 setGuesses(allGuesses)
                 setCurrentGuess(word => word[word.length - 1])
+            } else {
+                setShowInvalidWord(true)
+                setTimeout(() => { setShowInvalidWord(false) }, 2500)
             }
+
             // Reset submitting status regardless of validity of word
             setSubmitting(false)
         })()
@@ -141,10 +146,8 @@ export default function UnregisteredPuzzle() {
                 </div>
                 <div id='guesses-puzzles'>
                     <div id='guesses-container'>
+                        {showInvalidWord && <div id='invalid-word'>Not a valid word...</div>}
                         {!completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
-                            {/* <label htmlFor="guess">
-                            Type a word:
-                        </label> */}
                             <input
                                 style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}
                                 type="text"

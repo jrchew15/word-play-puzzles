@@ -21,6 +21,7 @@ export default function Puzzle() {
 
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
+    const [showInvalidWord, setShowInvalidWord] = useState(false)
 
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
@@ -104,6 +105,9 @@ export default function Puzzle() {
                     completed
                 }))
                 await dispatch(authenticate())
+            } else {
+                setShowInvalidWord(true)
+                setTimeout(() => { setShowInvalidWord(false) }, 3000)
             }
             // Reset submitting status regardless of validity of word
             setSubmitting(false)
@@ -158,6 +162,7 @@ export default function Puzzle() {
         await dispatch(authenticate())
         if (!data) {
             setShowModal(true)
+            setSession(null)
         }
     }
 
@@ -176,10 +181,8 @@ export default function Puzzle() {
                 </div>
                 <div id='guesses-puzzles'>
                     <div id='guesses-container'>
+                        {showInvalidWord && <div id='invalid-word'>Not a valid word...</div>}
                         {!session?.completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
-                            {/* <label htmlFor="guess">
-                            Type a word:
-                        </label> */}
                             <input
                                 style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}
                                 type="text"
@@ -195,6 +198,7 @@ export default function Puzzle() {
                             <div id='attempts-box'>
                                 Try to solve in {puzzle.numAttempts} words
                             </div>
+
                         </form> : <div> Your Words:</div>}
                         <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
                         <div id='past-guesses'>

@@ -12,7 +12,7 @@ export default function UserDropdown({ showDropdown, setShowDropdown, setShowMod
             <li onClick={() => { setShowModal(true); closeDropdowns() }}>My Profile</li>
             <div className="navbar-sep" />
             <li id='puzzle-select'>
-                {currentUser.openSessions.length < 1 ? (<span onClick={() => { closeDropdowns() }}>Start a Puzzle</span>) :
+                {currentUser.openSessions.length < 1 ? <span>No Open Puzzles</span> :
                     (<>Open Puzzles
                         {currentUser.openSessions.map(sesh => (
                             <span onClick={() => { closeDropdowns() }}>
