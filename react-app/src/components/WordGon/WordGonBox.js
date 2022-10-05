@@ -3,11 +3,13 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { color_dict } from "../../utils/puzzleFunctions";
 
-import LetterLine from "./LetterLine";
+import LineMaker from "./LineMaker";
 
 import './lines.css';
+import './gridareas.css';
+import './wordgon.css';
 
-export function BoxAndLetters({ letters, guesses, currentGuess }) {
+export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
 
     function usedLetter(char) {
@@ -24,19 +26,17 @@ export function BoxAndLetters({ letters, guesses, currentGuess }) {
     }
 
     return (
-        <>
-            <div id='puzzle-container'>
-                {letters.split('').map((x, idx) => (
-                    <>
-                        <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
-                        <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} />
-                    </>
-                ))}
-                <div id='puzzle-square'>
-                    {currentGuess.length > 1 && <LetterLine letters={letters} twoLetters={currentGuess.slice(currentGuess.length - 2)} />}
-                </div>
+        <div id='puzzle-container'>
+            {letters.split('').map((x, idx) => (
+                <>
+                    <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
+                    <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} style={{ backgroundColor: usedLetter(x) ? backgroundColor : 'white' }} />
+                </>
+            ))}
+            <div id='puzzle-square'>
+                <LineMaker allLetters={letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={backgroundColor} />
             </div>
-        </>
+        </div>
     )
 }
 

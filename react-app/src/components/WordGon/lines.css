@@ -4,7 +4,7 @@
     height: 1em;
     background-color: black;
     width: 50em;
-    transform-origin: left;
+    transform-origin: center left;
 }
 
 #puzzle-square {

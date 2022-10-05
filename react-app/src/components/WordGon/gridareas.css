@@ -1,0 +1,95 @@
+span.u1 {
+    grid-area: u1
+}
+
+span.u2 {
+    grid-area: u2
+}
+
+span.u3 {
+    grid-area: u3
+}
+
+span.d1 {
+    grid-area: d1
+}
+
+span.d2 {
+    grid-area: d2
+}
+
+span.d3 {
+    grid-area: d3
+}
+
+span.l1 {
+    grid-area: l1
+}
+
+span.l2 {
+    grid-area: l2
+}
+
+span.l3 {
+    grid-area: l3
+}
+
+span.r1 {
+    grid-area: r1
+}
+
+span.r2 {
+    grid-area: r2
+}
+
+span.r3 {
+    grid-area: r3
+}
+
+div.u1 {
+    grid-area: du1
+}
+
+div.u2 {
+    grid-area: du2
+}
+
+div.u3 {
+    grid-area: du3
+}
+
+div.d1 {
+    grid-area: dd1
+}
+
+div.d2 {
+    grid-area: dd2
+}
+
+div.d3 {
+    grid-area: dd3
+}
+
+div.l1 {
+    grid-area: dl1
+}
+
+div.l2 {
+    grid-area: dl2
+}
+
+div.l3 {
+    grid-area: dl3
+}
+
+div.r1 {
+    grid-area: dr1
+}
+
+div.r2 {
+    grid-area: dr2
+}
+
+div.r3 {
+    grid-area: dr3
+}

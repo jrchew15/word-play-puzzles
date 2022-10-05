@@ -64,7 +64,7 @@ export default function Puzzle() {
     useEffect(() => {
         if (session && session.guesses.length) {
             setGuesses(session.guesses.split(','))
-            setCurrentGuess(session.guesses[session.guesses.length - 1])
+            session.completed ? setCurrentGuess('') : setCurrentGuess(session.guesses[session.guesses.length - 1])
             return
         }
 
@@ -167,47 +167,47 @@ export default function Puzzle() {
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                 <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
                 {session && <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} commentsRef={commentsRef} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />}
-                <div id='guesses-container'>
-                    <div>
-                        <div id='puzzle-author'>
-                            <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
-                            Made By {puzzle.user.username}
-                            <div>
-                            </div>
-                        </div>
-                        {puzzle.numAttempts - guesses.length} words remaining
-                    </div>
-                    <form onSubmit={handleFormSubmit}>
-                        <label htmlFor="guess">
-                            Type a word:
-                        </label>
-                        <input
-                            type="text"
-                            name="guess"
-                            value={currentGuess}
-                            onKeyDown={handleFormKeyDown}
-                            onChange={e => setCurrentGuess(e.target.value)}
-                            autoComplete='off'
-                            id='guess-box'
-                            autoFocus
-                        >
-                        </input>
-                    </form>
-                    <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
-                    {
-                        guesses.map((word, idx) => (
-                            word.length > 0 && <div key={word}>
-                                {word}
-                            </div>
-                        ))
-                    }
+                <div id='puzzle-author'>
+                    <img src={puzzle.user.profilePicture} alt={puzzle.user.username} style={{ width: 50, height: 50, borderRadius: '50%' }} />
+                    Made By {puzzle.user.username}
                     <button onClick={deleteHandler}>Start Over?</button>
                 </div>
-                <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} />
+                <div id='guesses-puzzles'>
+                    <div id='guesses-container'>
+                        {/* {puzzle.numAttempts - guesses.length} words remaining */}
+                        <form id='guess-form' onSubmit={handleFormSubmit}>
+                            {/* <label htmlFor="guess">
+                            Type a word:
+                        </label> */}
+                            <input
+                                style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}
+                                type="text"
+                                name="guess"
+                                value={currentGuess}
+                                onKeyDown={handleFormKeyDown}
+                                onChange={e => setCurrentGuess(e.target.value)}
+                                autoComplete='off'
+                                id='guess-box'
+                                autoFocus
+                            >
+                            </input>
+                        </form>
+                        <div style={{ display: submitting ? 'flex' : 'none' }}> Submitting ...</div>
+                        {
+                            guesses.map((word, idx) => (
+                                word.length > 0 && <div key={word}>
+                                    {word}
+                                </div>
+                            ))
+                        }
+
+                    </div>
+                    <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
+                </div>
+                <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
+                    <CommentsContainer puzzleId={puzzleId} commentsRef={commentsRef} />
+                </div>
             </div >
-            <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}>
-                <CommentsContainer puzzleId={puzzleId} commentsRef={commentsRef} />
-            </div>
         </>
     )
 }

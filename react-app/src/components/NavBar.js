@@ -47,27 +47,30 @@ const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, 
           onClick={() => { history.push('/'); closeDropdowns() }}
         />
       </div>
+      <div onClick={closeDropdowns} style={{ flexGrow: '1', height: '100%' }} />
       <div id='right-nav' onClick={developerDropdownToggle}>
         <span >About the Developer</span>
         {(showDeveloperDropdown) && <ul id='developer-dropdown' onClick={() => setShowDeveloperDropdown(false)}>
-          <li onClick={() => history.push('/')}>
+          <a href='https://github.com/jrchew15/word-play-puzzles/' target='_blank'>
             Project Github
             <img src='/static/images/icon_square.svg' alt='project_github' />
-          </li>
-          <li onClick={() => history.push('https://github.com/jrchew15')}>
+          </a>
+          <a href='https://github.com/jrchew15' target='_blank'>
             Dev Github
             <img src='/static/images/GitHub-Mark-64px.png' alt='github' />
-          </li>
-          <li onClick={() => history.push('https://www.linkedin.com/in/jason-chew-20867a207/')}>
+          </a>
+          <a href='https://www.linkedin.com/in/jason-chew-20867a207/' target='_blank'>
             Dev LinkedIn
             <img src='https://cdn-icons-png.flaticon.com/512/49/49408.png' alt='linkedin' />
-          </li>
+          </a>
         </ul>}
       </div>
     </nav>
-    {showModal && currentUser && <Modal onClose={() => setShowModal(false)}>
-      <User userId={currentUser.id} setShowModal={setShowModal} />
-    </Modal>}
+    {
+      showModal && currentUser && <Modal onClose={() => setShowModal(false)}>
+        <User userId={currentUser.id} setShowModal={setShowModal} />
+      </Modal>
+    }
   </>);
 }
 
