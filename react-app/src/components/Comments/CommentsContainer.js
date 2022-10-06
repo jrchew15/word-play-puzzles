@@ -166,7 +166,9 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                     }
                     )
                 }
-                <button onClick={() => { setShowCommentForm(true); setReplyingTo(null) }} style={{ display: showCommentForm ? 'none' : 'block', marginBottom: '30px' }}>Add Comment</button>
+                <span>
+                    <button onClick={() => { setShowCommentForm(true); setReplyingTo(null) }} style={{ display: showCommentForm ? 'none' : 'block', marginBottom: '30px' }}>Add Comment</button>
+                </span>
                 {
                     showCommentForm && !replyingTo && !editCommentId && <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} style={{ width: '50%' }}>
                         <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} onKeyDown={checkLength} placeholder='Press Enter to Submit' />
