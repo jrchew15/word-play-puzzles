@@ -11,7 +11,7 @@ export default function LineMaker({ allLetters, guesses, currentGuess, backgroun
                 <LetterLine twoIndices={[lettersObj[guess[letterIdx]], lettersObj[guess[letterIdx + 1]]]} backgroundColor={backgroundColor + '70'} />
             ))
         })}
-        {currentGuess.split('').slice(1).map((char, letterIdx) => (
+        {currentGuess && currentGuess.split('').slice(1).map((char, letterIdx) => (
             <LetterLine twoIndices={[lettersObj[currentGuess[letterIdx]], lettersObj[currentGuess[letterIdx + 1]]]} backgroundColor={backgroundColor} />
         )
         )}
