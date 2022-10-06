@@ -10,7 +10,7 @@ export default function Homepage() {
 
     const allLoaded = loaded1 && loaded2 && loaded3 && loaded4
 
-    return <div style={allLoaded ? {} : { display: 'none' }}>
+    return <div id='homepage-loader' style={allLoaded ? {} : { display: 'none', }}>
         <PuzzlesOfTheDay loaded={loaded1} setLoaded={setLoaded1} />
         <PuzzlesByDifficulty difficulty={'easy'} loaded={loaded2} setLoaded={setLoaded2} />
         <PuzzlesByDifficulty difficulty={'medium'} loaded={loaded3} setLoaded={setLoaded3} />
