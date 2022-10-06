@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
-import { color_dict, puzzleDifficulty } from "../../utils/puzzleFunctions";
+import { color_dict, puzzleDifficulty, dbDateToDateObj } from "../../utils/puzzleFunctions";
 import '../WordGon/wordgon-list.css';
 
 export default function PuzzlesOfTheDay({ setLoaded }) {
     const [puzzles, setPuzzles] = useState([])
     const history = useHistory();
+    const now = new Date();
 
     useEffect(() => {
         (async () => {
@@ -14,7 +15,9 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
             const data = await res.json()
 
             if (res.ok) {
-                setPuzzles(data.puzzles)
+                let pastPuzzles = data.puzzles.filter(puzzle => dbDateToDateObj(puzzle.puzzleDay) < now)
+                console.log(dbDateToDateObj(data.puzzles[0].puzzleDay), now, dbDateToDateObj(data.puzzles[0].puzzleDay) < now)
+                setPuzzles(pastPuzzles)
                 setLoaded(true)
             }
         })()

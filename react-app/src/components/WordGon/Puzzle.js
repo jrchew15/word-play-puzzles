@@ -9,6 +9,7 @@ import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
 import CompleteModal from "./CompletedModal";
+import FailModal from "./FailModal";
 import CommentsContainer from "../Comments/CommentsContainer";
 import { color_dict, puzzleDifficulty } from '../../utils/puzzleFunctions';
 
@@ -25,6 +26,7 @@ export default function Puzzle() {
 
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
+    const [showFailModal, setShowFailModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [showComments, setShowComments] = useState(false)
 
@@ -97,6 +99,12 @@ export default function Puzzle() {
                         break
                     }
                 }
+
+                if (!completed && allGuesses.length >= puzzle.numAttempts) {
+                    setShowFailModal(true)
+                    setSubmitting(false)
+                    return
+                }
                 // Update the user's session
                 await dispatch(thunkUpdateWordgonSession({
                     puzzleId,
@@ -105,6 +113,7 @@ export default function Puzzle() {
                     completed
                 }))
                 await dispatch(authenticate())
+
             } else {
                 setShowInvalidWord(true)
                 setTimeout(() => { setShowInvalidWord(false) }, 3000)
@@ -172,6 +181,7 @@ export default function Puzzle() {
                 {session && session.completed ?
                     <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />
                     : <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />}
+                <FailModal guesses={guesses} setCurrentGuess={setCurrentGuess} showModal={showFailModal} setShowModal={setShowFailModal} deleteHandler={deleteHandler} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />

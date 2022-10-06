@@ -35,3 +35,8 @@ export function puzzleDifficulty(puzzle) {
             return 'medium'
     }
 }
+
+export function dbDateToDateObj(db_date) {
+    let arr = db_date.split('-')
+    return new Date(arr[0], +arr[1] - 1, arr[2])
+}

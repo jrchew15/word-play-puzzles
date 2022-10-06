@@ -35,6 +35,12 @@ wordgon_routes = Blueprint('wordgon',__name__)
 # def all_wordgons():
 #     puzzles = WordGon.query.all()
 #     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
+@wordgon_routes.route('/by_date/<req_date>')
+def get_puzzle_by_date(req_date):
+
+    puzzle = WordGon.query.filter(WordGon.puzzle_day == date(*[int(x) for x in req_date.split('-')])).one()
+
+    return puzzle.to_dict()
 
 @wordgon_routes.route('/puzzles_of_the_day')
 def get_puzzles_of_the_day():
