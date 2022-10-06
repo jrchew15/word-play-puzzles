@@ -42,9 +42,18 @@ export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor 
 
 export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
-    const history = useHistory()
+    const history = useHistory();
+    let showLines = false;
+    let session = null;
 
     const wordgons = useSelector(state => state.wordgon)
+    for (let sessionId in wordgons) {
+        if (wordgons[sessionId].puzzleId === puzzleId) {
+            showLines = true;
+            session = wordgons[sessionId]
+            break
+        }
+    }
 
     return (
         <>
@@ -55,7 +64,9 @@ export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
                         <div className={letterClasses[idx] + ' circle'} key={'circle' + x + idx} />
                     </>
                 ))}
-                <div id='puzzle-square' />
+                <div id='puzzle-square' >
+                    {showLines && <LineMaker allLetters={letters} guesses={session.guesses.split(',')} currentGuess={''} backgroundColor={color_dict[difficulty]} />}
+                </div>
             </div>
         </>
     )
