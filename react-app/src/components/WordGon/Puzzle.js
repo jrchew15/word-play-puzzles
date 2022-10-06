@@ -30,10 +30,12 @@ export default function Puzzle() {
     const [showFailModal, setShowFailModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [showComments, setShowComments] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     const sessions = useSelector(state => state.wordgon)
 
     useEffect(() => {
+        setIsLoaded(false);
         (async () => {
             let res = await fetch(`/api/wordgons/${puzzleId}`);
             let data = await res.json();
@@ -62,6 +64,7 @@ export default function Puzzle() {
             } else {
                 setShowModal(true)
             }
+            setIsLoaded(true)
         })()
     }, [puzzle, sessions, dispatch, puzzleId])
 
@@ -191,7 +194,7 @@ export default function Puzzle() {
                     </div>
                     <div id='restart-button' onClick={deleteHandler}>Restart</div>
                 </div>
-                <div id='guesses-puzzles'>
+                {isLoaded && <div id='guesses-puzzles'>
                     <div id='guesses-container'>
                         {showInvalidWord && <div id='invalid-word'>Not a valid word...</div>}
                         {!session?.completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
@@ -218,7 +221,7 @@ export default function Puzzle() {
                         </div>
                     </div>
                     <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
-                </div>
+                </div>}
                 {/* <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}> */}
                 <CommentsContainer puzzleId={puzzleId} setShowComments={setShowComments} showComments={showComments} />
                 {/* </div> */}

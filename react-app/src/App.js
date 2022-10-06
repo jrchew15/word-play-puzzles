@@ -23,6 +23,7 @@ function App() {
 
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showDeveloperDropdown, setShowDeveloperDropdown] = useState(false)
+  const [triggerReload, setTriggerReload] = useState(false)
 
   const currentUser = useSelector(state => state.session.user)
 
@@ -31,7 +32,8 @@ function App() {
       await dispatch(authenticate());
       setLoaded(true);
     })();
-  }, [dispatch]);
+    if (triggerReload) setTriggerReload(false)
+  }, [dispatch, triggerReload]);
 
   useEffect(() => {
     (async () => {
@@ -47,9 +49,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar showUserDropdown={showUserDropdown} setShowUserDropdown={setShowUserDropdown} showDeveloperDropdown={showDeveloperDropdown} setShowDeveloperDropdown={setShowDeveloperDropdown} />
+      <NavBar showUserDropdown={showUserDropdown} setShowUserDropdown={setShowUserDropdown} showDeveloperDropdown={showDeveloperDropdown} setShowDeveloperDropdown={setShowDeveloperDropdown} setTriggerReload={setTriggerReload} />
       <div id='nav-spacer' />
-      <div id='omni-container' onClick={() => { setShowUserDropdown(false); setShowDeveloperDropdown(false) }}>
+      {!triggerReload && <div id='omni-container' onClick={() => { setShowUserDropdown(false); setShowDeveloperDropdown(false) }}>
         <Switch>
           <Route path='/login' exact={true}>
             <LoginPage />
@@ -79,7 +81,7 @@ function App() {
             <BadRoute />
           </Route>
         </Switch>
-      </div>
+      </div>}
     </BrowserRouter>
   );
 }
