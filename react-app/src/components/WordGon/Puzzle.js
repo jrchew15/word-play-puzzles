@@ -12,6 +12,8 @@ import CompleteModal from "./CompletedModal";
 import FailModal from "./FailModal";
 import CommentsContainer from "../Comments/CommentsContainer";
 import { color_dict, puzzleDifficulty } from '../../utils/puzzleFunctions';
+import { defaultImg } from "../../store/utils/image_urls";
+import { parseDate } from "../Carousels/PuzzlesOfTheDay";
 
 import './wordgon.css';
 
@@ -189,9 +191,10 @@ export default function Puzzle() {
                 <FailModal guesses={guesses} setCurrentGuess={setCurrentGuess} showModal={showFailModal} setShowModal={setShowFailModal} deleteHandler={deleteHandler} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
-                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />
+                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} onError={e => e.target.src = defaultImg} />
                         By {puzzle.user.username}
                     </div>
+                    <div>{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : parseDate(puzzle.puzzleDay)}</div>
                     <div id='restart-button' onClick={deleteHandler}>Restart</div>
                 </div>
                 {isLoaded && <div id='guesses-puzzles'>

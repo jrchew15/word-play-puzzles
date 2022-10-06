@@ -7,6 +7,8 @@ import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
 import CompleteModal from "./CompletedModal";
 import FailModal from "./FailModal";
+import { defaultImg } from "../../store/utils/image_urls";
+import { parseDate } from "../Carousels/PuzzlesOfTheDay";
 import './puzzle-modal.css'
 
 import './wordgon.css';
@@ -147,9 +149,10 @@ export default function UnregisteredPuzzle() {
                 <FailModal showModal={showFailModal} setShowModal={setShowFailModal} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
-                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />
+                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} onError={e => e.target.src = defaultImg} />
                         By {puzzle.user.username}
                     </div>
+                    <div>{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : parseDate(puzzle.puzzleDay)}</div>
                     <div id='restart-button' onClick={deleteHandler}>Restart</div>
                 </div>
                 <div id='guesses-puzzles'>
