@@ -7,7 +7,7 @@ from ..forms.wordgon_form import WordGonForm
 from ..forms.wordgon_session_form import WordGonSessionForm
 from .utils import validation_errors_to_error_messages, db_date_to_datetime, not_future_day
 
-from datetime import date, datetime, timedelta
+from datetime import date
 
 wordgon_routes = Blueprint('wordgon',__name__)
 
@@ -38,9 +38,7 @@ wordgon_routes = Blueprint('wordgon',__name__)
 @wordgon_routes.route('/by_date/<req_date>')
 def get_puzzle_by_date(req_date):
     req_day = [int(x) for x in req_date.split('-')]
-    print('*************',req_day)
     puzzle = WordGon.query.filter(WordGon.puzzle_day == date(*req_day)).one()
-    print('**************',puzzle)
 
     if puzzle is not None:
         return puzzle.to_dict()
@@ -62,8 +60,13 @@ def get_puzzles_by_difficulty(diff):
 
     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 
-@wordgon_routes.route('/<int:id>')
+@wordgon_routes.route('/<id>')
 def one_wordgon(id):
+    try:
+        id = int(id)
+    except:
+        return {'errors':['puzzle id must be integer']}, 404
+
     puzzle = WordGon.query.get(id)
     if puzzle is not None:
         return puzzle and puzzle.to_dict()

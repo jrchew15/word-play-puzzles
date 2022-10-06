@@ -174,6 +174,9 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                         <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} onKeyDown={checkLength} placeholder='Press Enter to Submit' />
                     </form>
                 }
+                <div id='comments-title'>
+                    Comments:
+                </div>
                 {showCommentError && <div id='comment-error'>Comment must be less than 255 characters</div>}
             </ul >
         )
