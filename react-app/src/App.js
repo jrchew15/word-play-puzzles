@@ -9,11 +9,11 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import Homepage from './Homepage';
-import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
-import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
 import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
+import BadRoute from './components/BadRoute';
+import SignUpPrompt from './components/auth/SignUpPrompt';
 
 import './index.css'
 
@@ -66,12 +66,17 @@ function App() {
               <UnregisteredPuzzle />
             }
           </Route>
-          <ProtectedRoute path='/' exact={true} >
-            {currentUser?.id ? <Homepage /> : <Redirect to='/welcome' />
-            }
-          </ProtectedRoute>
+          <Route path='/' exact={true} >
+            {currentUser ? <Homepage /> : <Redirect to='/welcome' />}
+          </Route>
           <Route path='/welcome' exact>
             <SplashPage />
+          </Route>
+          <Route path='/unauthorized' exact>
+            <SignUpPrompt />
+          </Route>
+          <Route path='/'>
+            <BadRoute />
           </Route>
         </Switch>
       </div>
