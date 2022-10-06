@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
 import { authenticate } from "../../store/session";
@@ -17,6 +17,7 @@ import './wordgon.css';
 
 export default function Puzzle() {
     const dispatch = useDispatch()
+    const history = useHistory()
     const puzzleId = useParams().wordgonId
     const [puzzle, setPuzzle] = useState(null)
 
@@ -43,6 +44,7 @@ export default function Puzzle() {
                 setPuzzle(data)
                 return
             }
+            history.push('/404')
         })()
     }, [puzzleId])
 

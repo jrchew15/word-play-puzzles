@@ -9,10 +9,12 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import Homepage from './Homepage';
+import BadRoute from './components/BadRoute'
+import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
+import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
 import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
-import BadRoute from './components/BadRoute';
 import SignUpPrompt from './components/auth/SignUpPrompt';
 
 import './index.css'
