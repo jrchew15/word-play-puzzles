@@ -9,11 +9,13 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import Homepage from './Homepage';
+import BadRoute from './components/BadRoute'
 import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
 import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
 import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
+import SignUpPrompt from './components/auth/SignUpPrompt';
 
 import './index.css'
 
@@ -23,6 +25,7 @@ function App() {
 
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showDeveloperDropdown, setShowDeveloperDropdown] = useState(false)
+  const [triggerReload, setTriggerReload] = useState(false)
 
   const currentUser = useSelector(state => state.session.user)
 
@@ -31,7 +34,8 @@ function App() {
       await dispatch(authenticate());
       setLoaded(true);
     })();
-  }, [dispatch]);
+    if (triggerReload) setTriggerReload(false)
+  }, [dispatch, triggerReload]);
 
   useEffect(() => {
     (async () => {
@@ -47,9 +51,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar showUserDropdown={showUserDropdown} setShowUserDropdown={setShowUserDropdown} showDeveloperDropdown={showDeveloperDropdown} setShowDeveloperDropdown={setShowDeveloperDropdown} />
+      <NavBar showUserDropdown={showUserDropdown} setShowUserDropdown={setShowUserDropdown} showDeveloperDropdown={showDeveloperDropdown} setShowDeveloperDropdown={setShowDeveloperDropdown} setTriggerReload={setTriggerReload} />
       <div id='nav-spacer' />
-      <div id='omni-container' onClick={() => { setShowUserDropdown(false); setShowDeveloperDropdown(false) }}>
+      {!triggerReload && <div id='omni-container' onClick={() => { setShowUserDropdown(false); setShowDeveloperDropdown(false) }}>
         <Switch>
           <Route path='/login' exact={true}>
             <LoginPage />
@@ -66,15 +70,20 @@ function App() {
               <UnregisteredPuzzle />
             }
           </Route>
-          <ProtectedRoute path='/' exact={true} >
-            {currentUser?.id ? <Homepage /> : <Redirect to='/welcome' />
-            }
-          </ProtectedRoute>
+          <Route path='/' exact={true} >
+            {currentUser ? <Homepage /> : <Redirect to='/welcome' />}
+          </Route>
           <Route path='/welcome' exact>
             <SplashPage />
           </Route>
+          <Route path='/unauthorized' exact>
+            <SignUpPrompt />
+          </Route>
+          <Route path='/'>
+            <BadRoute />
+          </Route>
         </Switch>
-      </div>
+      </div>}
     </BrowserRouter>
   );
 }

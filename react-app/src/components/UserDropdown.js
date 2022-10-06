@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import LogoutButton from "./auth/LogoutButton";
 import { useHistory, NavLink } from "react-router-dom";
 
-export default function UserDropdown({ showDropdown, setShowDropdown, setShowModal, closeDropdowns }) {
+export default function UserDropdown({ showDropdown, setShowDropdown, setShowModal, closeDropdowns, setTriggerReload }) {
     const currentUser = useSelector(state => state.session.user)
     const wordgons = useSelector(state => state.wordgon)
     const history = useHistory();
@@ -15,7 +15,7 @@ export default function UserDropdown({ showDropdown, setShowDropdown, setShowMod
                 {currentUser.openSessions.length < 1 ? <span>No Open Puzzles</span> :
                     (<>Open Puzzles
                         {currentUser.openSessions.map(sesh => (
-                            <span onClick={() => { closeDropdowns() }}>
+                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }}>
                                 <NavLink to={`/wordgons/${wordgons[sesh].puzzleId}`} >
                                     {wordgons[sesh].puzzleId}</NavLink>
                             </span>

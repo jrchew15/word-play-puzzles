@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
 import { authenticate } from "../../store/session";
@@ -12,11 +12,14 @@ import CompleteModal from "./CompletedModal";
 import FailModal from "./FailModal";
 import CommentsContainer from "../Comments/CommentsContainer";
 import { color_dict, puzzleDifficulty } from '../../utils/puzzleFunctions';
+import { defaultImg } from "../../store/utils/image_urls";
+import { parseDate } from "../Carousels/PuzzlesOfTheDay";
 
 import './wordgon.css';
 
 export default function Puzzle() {
     const dispatch = useDispatch()
+    const history = useHistory()
     const puzzleId = useParams().wordgonId
     const [puzzle, setPuzzle] = useState(null)
 
@@ -29,10 +32,12 @@ export default function Puzzle() {
     const [showFailModal, setShowFailModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [showComments, setShowComments] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     const sessions = useSelector(state => state.wordgon)
 
     useEffect(() => {
+        setIsLoaded(false);
         (async () => {
             let res = await fetch(`/api/wordgons/${puzzleId}`);
             let data = await res.json();
@@ -41,6 +46,7 @@ export default function Puzzle() {
                 setPuzzle(data)
                 return
             }
+            history.push('/404')
         })()
     }, [puzzleId])
 
@@ -60,6 +66,7 @@ export default function Puzzle() {
             } else {
                 setShowModal(true)
             }
+            setIsLoaded(true)
         })()
     }, [puzzle, sessions, dispatch, puzzleId])
 
@@ -184,12 +191,13 @@ export default function Puzzle() {
                 <FailModal guesses={guesses} setCurrentGuess={setCurrentGuess} showModal={showFailModal} setShowModal={setShowFailModal} deleteHandler={deleteHandler} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
-                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />
+                        <img src={puzzle.user.profilePicture} alt={puzzle.user.username} onError={e => e.target.src = defaultImg} />
                         By {puzzle.user.username}
                     </div>
+                    <div>{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : parseDate(puzzle.puzzleDay)}</div>
                     <div id='restart-button' onClick={deleteHandler}>Restart</div>
                 </div>
-                <div id='guesses-puzzles'>
+                {isLoaded && <div id='guesses-puzzles'>
                     <div id='guesses-container'>
                         {showInvalidWord && <div id='invalid-word'>Not a valid word...</div>}
                         {!session?.completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
@@ -216,7 +224,7 @@ export default function Puzzle() {
                         </div>
                     </div>
                     <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
-                </div>
+                </div>}
                 {/* <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}> */}
                 <CommentsContainer puzzleId={puzzleId} setShowComments={setShowComments} showComments={showComments} />
                 {/* </div> */}

@@ -7,7 +7,7 @@ import User from './User';
 
 import './nav.css'
 
-const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, setShowDeveloperDropdown }) => {
+const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, setShowDeveloperDropdown, setTriggerReload }) => {
   const currentUser = useSelector(state => state.session.user)
   const history = useHistory()
 
@@ -40,7 +40,7 @@ const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, 
           <div id='dropdown-selector' onClick={userDropdownToggle} >
             {(showUserDropdown) ? <i className="fas fa-times" /> : <i className="fas fa-bars" />}
           </div>}
-        {(showUserDropdown) && <UserDropdown showDropdown={showUserDropdown} setShowDropdown={setShowUserDropdown} setShowModal={setShowModal} closeDropdowns={closeDropdowns} />}
+        {(showUserDropdown) && <UserDropdown showDropdown={showUserDropdown} setShowDropdown={setShowUserDropdown} setShowModal={setShowModal} closeDropdowns={closeDropdowns} setTriggerReload={setTriggerReload} />}
         <img src={imageSrc} alt='logo' className='logo'
           onMouseEnter={() => setImageSrc('/static/images/icon_2-cropped.svg')}
           onMouseLeave={() => setImageSrc('/static/images/icon_1-cropped.svg')}

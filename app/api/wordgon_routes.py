@@ -37,10 +37,14 @@ wordgon_routes = Blueprint('wordgon',__name__)
 #     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 @wordgon_routes.route('/by_date/<req_date>')
 def get_puzzle_by_date(req_date):
+    req_day = [int(x) for x in req_date.split('-')]
+    print('*************',req_day)
+    puzzle = WordGon.query.filter(WordGon.puzzle_day == date(*req_day)).one()
+    print('**************',puzzle)
 
-    puzzle = WordGon.query.filter(WordGon.puzzle_day == date(*[int(x) for x in req_date.split('-')])).one()
-
-    return puzzle.to_dict()
+    if puzzle is not None:
+        return puzzle.to_dict()
+    return {'errors':['Puzzle not found']}, 404
 
 @wordgon_routes.route('/puzzles_of_the_day')
 def get_puzzles_of_the_day():
@@ -61,7 +65,9 @@ def get_puzzles_by_difficulty(diff):
 @wordgon_routes.route('/<int:id>')
 def one_wordgon(id):
     puzzle = WordGon.query.get(id)
-    return puzzle and puzzle.to_dict()
+    if puzzle is not None:
+        return puzzle and puzzle.to_dict()
+    return {'errors':['Puzzle not found']},404
 
 @wordgon_routes.route('/<int:id>/sessions', methods=['POST'])
 @login_required
