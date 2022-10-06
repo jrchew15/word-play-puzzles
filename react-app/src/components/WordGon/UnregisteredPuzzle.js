@@ -35,8 +35,8 @@ export default function UnregisteredPuzzle() {
                 let puzzleDate = data.puzzleDay
 
                 let [year, month, day] = puzzleDate.split('-')
-                let notToday = day != today_date.getDate() || month != today_date.getMonth() + 1 || year != today_date.getFullYear();
-                if (notToday) {
+                let isToday = day != today_date.getDate() || month != today_date.getMonth() + 1 || year != today_date.getFullYear();
+                if (isToday) {
                     history.push('/')
                 }
 
