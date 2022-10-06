@@ -15,7 +15,7 @@ class Comment(db.Model):
 
     puzzle = db.relationship("WordGon", back_populates="comments")
     user = db.relationship("User", back_populates="comments")
-    children = db.relationship("Comment")
+    children = db.relationship("Comment", cascade="all, delete")
 
     def to_dict(self):
         children = self.children

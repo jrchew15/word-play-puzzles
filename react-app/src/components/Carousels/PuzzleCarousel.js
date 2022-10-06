@@ -9,13 +9,16 @@ export default function PuzzleCarousel({ puzzles }) {
     const history = useHistory();
     const carouselRef = useRef();
 
+    const cardWidth = 216;
+
     function scrollLeftEvent(e) {
-        carouselRef.current.scroll(carouselRef.current.scrollLeft - 500, 0)
+        let nextIncr = carouselRef.current.scrollLeft - 3 * cardWidth - (carouselRef.current.scrollLeft % cardWidth)
+        carouselRef.current.scroll(nextIncr, 0)
     }
 
     function scrollRightEvent(e) {
-        carouselRef.current.scroll(carouselRef.current.scrollLeft + 500, 0)
-        // console.log(puzzles[0].puzzleDay)
+        let nextIncr = carouselRef.current.scrollLeft + 3 * cardWidth - (carouselRef.current.scrollLeft % cardWidth)
+        carouselRef.current.scroll(nextIncr, 0)
     }
 
     return <div className="carousel-container">

@@ -41,7 +41,7 @@
 }
 
 .puzzle-card:hover {
-    box-shadow: #e2e2e2 2px 2px;
+    box-shadow: lightgray 0px 0px 5px;
 }
 
 #the-pod {

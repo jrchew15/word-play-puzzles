@@ -34,7 +34,7 @@ def image_extensions(form, field):
 
 class SignUpForm(FlaskForm):
     username = StringField(
-        'username', validators=[DataRequired(message='Username is required'), username_exists])
+        'username', validators=[DataRequired(message='Username is required'), Length(max=40, message='Username must be 40 characters or fewer'), username_exists])
     email = StringField('email', validators=[DataRequired(message='Email is required'), Email(), email_exists])
     password = StringField('password', validators=[DataRequired(message='Password is required'), Length(min=6, message='Password must be at least 6 characters long')])
     profilePicture = StringField('profile_picture', validators=[image_extensions])
