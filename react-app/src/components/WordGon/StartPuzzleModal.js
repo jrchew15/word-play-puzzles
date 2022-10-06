@@ -25,12 +25,11 @@ export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) 
             {showModal && (
                 <NonClickModal >
                     <div>
-                        <h2>Word-Gon</h2>
+                        <h2>Word-Play</h2>
                         <div style={{ fontSize: '1.2em', width: '400px', textAlign: 'center' }}>
                             <span style={{ width: '300px' }}>
                                 Use all the letters around the square before you run out of words.
                                 Two letters on the same side cannot be used back-to-back!
-                                {!currentUser && "\n Since you don't have an account, your progress will not be saved."}
                             </span>
                         </div>
                         {currentUser ? <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
