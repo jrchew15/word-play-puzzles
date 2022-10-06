@@ -1,9 +1,9 @@
-import { letterIndexToCoord as lettersObj } from "../../utils/lineFunctions";
+import { letterIndexToCoord } from "../../utils/lineFunctions";
 
 export default function LetterLine({ twoIndices, backgroundColor }) {
 
-    const coordsStart = lettersObj[twoIndices[0]];
-    const coordsEnd = lettersObj[twoIndices[1]];
+    const coordsStart = letterIndexToCoord[twoIndices[0]];
+    const coordsEnd = letterIndexToCoord[twoIndices[1]];
     const x = coordsStart[0];
     const y = coordsStart[1];
     const xEnd = coordsEnd[0];
