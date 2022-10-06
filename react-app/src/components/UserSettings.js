@@ -76,10 +76,10 @@ export default function UserSettings() {
                                 value={profilePicture}
                             ></input>
                         </div>
-                        <div>
+                        {/* <div>
                             Theme placeholder
-                        </div>
-                        <button type='submit'>Edit Settings</button>
+                        </div> */}
+                        <button className='modal-button' type='submit'>Confirm</button>
                     </form>
                 </div>
             </div>

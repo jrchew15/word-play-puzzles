@@ -1,0 +1,50 @@
+.carousel,
+.carousel-container {
+    width: 80vw;
+    display: flex;
+    position: relative;
+}
+
+.carousel {
+    overflow: hidden;
+    scroll-behavior: smooth;
+    border-right: 10px solid grey;
+    border-left: 10px solid grey;
+}
+
+.scroll-button {
+    position: absolute;
+    opacity: 0.4;
+    background-color: white;
+    padding: 1em;
+    border-radius: 15px;
+    border: 1px solid black;
+    cursor: pointer;
+    z-index: 4;
+    top: 0;
+    width: 80px;
+    height: 160px;
+    box-sizing: border-box;
+    top: calc(50% - 80px);
+}
+
+.scroll-button:hover {
+    opacity: 0.8;
+}
+
+.scroll-button.left {
+    left: -90px;
+}
+
+.scroll-button.right {
+    right: -90px;
+}
+
+.scroll-button i {
+    font-size: 120px;
+}
+
+.scroll-button.right i {
+    position: relative;
+    right: 13px;
+}

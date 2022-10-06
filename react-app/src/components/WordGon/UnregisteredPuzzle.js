@@ -6,6 +6,7 @@ import { lettersParse } from "../../utils/puzzleFunctions";
 import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
 import CompleteModal from "./CompletedModal";
+import FailModal from "./FailModal";
 import './puzzle-modal.css'
 
 import './wordgon.css';
@@ -18,13 +19,13 @@ export default function UnregisteredPuzzle() {
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
     const [completed, setCompleted] = useState(false)
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(true)
+    const [showFailModal, setShowFailModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [showInvalidWord, setShowInvalidWord] = useState(false)
 
     const today_date = new Date();
 
-    console.log('UNREGISTERED')
     useEffect(() => {
         (async () => {
             let res = await fetch(`/api/wordgons/${puzzleId}`);
@@ -71,6 +72,11 @@ export default function UnregisteredPuzzle() {
                     }
                 }
                 if (completed) setCompleted(true)
+                if (!completed && allGuesses.length >= puzzle.numAttempts) {
+                    setShowFailModal(true)
+                    setSubmitting(false)
+                    return
+                }
                 setGuesses(allGuesses)
                 setCurrentGuess(word => word[word.length - 1])
             } else {
@@ -137,7 +143,8 @@ export default function UnregisteredPuzzle() {
         <>
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                 <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
-
+                <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
+                <FailModal showModal={showFailModal} setShowModal={setShowFailModal} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} />

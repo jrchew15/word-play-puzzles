@@ -124,7 +124,7 @@ const SignUpForm = () => {
         <div className={'sep ' + theme}><span>or</span></div>
         <NavLink to='/login'>I already have an account</NavLink>
       </form>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 15 }}>
         {previewError ? <>
           <span>Default image:</span>
           <img src={defaultImg} className='preview-image' />

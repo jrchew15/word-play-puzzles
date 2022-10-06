@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import './comments.css';
+import { defaultImg } from '../../store/utils/image_urls'
 
 export default function CommentsContainer({ puzzleId, showComments, setShowComments }) {
     const dispatch = useDispatch();
@@ -13,6 +14,8 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
     const [replyingTo, setReplyingTo] = useState(null);
     const [editCommentId, setEditCommentId] = useState(null);
     const [resetting, setResetting] = useState(false);
+
+    const [showCommentError, setShowCommentError] = useState(false);
 
     useEffect(() => {
         if (isLoaded) return
@@ -96,6 +99,20 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
         setEditCommentId(null)
     }
 
+    function checkLength(e) {
+        console.log(e.key, commentBody.length)
+        if (commentBody.length > 255 && !(e.key == 'Enter' || e.key == 'Backspace')) {
+            e.preventDefault()
+        }
+        if (commentBody.length > 255 && e.key == 'Enter') {
+            e.preventDefault()
+            setShowCommentError(true)
+            setTimeout(() => {
+                setShowCommentError(false)
+            }, 2500)
+        }
+    }
+
     if (showComments) {
         return (
             <ul id='comments-container' >
@@ -104,7 +121,7 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                         let comment = comments[commentId]
                         return (
                             <li key={'li' + comment.id} >
-                                <img src={comment.user.profilePicture} alt={comment.user.username} key={'img' + comment.id} />
+                                <img src={comment.user.profilePicture} onError={e => e.target.src = defaultImg} alt={comment.user.username} key={'img' + comment.id} />
                                 <div key={'div' + comment.id} className='body-container'>
                                     <span key={'username' + comment.id}>
                                         {comment.user.username}
@@ -112,7 +129,7 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                     </span>
                                     {editCommentId === comment.id ?
                                         <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} key={'editcommentform' + comment.id}>
-                                            <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} key={'editcommentinput' + comment.id} />
+                                            <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} onKeyDown={checkLength} key={'editcommentinput' + comment.id} />
                                         </form>
                                         : <span className='comment-body' key={'comment span' + comment.id}>
                                             {comment.body}
@@ -122,7 +139,7 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                     <ul key={'ul' + comment.id} className='reply-container'>
                                         {comment.children.map(child => (
                                             <li key={'child li' + child.id} className='reply'>
-                                                <img src={child.user.profilePicture} alt={child.user.username} key={'child img' + child.id} />
+                                                <img src={child.user.profilePicture} onError={e => e.target.src = defaultImg} alt={child.user.username} key={'child img' + child.id} />
                                                 <div key={'child div' + child.id} className='body-container'>
                                                     <span key={'child username' + child.id}>
                                                         {child.user.username}
@@ -130,17 +147,17 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                                     </span>
                                                     {editCommentId === child.id ?
                                                         <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} key={'editchildform' + child.id}>
-                                                            <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} key={'editchildinput' + child.id} />
+                                                            <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} onKeyDown={checkLength} key={'editchildinput' + child.id} />
                                                         </form>
                                                         : <span className='comment-body' key={'child span' + child.id}>
                                                             {child.body}
+                                                            {child.user.id === currentUser.id && <i className="fas fa-trash-alt" onClick={() => handleDelete(child.id)} />}
                                                         </span>}
-                                                    {child.user.id === currentUser.id && <i className="fas fa-trash-alt" onClick={() => handleDelete(child.id)} />}
                                                 </div>
                                             </li>
                                         ))}
                                         {showCommentForm && replyingTo === comment.id && <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} key={'form' + comment.id}>
-                                            <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} key={'input' + comment.id} />
+                                            <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} onKeyDown={checkLength} key={'input' + comment.id} placeholder='Press Enter to Submit' />
                                         </form>}
                                     </ul>
                                 </div>
@@ -149,12 +166,15 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                     }
                     )
                 }
-                <button onClick={() => { setShowCommentForm(true); setReplyingTo(null) }} style={{ display: showCommentForm ? 'none' : 'block' }}>Add Comment</button>
+                <span>
+                    <button onClick={() => { setShowCommentForm(true); setReplyingTo(null) }} style={{ display: showCommentForm ? 'none' : 'block', marginBottom: '30px' }}>Add Comment</button>
+                </span>
                 {
-                    showCommentForm && !replyingTo && !editCommentId && <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} >
-                        <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} />
+                    showCommentForm && !replyingTo && !editCommentId && <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} style={{ width: '50%' }}>
+                        <input type='text' autoFocus value={commentBody} onChange={(e) => setCommentBody(e.target.value)} onKeyDown={checkLength} placeholder='Press Enter to Submit' />
                     </form>
                 }
+                {showCommentError && <div id='comment-error'>Comment must be less than 255 characters</div>}
             </ul >
         )
     } else {

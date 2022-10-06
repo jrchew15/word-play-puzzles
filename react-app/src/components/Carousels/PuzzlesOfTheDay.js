@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
-import { color_dict, puzzleDifficulty } from "../../utils/puzzleFunctions";
+import PuzzleCarousel from "./PuzzleCarousel";
+import { color_dict, puzzleDifficulty, dbDateToDateObj } from "../../utils/puzzleFunctions";
 import '../WordGon/wordgon-list.css';
+import './carousel.css'
 
 export default function PuzzlesOfTheDay({ setLoaded }) {
     const [puzzles, setPuzzles] = useState([])
     const history = useHistory();
+    const now = new Date();
 
     useEffect(() => {
         (async () => {
@@ -14,7 +17,8 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
             const data = await res.json()
 
             if (res.ok) {
-                setPuzzles(data.puzzles)
+                let pastPuzzles = data.puzzles.filter(puzzle => dbDateToDateObj(puzzle.puzzleDay) < now)
+                setPuzzles(pastPuzzles)
                 setLoaded(true)
             }
         })()
@@ -35,10 +39,10 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                 </div>
             </div>}
             <h2>Past Puzzles of the Day</h2>
-            <div id='pod-carousel' className="carousel">
+            {/* <div id='pod-carousel' className="carousel">
                 {puzzles.slice(1).map(puzzle => (
                     <div className='puzzle-card' onClick={() => history.push(`/wordgons/${puzzle.id}`)} >
-                        {/* <h3>{puzzle.puzzleDay}</h3> */}
+
                         <div className='puzzle-title' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                             <span style={{ margin: '5px 0' }}>{parseDate(puzzle.puzzleDay)}</span>
                         </div>
@@ -48,7 +52,8 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                         </div>
                     </div>
                 ))}
-            </div>
+            </div> */}
+            <PuzzleCarousel puzzles={puzzles.slice(1)} />
         </>
     )
 

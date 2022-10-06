@@ -38,7 +38,7 @@ function User({ userId, setShowModal }) {
         <li>{user.username}</li>
         <li>Puzzles Solved: {user.totalPuzzlesSolved}</li>
       </ul>
-      {currentUser.id === user.id && <button onClick={directToSettings}>
+      {currentUser.id === user.id && <button className='modal-button' onClick={directToSettings}>
         Edit Settings
       </button>}
     </div>

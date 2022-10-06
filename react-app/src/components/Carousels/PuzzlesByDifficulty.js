@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
 import { color_dict } from '../../utils/puzzleFunctions';
+import PuzzleCarousel from './PuzzleCarousel';
 
 export default function PuzzlesByDifficulty({ difficulty, loaded, setLoaded }) {
     const [puzzles, setPuzzles] = useState([]);
@@ -22,7 +23,7 @@ export default function PuzzlesByDifficulty({ difficulty, loaded, setLoaded }) {
     return (
         <>
             <h2>{difficulty[0].toUpperCase() + difficulty.slice(1)} Puzzles</h2>
-            <div id='pod-carousel' className="carousel">
+            {/* <div id='pod-carousel' className="carousel">
                 {puzzles.map(puzzle => (
                     <div className='puzzle-card' onClick={() => history.push(`/wordgons/${puzzle.id}`)} >
                         <div className='puzzle-title' style={{ backgroundColor: color_dict[difficulty] }}>Word-Gon #{puzzle.id}</div>
@@ -33,7 +34,8 @@ export default function PuzzlesByDifficulty({ difficulty, loaded, setLoaded }) {
                         </div>
                     </div>
                 ))}
-            </div>
+            </div> */}
+            <PuzzleCarousel puzzles={puzzles} />
         </>
     )
 }
