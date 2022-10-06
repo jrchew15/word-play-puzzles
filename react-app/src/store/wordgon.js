@@ -7,7 +7,7 @@ const actionSetWordgonSession = (puzzleSession) => ({
     payload: puzzleSession
 })
 
-const actionLoadWordgonSessions = (sessionsArr) => ({
+export const actionLoadWordgonSessions = (sessionsArr) => ({
     type: LOAD_WORDGONS,
     payload: sessionsArr
 })

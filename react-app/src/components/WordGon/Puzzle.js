@@ -37,7 +37,7 @@ export default function Puzzle() {
         (async () => {
             let res = await fetch(`/api/wordgons/${puzzleId}`);
             let data = await res.json();
-            console.log(res, data)
+
             if (res.ok) {
                 setPuzzle(data)
                 return
