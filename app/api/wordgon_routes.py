@@ -60,8 +60,11 @@ def get_puzzles_by_difficulty(diff):
 
 @wordgon_routes.route('/<int:id>')
 def one_wordgon(id):
+
     puzzle = WordGon.query.get(id)
-    return puzzle and puzzle.to_dict()
+    if puzzle is None:
+        return {"errors":["Puzzle not found"]}, 404
+    return puzzle.to_dict()
 
 @wordgon_routes.route('/<int:id>/sessions', methods=['POST'])
 @login_required
