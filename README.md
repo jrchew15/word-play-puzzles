@@ -83,4 +83,4 @@ The process by which words are validated is applicable to nearly any word puzzle
 #
 
 <a name=
-"wordsAPI"></a> [WordsAPI](https://www.wordsapi.com) provides signifnificantly more information than is required by the internal database, including definitions, word frequency, and much more.
+"wordsAPI"></a> *[WordsAPI](https://www.wordsapi.com) provides signifnificantly more information than is required by the internal database, including definitions, word frequency, and much more.
