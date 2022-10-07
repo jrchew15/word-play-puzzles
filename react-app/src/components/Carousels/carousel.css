@@ -1,8 +1,9 @@
 .carousel,
 .carousel-container {
-    width: 80vw;
+    width: calc(5 * var(--card-width) + 20px);
     display: flex;
     position: relative;
+    box-sizing: border-box;
 }
 
 .carousel {
@@ -47,4 +48,12 @@
 .scroll-button.right i {
     position: relative;
     right: 13px;
+}
+
+.scroll-button.inactive {
+    cursor: default;
+}
+
+.scroll-button.inactive:hover {
+    opacity: 0.4;
 }
