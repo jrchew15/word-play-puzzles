@@ -1,9 +1,10 @@
 import LetterLine from "./LetterLine";
+import { letterIndexToCoord } from "../../utils/lineFunctions";
 
 export default function LineMaker({ allLetters, guesses, currentGuess, backgroundColor }) {
     let lettersObj = {}
     allLetters.split('').forEach((char, idx) => lettersObj[char] = idx);
-
+    let allCoords = Object.values(letterIndexToCoord)
 
     return (<>
         {guesses.length > 0 && guesses.map(guess => {
