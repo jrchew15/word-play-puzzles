@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ListableBoxAndLetters } from "../WordGon/WordGonBox";
 import { color_dict, puzzleDifficulty } from "../../utils/puzzleFunctions";
@@ -11,14 +11,26 @@ export default function PuzzleCarousel({ puzzles }) {
 
     const cardWidth = 216;
 
+    const [scrollPlace, setScrollPlace] = useState('start')
+
     function scrollLeftEvent(e) {
         let nextIncr = carouselRef.current.scrollLeft - 3 * cardWidth - (carouselRef.current.scrollLeft % cardWidth)
         carouselRef.current.scroll(nextIncr, 0)
+        if (nextIncr <= 0) {
+            setScrollPlace('start')
+        } else {
+            setScrollPlace('')
+        }
     }
 
     function scrollRightEvent(e) {
         let nextIncr = carouselRef.current.scrollLeft + 3 * cardWidth - (carouselRef.current.scrollLeft % cardWidth)
         carouselRef.current.scroll(nextIncr, 0)
+        if (nextIncr >= carouselRef.current.scrollWidth - 5 * cardWidth) {
+            setScrollPlace('end')
+        } else {
+            setScrollPlace('')
+        }
     }
 
     return <div className="carousel-container">
@@ -33,7 +45,7 @@ export default function PuzzleCarousel({ puzzles }) {
                 </div>
             </div>)}
         </div>
-        <div className="scroll-button left" onClick={scrollLeftEvent}><i className="fas fa-caret-left" /></div>
-        <div className="scroll-button right" onClick={scrollRightEvent}><i className="fas fa-caret-right" /></div>
+        <div className={"scroll-button left" + (scrollPlace === 'start' ? ' inactive' : '')} onClick={scrollLeftEvent}><i className="fas fa-caret-left" /></div>
+        <div className={"scroll-button right" + (scrollPlace === 'end' ? ' inactive' : '')} onClick={scrollRightEvent}><i className="fas fa-caret-right" /></div>
     </div>
 }

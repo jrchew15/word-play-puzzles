@@ -1,87 +1,86 @@
-# Flask React Project
+# [Word Play Puzzles](https://word-play-puzzles.herokuapp.com)
 
-This is the starter for the Flask React project.
+## A Particularly Playful Puzzle Platform
+This application takes heavy inspiration from the New York Times Puzzles. In particular, Word Play offers a large collection of Word-Gon puzzles, modeled after the NYT's Letter Boxed.
 
-## Getting started
-1. Clone this repository (only this branch)
+You can enjoy the plethora of puzzles, organized by difficulty at:
 
-   ```bash
-   git clone https://github.com/appacademy-starters/python-project-starter.git
-   ```
+https://word-play-puzzles.herokuapp.com
 
-2. Install dependencies
+## Packages and Frameworks
 
-      ```bash
-      pipenv install -r requirements.txt
-      ```
+#
 
-3. Create a **.env** file based on the example with proper settings for your
-   development environment
-4. Make sure the SQLite3 database connection URL is in the **.env** file
+### Backend
+ - [Flask](https://flask.palletsprojects.com/)
+ - [PostgreSQL](https://www.postgresql.org/)
+ - [SQLAlchemy](https://www.sqlalchemy.org/)
+ - [WTForms](https://wtforms.readthedocs.io/en/3.0.x/) and [Flask-WTForms](https://flask-wtf.readthedocs.io/en/1.0.x/)
+### Frontend
+ - [React](https://reactjs.org/)
+ - [Redux](https://redux.js.org/)
+ - [WordsAPI](https://www.wordsapi.com/)[*](#wordsAPI)
 
-5. Get into your pipenv, migrate your database, seed your database, and run your Flask app
+#
 
-   ```bash
-   pipenv shell
-   ```
+## MVP Features
 
-   ```bash
-   flask db upgrade
-   ```
+### Users
+ - New users can sign-up
+ - Users can log in and log out
+ - Users without an account can only access the puzzle of the day
+ - Users with an account have a settings and stats page
+### Word-gon
+ - Each user can only complete each puzzle once
+ - Logged in users can create new Word-gon puzzles
+ - Logged in users can delete puzzles that they have created
+### Puzzle Session
+ - Logged in users can start a puzzle session by opening a specific puzzle
+ - Once a user has started a session and before they have completed it, they can edit their guessed words
+ - Once a user has submitted a puzzle, it cannot be editted
+ - Users can delete a submitted session
+### Comments
+ - Logged in users can see all comments and create comments
+ - Users can reply to comments which are not themselves replies
+ - Users can edit their past comments
+ - Users can delete their past comments
 
-   ```bash
-   flask seed all
-   ```
+#
 
-   ```bash
-   flask run
-   ```
+## Application Highlights
 
-6. To run the React App in development, checkout the [README](./react-app/README.md) inside the `react-app` directory.
+### Puzzle Display
+![puzzlepage](https://raw.githubusercontent.com/jrchew15/word-play-puzzles/main/documentation-images/wireframes/puzzlepage.png)
+The lines connecting letters update dynamically. These were constructed with only React and css, aided by simple calculations.
 
+The entire display is constructed with relative units, making the component extremely flexible. The square is reused in the carousel lists and is simply resized.
+### Carousels
+![carousel](https://raw.githubusercontent.com/jrchew15/word-play-puzzles/main/documentation-images/wireframes/carousel.png)
+The carousels scroll smoothly using the left and right buttons. The buttons deactivate when at the respective far left and right of the list of puzzles.
 
-<br>
+Users can see which puzzles they have begun and completed from the display of lines depicting guesses and from the message on the bottom button of each card.
 
-## Deploy to Heroku
-This repo comes configured with Github Actions. When you push to your main branch, Github will automatically pull your code, package and push it to Heroku, and then release the new image and run db migrations. 
+### Word Validation
+A core requirement of presenting these puzzles is that the application must know how to confirm whether or not a user's submission is an existing English word. Here is an outline of the process:
+ 1. The user submits a word
+ 2. The flask backend receives the submission and checks the internal database's 'words' table which is populated with valid words.
+ 3. If the word is not found internally, the backend sends a request to the WordsAPI.
+ 4. If the external WordsAPI confirms that the submission is a word, the backend adds it to the internal database.[*](#wordsAPI)
+ 5. The frontend receives a response from the backend and either displays an error or adds the word to the used words of the puzzle
 
-1. Write your Dockerfile. In order for the Github action to work effectively, it must have a configured Dockerfile. Follow the comments found in this [Dockerfile](./Dockerfile) to write your own!
+#
 
-2. Create a new project on Heroku.
+## Future Features
+### User-Created Word-Gons
+Word-Gons are defined by the 12 letters they use and their placement along the square. Functionality can be added to allow users to create and share their own Word-Gon puzzles.
 
-3. Under Resources click "Find more add-ons" and add the add on called "Heroku Postgres".
+Puzzles would be validated by requiring users to complete their own puzzles before they can be posted.
 
-4. Configure production environment variables. In your Heroku app settings -> config variables you should have two environment variables set:
-
-   |    Key          |    Value    |
-   | -------------   | ----------- |
-   | `DATABASE_URL`  | Autogenerated when adding postgres to Heroku app |
-   | `SECRET_KEY`    | Random string full of entropy |
-
-5. Generate a Heroku OAuth token for your Github Action. To do so, log in to Heroku via your command line with `heroku login`. Once you are logged in, run `heroku authorizations:create`. Copy the GUID value for the Token key.
-
-6. In your Github Actions Secrets you should have two environment variables set. You can set these variables via your Github repository settings -> secrets -> actions. Click "New respository secret" to create
-each of the following variables:
-
-   |    Key            |    Value    |
-   | -------------     | ----------- |
-   | `HEROKU_API_KEY`  | Heroku Oauth Token (from step 6)|
-   | `HEROKU_APP_NAME` | Heroku app name    |
-
-7. Push to your `main` branch! This will trigger the Github Action to build your Docker image and deploy your application to the Heroku container registry. Please note that the Github Action will automatically upgrade your production database with `flask db upgrade`. However, it will *not* automatically seed your database. You must manually seed your production database if/when you so choose (see step 8).
-
-8. *Attention!* Please run this command *only if you wish to seed your production database*: `heroku run -a HEROKU_APP_NAME flask seed all`
-
-## Helpful commands
-|    Command            |    Purpose    |
-| -------------         | ------------- |
-| `pipenv shell`        | Open your terminal in the virtual environment and be able to run flask commands without a prefix |
-| `pipenv run`          | Run a command from the context of the virtual environment without actually entering into it. You can use this as a prefix for flask commands  |
-| `flask db upgrade`    | Check in with the database and run any needed migrations  |
-| `flask db downgrade`  | Check in with the database and revert any needed migrations  |
-| `flask seed all`      | Just a helpful syntax to run queries against the db to seed data. See the **app/seeds** folder for reference and more details |
-| `heroku login -i`      | Authenticate your heroku-cli using the command line. Drop the -i to authenticate via the browser |
-| `heroku authorizations:create` | Once authenticated, use this to generate an Oauth token |
-| `heroku run -a <app name>` | Run a command from within the deployed container on Heroku |
+### More Puzzle Types
+The process by which words are validated is applicable to nearly any word puzzle. In the future the application may also provide access to puzzles similar to Wordle and Spelling Bee.
 
 
+#
+
+<a name=
+"wordsAPI"></a> [WordsAPI](https://www.wordsapi.com) provides signifnificantly more information than is required by the internal database, including definitions, word frequency, and much more.
