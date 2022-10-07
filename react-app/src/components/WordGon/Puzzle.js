@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -35,6 +35,8 @@ export default function Puzzle() {
     const [isLoaded, setIsLoaded] = useState(false)
 
     const sessions = useSelector(state => state.wordgon)
+
+    const guessRef = useRef(null);
 
     useEffect(() => {
         setIsLoaded(false);
@@ -182,6 +184,10 @@ export default function Puzzle() {
         }
     }
 
+    function giveFocus() {
+        guessRef.current.focus()
+    }
+
     return (
         <>
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
@@ -197,7 +203,7 @@ export default function Puzzle() {
                     <div>{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : parseDate(puzzle.puzzleDay)}</div>
                     <div id='restart-button' onClick={deleteHandler}>Restart</div>
                 </div>
-                {isLoaded && <div id='guesses-puzzles'>
+                {isLoaded && <div id='guesses-puzzles' onClick={giveFocus}>
                     <div id='guesses-container'>
                         {showInvalidWord && <div id='invalid-word'>Not a valid word...</div>}
                         {!session?.completed ? <form id='guess-form' onSubmit={handleFormSubmit}>
@@ -211,6 +217,7 @@ export default function Puzzle() {
                                 autoComplete='off'
                                 id='guess-box'
                                 autoFocus
+                                ref={guessRef}
                             >
                             </input>
                             <div id='attempts-box'>
