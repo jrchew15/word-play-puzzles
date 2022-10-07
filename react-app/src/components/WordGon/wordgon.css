@@ -73,13 +73,13 @@
 
 #puzzle-square {
     position: absolute;
-    width: calc(6 * var(--unit-length) + 4 * var(--circle-width) - 4px);
-    height: calc(6 * var(--unit-length) + 4 * var(--circle-width) - 4px);
+    width: calc(6 * var(--unit-length) + 4 * var(--circle-width) - 0.6em);
+    height: calc(6 * var(--unit-length) + 4 * var(--circle-width) - 0.6em);
     content: '';
-    bottom: calc(var(--letter-box-length) + 0.5 * var(--circle-width) + 1em);
-    left: calc(50% - 2 * var(--circle-width) - 3 * var(--unit-length));
+    bottom: calc(var(--letter-box-length) + 0.5 * var(--circle-width) + 1em - 0.3em);
+    left: calc(50% - 2 * var(--circle-width) - 3 * var(--unit-length) - 0.3em);
     background-color: white;
-    border: 4px solid black;
+    border: 0.6em solid black;
     z-index: 1;
 }
 
@@ -89,7 +89,7 @@
     height: 100%;
     border-radius: 50%;
     box-sizing: border-box;
-    border: 4px solid black;
+    border: 0.6em solid black;
     background-color: white;
     z-index: 3;
     box-sizing: border-box;
