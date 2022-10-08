@@ -80,7 +80,7 @@ def add_session(id):
     puzzle = WordGon.query.get(id)
 
     if puzzle is None:
-        return {'errors':['Puzzle not found']}, 401
+        return {'errors':['Puzzle not found']}, 404
 
     new_session = WordGonSession(
         puzzle_id=id,
