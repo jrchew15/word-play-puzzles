@@ -1,13 +1,24 @@
+import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import LogoutButton from "./auth/LogoutButton";
 import { useHistory, NavLink } from "react-router-dom";
 
-export default function UserDropdown({ showDropdown, setShowDropdown, setShowModal, closeDropdowns, setTriggerReload }) {
+export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerReload }) {
     const currentUser = useSelector(state => state.session.user)
     const wordgons = useSelector(state => state.wordgon)
     const history = useHistory();
 
-    return (currentUser?.id ?
+    const [loggingOut, setLoggingOut] = useState(false);
+
+    useEffect(() => {
+
+        if (loggingOut) {
+            history.push('/')
+        }
+
+    }, [loggingOut])
+
+    return (currentUser ?
         <ul id='user-dropdown' className="unselectable">
             <li onClick={() => { setShowModal(true); closeDropdowns() }}>My Profile</li>
             <div className="navbar-sep" />
@@ -23,7 +34,7 @@ export default function UserDropdown({ showDropdown, setShowDropdown, setShowMod
                 }
             </li>
             <div className="navbar-sep" />
-            <LogoutButton closeDropdowns={closeDropdowns} />
+            <LogoutButton loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
         </ul >
         : null)
 }
