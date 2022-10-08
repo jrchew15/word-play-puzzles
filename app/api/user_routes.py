@@ -18,7 +18,9 @@ def users():
 @login_required
 def user(id):
     user = User.query.get(id)
-    return user.to_dict(total=True)
+    if user is not None:
+        return user.to_dict(total=True)
+    return {"errors":["Could not find user"]}
 
 @user_routes.route('/<int:id>',methods=['PUT'])
 @login_required

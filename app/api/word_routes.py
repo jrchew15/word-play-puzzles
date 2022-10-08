@@ -38,16 +38,16 @@ def get_word(word):
         db.session.commit()
         return ({'word':word}, 200)
 
-    return ({'errors':['word not found']}, 400)
+    return ({'errors':['word not found']}, 404)
 
-@word_routes.route('', methods=['POST'])
-def add_word():
-    form = WordForm()
-    form['csrf_token'].data = request.cookies['csrf_token']
-    word = form.word.data
-    if form.validate_on_submit():
-        new_word = Word(word=word, length=len(word))
-        db.session.add(new_word)
-        db.session.commit()
-        return {'word':word}, 200
-    return {'errors':['Unauthorized']}, 405
+# @word_routes.route('', methods=['POST'])
+# def add_word():
+#     form = WordForm()
+#     form['csrf_token'].data = request.cookies['csrf_token']
+#     word = form.word.data
+#     if form.validate_on_submit():
+#         new_word = Word(word=word, length=len(word))
+#         db.session.add(new_word)
+#         db.session.commit()
+#         return {'word':word}, 200
+#     return {'errors':['Unauthorized']}, 405
