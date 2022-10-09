@@ -144,8 +144,9 @@ export default function UnregisteredPuzzle() {
     return (
         <>
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
-                <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
-                <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
+                {completed ?
+                    <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
+                    : <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />}
                 <FailModal showModal={showFailModal} setShowModal={setShowFailModal} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>

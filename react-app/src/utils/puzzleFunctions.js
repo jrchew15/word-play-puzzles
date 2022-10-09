@@ -14,9 +14,9 @@ export const color_dict = {
     '2': '#58bc82',
     '3': '#0d3b66',
     '4': '#e84855',
-    '5': '#50808E',
+    '5': '#3ABEFF',
     'easy': '#58bc82',
-    'medium': '#50808E',
+    'medium': '#3ABEFF',
     'hard': '#e84855'
 }
 
