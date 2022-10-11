@@ -79,17 +79,13 @@ button.reply-to {
 
 .fa-pen {
     font-size: smaller;
-    position: relative;
-    left: 5px;
+    margin: 0 8px;
     cursor: pointer;
 }
 
 .fa-trash-alt {
     width: min-content;
     cursor: pointer;
-    position: absolute;
-    left: 0px;
-    top: 5px;
     font-size: smaller;
 }
 
