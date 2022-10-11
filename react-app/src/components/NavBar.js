@@ -59,7 +59,7 @@ const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, 
             Dev Github
             <img src='/static/images/GitHub-Mark-64px.png' alt='github' />
           </a>
-          <a href='https://www.linkedin.com/in/jason-chew-20867a207/' target='_blank'>
+          <a href='https://www.linkedin.com/in/jason-r-chew/' target='_blank'>
             Dev LinkedIn
             <img src='https://cdn-icons-png.flaticon.com/512/49/49408.png' alt='linkedin' />
           </a>

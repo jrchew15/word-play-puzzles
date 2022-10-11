@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NonClickModal } from "../../context/Modal";
 import { authenticate } from "../../store/session";
 import { thunkAddWordgonSession } from "../../store/wordgon";
+import CloseButton from "./CloseButton";
 
 import './puzzle-modal.css'
 
@@ -42,6 +43,7 @@ export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) 
                             <div className='modal-button back-to-puzzles' onClick={() => history.push('/sign-up')}>Create an account</div>
                         </div>}
                     </div>
+                    <CloseButton setShowModal={setShowModal} />
                 </NonClickModal>
             )}
         </>

@@ -1,6 +1,7 @@
 import { Modal } from "../../context/Modal";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import CloseButton from "./CloseButton";
 
 export default function FailModal({ deleteHandler, showModal, setShowModal }) {
     const history = useHistory();
@@ -21,6 +22,7 @@ export default function FailModal({ deleteHandler, showModal, setShowModal }) {
                         : <button className="modal-button" onClick={() => history.push('/sign-up')}>Create an account</button>
                 }
             </div>
+            <CloseButton setShowModal={setShowModal} />
         </Modal>
     )
 }
