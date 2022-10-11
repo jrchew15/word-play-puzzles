@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import './comments.css';
-import { defaultImg } from '../../store/utils/image_urls'
+import { defaultImg } from '../../store/utils/image_urls';
+import DeleteConfirmation from './DeleteConfirmation';
 
 export default function CommentsContainer({ puzzleId, showComments, setShowComments }) {
     const dispatch = useDispatch();
@@ -126,6 +127,7 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                     <span key={'username' + comment.id}>
                                         {comment.user.username}
                                         {comment.user.id === currentUser.id && !showCommentForm && < i className="fas fa-pen" onClick={() => { setShowCommentForm(true); setEditCommentId(comment.id); setCommentBody(comment.body) }} />}
+                                        {comment.user.id === currentUser.id && <DeleteConfirmation handleDelete={handleDelete} commentId={comment.id} />}
                                     </span>
                                     {editCommentId === comment.id ?
                                         <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} key={'editcommentform' + comment.id}>
@@ -133,7 +135,6 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                         </form>
                                         : <span className='comment-body' key={'comment span' + comment.id}>
                                             {comment.body}
-                                            {comment.user.id === currentUser.id && <i className="fas fa-trash-alt" onClick={() => handleDelete(comment.id)} />}
                                         </span>}
                                     <button className='reply-to' onClick={() => { setShowCommentForm(true); setReplyingTo(comment.id) }}>Reply...</button>
                                     <ul key={'ul' + comment.id} className='reply-container'>
@@ -144,6 +145,7 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                                     <span key={'child username' + child.id}>
                                                         {child.user.username}
                                                         {child.user.id === currentUser.id && !showCommentForm && <i className="fas fa-pen" onClick={() => { setShowCommentForm(true); setEditCommentId(child.id); setCommentBody(child.body) }} />}
+                                                        {child.user.id === currentUser.id && <DeleteConfirmation handleDelete={handleDelete} commentId={child.id} />}
                                                     </span>
                                                     {editCommentId === child.id ?
                                                         <form onSubmit={handleCommentSubmit} className='comment-form' onBlur={() => setResetting(true)} key={'editchildform' + child.id}>
@@ -151,7 +153,6 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
                                                         </form>
                                                         : <span className='comment-body' key={'child span' + child.id}>
                                                             {child.body}
-                                                            {child.user.id === currentUser.id && <i className="fas fa-trash-alt" onClick={() => handleDelete(child.id)} />}
                                                         </span>}
                                                 </div>
                                             </li>
