@@ -3,6 +3,7 @@ from .users import seed_users, undo_users
 from .words import seed_words, undo_words
 from .wordgons import seed_wordgons, undo_wordgons, puzzles_of_the_day
 from .comments import seed_comments, undo_comments
+from .wordles import seed_wordles, undo_wordles
 
 # Creates a seed group to hold our commands
 # So we can type `flask seed --help`
@@ -17,6 +18,7 @@ def seed():
     seed_wordgons()
     puzzles_of_the_day()
     seed_comments()
+    seed_wordles()
     # Add other seed functions here
 
 
@@ -27,4 +29,5 @@ def undo():
     undo_words()
     undo_wordgons()
     undo_comments()
+    undo_wordles()
     # Add other undo functions here
