@@ -29,10 +29,8 @@ def login():
     # Get the csrf_token from the request cookie and put it into the
     # form manually to validate_on_submit can be used
     form['csrf_token'].data = request.cookies['csrf_token']
-    print('------------------',form.data['credential'], form.validate_on_submit())
     if form.validate_on_submit():
         should_be=User.query.get(1)
-        print('******************',should_be.email, form.data['credential'])
         # Add the user to the session, we are logged in!
         user = User.query.filter(db.or_(User.email == form.data['credential'], User.username == form.data['credential'])).first()
         login_user(user)
