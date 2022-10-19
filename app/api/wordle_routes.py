@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
 
-from ..models import db, Wordle, WordleSession
+from ..models import db, Wordle, WordleSession, User
 from .utils import validation_errors_to_error_messages
 from ..forms.wordle_session_form import WordleSessionForm
 from datetime import date
@@ -44,6 +44,14 @@ def add_wordle_session(id):
     db.session.add(new_session)
     db.session.commit()
     return new_session.to_dict()
+
+@wordle_routes.route('/<int:puzzleId>/sessions/current')
+@login_required
+def get_users_wordle_session(puzzleId):
+    session = WordleSession.query.filter(db.and_(WordleSession.puzzle_id == puzzleId, WordleSession.user_id == current_user.id)).one_or_none()
+    if session:
+        return session.to_dict()
+    return {'errors':['session not found']}, 404
 
 @wordle_routes.route('/<int:puzzleId>/sessions/<int:sessionId>', methods=['PUT'])
 @login_required
