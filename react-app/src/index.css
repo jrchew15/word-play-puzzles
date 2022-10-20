@@ -8,6 +8,10 @@
     --letter-box-length: 3em;
     --puzzle-size: 7.5px;
     --card-width: 216px;
+
+    --wordle-yellow: #fdb515;
+    --wordle-green: #538d4e;
+    --wordle-gray: #3a3a3c;
 }
 
 #root.dark {

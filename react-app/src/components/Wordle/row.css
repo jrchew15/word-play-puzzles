@@ -1,0 +1,37 @@
+.wordle-row {
+    display: flex;
+    width: calc(10 * 0.2em + 5 * 1.2em + 4 * 0.2em);
+    justify-content: space-between;
+    margin: 0.2em 0;
+}
+
+.wordle-letter {
+    display: flex;
+    box-sizing: border-box;
+    height: calc(2 * 0.2em + 1.2em);
+    width: calc(2 * 0.2em + 1.2em);
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    padding: 0.2em;
+    border: 2px solid var(--wordle-gray);
+}
+
+.wordle-letter.blank {
+    background-color: var(--off-black);
+}
+
+.wordle-letter.gray {
+    background-color: var(--wordle-gray);
+}
+
+.wordle-letter.yellow {
+    background-color: var(--wordle-yellow);
+    border-color: var(--wordle-yellow);
+}
+
+.wordle-letter.green {
+    background-color: var(--wordle-green);
+    border-color: var(--wordle-green);
+}

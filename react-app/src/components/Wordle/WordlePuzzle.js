@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
+import WordleRow from "./WordleRow";
+import './wordle-puzzle.css';
+
 export default function WordlePuzzle() {
     const puzzleId = useParams().wordleId
-    console.log(puzzleId)
     let history = useHistory();
 
     const [guesses, setGuesses] = useState([])
@@ -42,7 +44,6 @@ export default function WordlePuzzle() {
 
             if (res.ok) {
                 setSession(data)
-                setGuesses(data.guesses)
                 return
             }
 
@@ -62,9 +63,25 @@ export default function WordlePuzzle() {
         })()
     }, [puzzle, puzzleId])
 
+    useEffect(() => {
+        if (session && session.guesses.length) {
+            setGuesses(session.guesses.split(','))
+        }
+    }, [session])
+
+
+    if (!puzzle) return null
+
+
     return session ? (
-        <h1>
-            {JSON.stringify(session)}
-        </h1>
+        <div id='wordle-rows'>
+            {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}
+            <WordleRow word={puzzle.word} />
+            <WordleRow word={puzzle.word} />
+            <WordleRow word={puzzle.word} />
+            <WordleRow word={puzzle.word} />
+            <WordleRow word={puzzle.word} />
+            <WordleRow word={puzzle.word} />
+        </div>
     ) : null
 }
