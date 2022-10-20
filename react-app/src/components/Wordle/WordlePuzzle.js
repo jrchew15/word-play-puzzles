@@ -69,19 +69,81 @@ export default function WordlePuzzle() {
         }
     }, [session])
 
+    useEffect(() => {
+        if (!submitting) return
+
+        (async () => {
+
+            // NEED TO CHECK WORD VALIDITY
+
+            // update session
+            const res = await fetch(`/api/wordles/${puzzleId}/sessions/${session.id}`, {
+                method: 'PUT',
+                header: { 'Content-Type': 'application/json' },
+                body: { newGuess: currentGuess.toLowerCase() }
+            })
+
+            if (res.ok) {
+                setGuesses(arr => arr.push(currentGuess.toLowerCase()))
+                setCurrentGuess('')
+            }
+            setSubmitting(false)
+        })()
+
+    }, [submitting])
 
     if (!puzzle) return null
 
 
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        setSubmitting(true)
+    }
+
+    function handleChange(e) {
+        setCurrentGuess(e.target.value)
+    }
+
+    function handleKey(e) {
+        if (e.key === 'Enter' && currentGuess.length === 5) return
+        e.preventDefault();
+
+        if (e.key.length === 1 && e.key.match(/[a-z]/i) && currentGuess.length < 5) {
+            setCurrentGuess(currentGuess + e.key.toUpperCase());
+            return
+        }
+        if (e.key === 'Backspace' && currentGuess.length > 0) {
+            setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1));
+        }
+    }
+
     return session ? (
-        <div id='wordle-rows'>
-            {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}
-            <WordleRow word={puzzle.word} />
-            <WordleRow word={puzzle.word} />
-            <WordleRow word={puzzle.word} />
-            <WordleRow word={puzzle.word} />
-            <WordleRow word={puzzle.word} />
-            <WordleRow word={puzzle.word} />
+        <div id='wordle-page'>
+            <div id='wordle-topbar'>
+
+            </div>
+            <div id='wordle-rows'>
+                {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}
+                <WordleRow word={puzzle.word} />
+                <WordleRow word={puzzle.word} />
+                <WordleRow word={puzzle.word} />
+                <WordleRow word={puzzle.word} />
+                <WordleRow word={puzzle.word} />
+                <WordleRow word={puzzle.word} />
+            </div>
+            <form id='wordle-form' onSubmit={handleSubmit}>
+                <input
+                    type='text'
+                    name='wordle'
+                    onChange={handleChange}
+                    onKeyDown={handleKey}
+                    autoFocus
+                    autoComplete="off"
+                    ref={formRef}
+                    value={currentGuess}
+                />
+            </form>
         </div>
     ) : null
 }

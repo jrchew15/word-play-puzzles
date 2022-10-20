@@ -1,7 +1,10 @@
 #wordle-rows {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
     background-color: var(--off-black);
     font-size: 36px;
     padding: 0.8em;
+    height: max-content;
 }
