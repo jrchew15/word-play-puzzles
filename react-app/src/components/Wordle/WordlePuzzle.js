@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
-import WordleRow from "./WordleRow";
+import { checkWordsTable } from "../../utils/wordChecks";
+import WordleRow, { CurrentRow } from "./WordleRow";
 import './wordle-puzzle.css';
 
 export default function WordlePuzzle() {
@@ -11,6 +12,8 @@ export default function WordlePuzzle() {
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
     const [showInvalidWord, setShowInvalidWord] = useState(false)
+
+    const [errors, setErrors] = useState([])
 
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
@@ -74,19 +77,33 @@ export default function WordlePuzzle() {
 
         (async () => {
 
-            // NEED TO CHECK WORD VALIDITY
+            // check word validity
+            const valid = await checkWordsTable(currentGuess)
 
-            // update session
-            const res = await fetch(`/api/wordles/${puzzleId}/sessions/${session.id}`, {
-                method: 'PUT',
-                header: { 'Content-Type': 'application/json' },
-                body: { newGuess: currentGuess.toLowerCase() }
-            })
+            if (valid) {
+                // update session
+                const res = await fetch(`/api/wordles/${puzzleId}/sessions/${session.id}`, {
+                    method: 'PUT',
+                    headers: { 'content-type': 'application/json' },
+                    body: JSON.stringify({ newGuess: currentGuess.toLowerCase() })
+                })
 
-            if (res.ok) {
-                setGuesses(arr => arr.push(currentGuess.toLowerCase()))
-                setCurrentGuess('')
+                if (res.ok) {
+                    setGuesses(arr => [...arr, currentGuess.toLowerCase()])
+                    setCurrentGuess('')
+                } else {
+                    let errData = await res.json();
+
+                    setErrors(errData.errors);
+                    setTimeout(() => { setErrors([]) }, 3000);
+                }
+            } else {
+                // if invalid word, display error for 3 seconds
+                setShowInvalidWord(true)
+                setTimeout(() => { setShowInvalidWord(false) }, 3000)
             }
+
+            // end submission timeout in all cases
             setSubmitting(false)
         })()
 
@@ -118,6 +135,8 @@ export default function WordlePuzzle() {
         }
     }
 
+    let emptyRows = guesses.length < 6 ? new Array(5 - guesses.length).fill(null) : []
+
     return session ? (
         <div id='wordle-page'>
             <div id='wordle-topbar'>
@@ -125,14 +144,10 @@ export default function WordlePuzzle() {
             </div>
             <div id='wordle-rows'>
                 {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}
-                <WordleRow word={puzzle.word} />
-                <WordleRow word={puzzle.word} />
-                <WordleRow word={puzzle.word} />
-                <WordleRow word={puzzle.word} />
-                <WordleRow word={puzzle.word} />
-                <WordleRow word={puzzle.word} />
+                <CurrentRow guess={currentGuess} word={puzzle.word} />
+                {emptyRows.map(empty => <WordleRow word={puzzle.word} />)}
             </div>
-            <form id='wordle-form' onSubmit={handleSubmit}>
+            {!session.completed && <form id='wordle-form' onSubmit={handleSubmit}>
                 <input
                     type='text'
                     name='wordle'
@@ -143,7 +158,11 @@ export default function WordlePuzzle() {
                     ref={formRef}
                     value={currentGuess}
                 />
-            </form>
+            </form>}
+            {errors.length > 0 && <div>
+                {errors.map(err => <span>{err}</span>)}
+            </div>
+            }
         </div>
     ) : null
 }

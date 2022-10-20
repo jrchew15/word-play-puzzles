@@ -30,3 +30,15 @@ export default function WordleRow({ guess, word }) {
         }
     </div>
 }
+
+export function CurrentRow({ guess, word }) {
+    let squares = new Array(5).fill(null);
+    for (let i = 0; i < guess.length; i++) {
+        squares[i] = guess[i]
+    }
+    return <div className='wordle-row'>
+        {squares.map(char => (
+            <div className='wordle-letter blank'>{char}</div>
+        ))}
+    </div>
+}

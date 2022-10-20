@@ -57,10 +57,12 @@ def get_users_wordle_session(puzzleId):
 @login_required
 def edit_wordle_session(puzzleId, sessionId):
     # session = WordleSession.query.get(sessionId)
-    session = WordleSession.query.options(db.joinedload(WordleSession.wordle)).get(puzzleId)
+    session = WordleSession.query.options(db.joinedload(WordleSession.wordle)).get(sessionId)
 
     form = WordleSessionForm()
     form['csrf_token'].data = request.cookies['csrf_token']
+    print('*********************88',form.data)
+    print(request.json)
     if session.puzzle_id == puzzleId and form.validate_on_submit():
         session.guesses = (session.guesses + ',' + form.newGuess.data) if len(session.guesses) > 0 else form.newGuess.data
         session.num_guesses += 1
