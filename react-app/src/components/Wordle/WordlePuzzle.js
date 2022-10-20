@@ -3,6 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 
 import { checkWordsTable } from "../../utils/wordChecks";
 import WordleRow, { CurrentRow } from "./WordleRow";
+import WordleKeyboard from "./WordleKeyboard";
 import './wordle-puzzle.css';
 
 export default function WordlePuzzle() {
@@ -163,6 +164,7 @@ export default function WordlePuzzle() {
                 {errors.map(err => <span>{err}</span>)}
             </div>
             }
+            <WordleKeyboard word={puzzle.word} guesses={guesses} />
         </div>
     ) : null
 }
