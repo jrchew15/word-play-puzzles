@@ -1,4 +1,4 @@
-#wordle-rows {
+#wordle-page {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,4 +7,33 @@
     font-size: 36px;
     padding: 0.8em;
     height: max-content;
+    width: 100%;
+    height: calc(100vh - var(--nav-height));
+}
+
+#wordle-form {
+    z-index: -1;
+    position: absolute;
+    top: center;
+    left: center;
+}
+
+#wordle-form,
+#wordle-message-container {
+    min-height: 1.2em;
+}
+
+#wordle-errors {
+    color: red;
+    font-size: 0.8em;
+    transition-property: opacity;
+    transition-duration: 0.25s;
+}
+
+#wordle-errors.off {
+    opacity: 0;
+}
+
+#wordle-errors.on {
+    opacity: 1;
 }

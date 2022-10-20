@@ -4,6 +4,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { checkWordsTable } from "../../utils/wordChecks";
 import WordleRow, { CurrentRow } from "./WordleRow";
 import WordleKeyboard from "./WordleKeyboard";
+import WordleLoader from "./WordleLoader";
 import './wordle-puzzle.css';
 
 export default function WordlePuzzle() {
@@ -15,6 +16,7 @@ export default function WordlePuzzle() {
     const [showInvalidWord, setShowInvalidWord] = useState(false)
 
     const [errors, setErrors] = useState([])
+    const [completed, setCompleted] = useState(false)
 
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
@@ -48,6 +50,7 @@ export default function WordlePuzzle() {
 
             if (res.ok) {
                 setSession(data)
+                setCompleted(data.completed)
                 return
             }
 
@@ -74,7 +77,7 @@ export default function WordlePuzzle() {
     }, [session])
 
     useEffect(() => {
-        if (!submitting) return
+        if (!submitting || !formRef) return
 
         (async () => {
 
@@ -90,18 +93,21 @@ export default function WordlePuzzle() {
                 })
 
                 if (res.ok) {
+                    let data = await res.json()
                     setGuesses(arr => [...arr, currentGuess.toLowerCase()])
                     setCurrentGuess('')
+                    if (data.completed) {
+                        setCompleted(true)
+                    }
                 } else {
                     let errData = await res.json();
-
                     setErrors(errData.errors);
-                    setTimeout(() => { setErrors([]) }, 3000);
+                    setTimeout(() => { setErrors([]) }, 2000);
                 }
             } else {
                 // if invalid word, display error for 3 seconds
-                setShowInvalidWord(true)
-                setTimeout(() => { setShowInvalidWord(false) }, 3000)
+                setErrors(['Not a valid word'])
+                setTimeout(() => { setErrors([]) }, 2000)
             }
 
             // end submission timeout in all cases
@@ -124,6 +130,10 @@ export default function WordlePuzzle() {
     }
 
     function handleKey(e) {
+        if (e.ctrlKey) {
+            if (e.key.toLowerCase() === 'v') e.preventDefault()
+            return
+        }
         if (e.key === 'Enter' && currentGuess.length === 5) return
         e.preventDefault();
 
@@ -136,19 +146,31 @@ export default function WordlePuzzle() {
         }
     }
 
+    function focusForm(e) {
+        if (formRef?.current) {
+            formRef.current.focus()
+        }
+    }
+
     let emptyRows = guesses.length < 6 ? new Array(5 - guesses.length).fill(null) : []
 
     return session ? (
-        <div id='wordle-page'>
+        <div id='wordle-page' onClick={focusForm}>
             <div id='wordle-topbar'>
 
             </div>
             <div id='wordle-rows'>
                 {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}
-                <CurrentRow guess={currentGuess} word={puzzle.word} />
+                {guesses.length < 6 && <CurrentRow guess={currentGuess} word={puzzle.word} />}
                 {emptyRows.map(empty => <WordleRow word={puzzle.word} />)}
             </div>
-            {!session.completed && <form id='wordle-form' onSubmit={handleSubmit}>
+            <div id='wordle-message-container'>
+                <div id='wordle-errors' className={errors.length > 0 ? 'on' : 'off'}>
+                    {errors.map(err => <span>{err}</span>)}
+                </div>
+                {submitting && !errors.length && <WordleLoader />}
+            </div>
+            {!completed && <form id='wordle-form' onSubmit={handleSubmit}>
                 <input
                     type='text'
                     name='wordle'
@@ -160,11 +182,7 @@ export default function WordlePuzzle() {
                     value={currentGuess}
                 />
             </form>}
-            {errors.length > 0 && <div>
-                {errors.map(err => <span>{err}</span>)}
-            </div>
-            }
-            <WordleKeyboard word={puzzle.word} guesses={guesses} />
+            <WordleKeyboard word={puzzle.word} guesses={guesses} currentGuess={currentGuess} setCurrentGuess={setCurrentGuess} setSubmitting={setSubmitting} />
         </div>
     ) : null
 }

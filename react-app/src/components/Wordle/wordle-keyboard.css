@@ -1,21 +1,24 @@
 #wordle-keyboard,
 #wordle-keyboard .row,
-.keyboard-letter {
+.keyboard-letter,
+.special-key {
     display: flex;
     background-color: var(--off-black);
+    font-size: 28px;
 }
 
 #wordle-keyboard {
     flex-direction: column;
     align-items: center;
-    width: calc(10 * 2em + 11 * 0.2em);
+    width: max-content;
 }
 
 #wordle-keyboard .row {
     justify-content: space-between;
 }
 
-.keyboard-letter {
+.keyboard-letter,
+.special-key {
     box-sizing: border-box;
     margin: 0.2em;
     justify-content: center;
@@ -23,7 +26,15 @@
     color: white;
     width: 2em;
     height: 2.8em;
-    border: 2px solid var(--wordle-gray);
+    cursor: pointer;
+    border-radius: 0.2em;
+    background-color: var(--wordle-light-gray);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .keyboard-letter.green {
@@ -36,4 +47,15 @@
 
 .keyboard-letter.gray {
     background-color: var(--wordle-gray);
+}
+
+.special-key {
+    width: 3.2em;
+    position: relative;
+}
+
+.special-key i {
+    font-size: 1.4em;
+    position: relative;
+    right: 0.06em;
 }

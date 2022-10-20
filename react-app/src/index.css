@@ -12,6 +12,7 @@
     --wordle-yellow: #fdb515;
     --wordle-green: #538d4e;
     --wordle-gray: #3a3a3c;
+    --wordle-light-gray: #818384;
 }
 
 #root.dark {

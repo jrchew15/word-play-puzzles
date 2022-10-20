@@ -1,20 +1,10 @@
-import('./row.css')
+import { checkWordleGuess } from './wordleFunctions'
+import './row.css'
 
 export default function WordleRow({ guess, word }) {
-    let mutableWordArr = word.split('');
-    let colors = new Array(5)
+    let colors
     if (guess) {
-        for (let i = 0; i < 5; i++) {
-            if (mutableWordArr[i] === guess[i]) {
-                colors[i] = 'green';
-                mutableWordArr[i] = null;
-            }
-        }
-        for (let i = 0; i < 5; i++) {
-            if (mutableWordArr[i]) {
-                colors[i] = mutableWordArr.includes(guess[i]) ? 'yellow' : 'gray'
-            }
-        }
+        colors = checkWordleGuess(word, guess)
     }
 
     return <div className="wordle-row">

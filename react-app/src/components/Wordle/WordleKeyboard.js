@@ -1,9 +1,9 @@
 import './wordle-keyboard.css';
 
-export default function WordleKeyboard({ word, guesses }) {
-    let row1 = 'qwertyuiop'.toUpperCase();
-    let row2 = 'asdfghjkl'.toUpperCase();
-    let row3 = 'zxcvbnm'.toUpperCase();
+export default function WordleKeyboard({ word, guesses, currentGuess, setCurrentGuess, setSubmitting }) {
+    let row1 = 'QWERTYUIOP';
+    let row2 = 'ASDFGHJKL';
+    let row3 = 'ZXCVBNM';
 
     let colorObj = {};
 
@@ -23,31 +23,44 @@ export default function WordleKeyboard({ word, guesses }) {
         }
     }
 
-    console.log(colorObj)
+    function keyboardClickHandle(e) {
+        if (e.target.className.includes('keyboard-letter') && currentGuess.length < 5) {
+            setCurrentGuess(word => word + e.target.innerText)
+        }
+    }
 
-    return <div id='wordle-keyboard'>
+    function enterKey(e) {
+        if (currentGuess.length < 5) return
+        setSubmitting(true)
+    }
+
+    function backspaceKey(e) {
+        if (currentGuess.length > 0) setCurrentGuess(word => word.slice(0, word.length - 1))
+    }
+
+    return <div id='wordle-keyboard' onClick={keyboardClickHandle}>
         <div className="row 1">
             {row1.split('').map(char => (
-                <div className={`keyboard-letter ${colorObj[char.toLowerCase()]}`}>
+                <div className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
                     {char}
                 </div>
             ))}
         </div>
         <div className="row 2">
             {row2.split('').map(char => (
-                <div className={`keyboard-letter ${colorObj[char.toLowerCase()]}`}>
+                <div className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
                     {char}
                 </div>
             ))}
         </div>
         <div className="row 3">
-            <div className="keyboard-letter special-key">Enter</div>
+            <div className="special-key" onClick={enterKey}>Enter</div>
             {row3.split('').map(char => (
-                <div className={`keyboard-letter ${colorObj[char]}`}>
+                <div className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
                     {char}
                 </div>
             ))}
-            <div className="keyboard-letter special-key">Backspace</div>
+            <div className="special-key" onClick={backspaceKey}><i className="fas fa-backspace" /></div>
         </div>
     </div>
 }
