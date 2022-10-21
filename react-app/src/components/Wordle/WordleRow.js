@@ -9,7 +9,7 @@ export default function WordleRow({ guess, word }) {
 
     return <div className="wordle-row">
         {guess ? guess.split('').map((char, i) => (
-            <div className={`wordle-letter ${colors[i]}`}>{char.toUpperCase()}</div>
+            <div className={`wordle-letter ${colors[i]}`} >{char.toUpperCase()}</div>
         )) : (<>
             <div className="wordle-letter blank"></div>
             <div className="wordle-letter blank"></div>

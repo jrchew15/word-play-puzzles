@@ -17,6 +17,21 @@ def get_puzzle_by_date(req_date):
         return puzzle.to_dict()
     return {'errors':['Puzzle not found']}, 404
 
+@wordle_routes.route('', methods=['POST'])
+@login_required
+def random_wordle():
+    form = WordleSessionForm()
+
+    print('******************',form.newGuess.data)
+    form['csrf_token'].data = request.cookies['csrf_token']
+    if form.validate_on_submit():
+        new_wordle = Wordle(word=form.newGuess.data)
+        db.session.add(new_wordle)
+        db.session.commit()
+        return new_wordle.to_dict()
+    return {'errors':['Unable to create new wordle']}, 401
+
+
 @wordle_routes.route('/<id>')
 def one_wordle(id):
     try:
@@ -61,8 +76,6 @@ def edit_wordle_session(puzzleId, sessionId):
 
     form = WordleSessionForm()
     form['csrf_token'].data = request.cookies['csrf_token']
-    print('*********************88',form.data)
-    print(request.json)
     if session.puzzle_id == puzzleId and form.validate_on_submit():
         session.guesses = (session.guesses + ',' + form.newGuess.data) if len(session.guesses) > 0 else form.newGuess.data
         session.num_guesses += 1

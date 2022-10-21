@@ -61,5 +61,37 @@
 #the-pod .puzzle-card {
     background-color: whitesmoke;
     border: 1px solid black;
-    aspect-ratio: 1/1;
+    height: 270px;
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+#the-pod .puzzle-card.wordle {
+    position: relative;
+    background-color: var(--wordle-gray);
+    color: #e2e2e2;
+}
+
+#the-pod .puzzle-card.wordle img {
+    width: 70%;
+    height: auto;
+}
+
+#pod-cards {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#the-pod .puzzle-card.wordle i {
+    font-size: 8em;
+    bottom: 18%;
+    position: absolute;
+    z-index: 1;
+}
+
+#the-pod .puzzle-card.wordle:hover i {
+    color: var(--highlight-color)
+ }

@@ -1,6 +1,6 @@
 from crypt import methods
 from flask import Blueprint, request
-from app.models import db, Word
+from app.models import db, Word, Wordle
 import os
 from ..forms.word_form import WordForm
 import http.client
@@ -9,6 +9,7 @@ word_routes = Blueprint('words', __name__)
 
 @word_routes.route('/<word>')
 def get_word(word):
+    word = word.lower()
     if len(word) <= 1:
         return ({'errors':['word must be more than one letter']}, 400)
 
@@ -21,8 +22,8 @@ def get_word(word):
     conn = http.client.HTTPSConnection("wordsapiv1.p.rapidapi.com")
 
     headers = {
-        'X-RapidAPI-Key': "0e76769061msh1affd841b6293c1p114f0ejsn5072e6ef9223",
-        'X-RapidAPI-Host': "wordsapiv1.p.rapidapi.com"
+        'X-RapidAPI-Key': os.environ.get("RAPIDAPI_KEY"),
+        'X-RapidAPI-Host': os.environ.get("RAPIDAPI_HOST")
         }
 
     conn.request("GET", f"/words/{word}/frequency", headers=headers)
@@ -51,3 +52,31 @@ def add_word():
         db.session.commit()
         return {'word':word}, 200
     return {'errors':['Unauthorized']}, 405
+
+@word_routes.route('/random-wordle')
+def random_wordle_fetch():
+    conn = http.client.HTTPSConnection("wordsapiv1.p.rapidapi.com")
+
+    headers = {
+        'X-RapidAPI-Key': os.environ.get("RAPIDAPI_KEY"),
+        'X-RapidAPI-Host': os.environ.get("RAPIDAPI_HOST")
+        }
+
+    try_again=True
+
+    while try_again:
+        conn.request("GET", f"/words/?letters=5&frequencyMin=3.8&random=true", headers=headers)
+
+        res = conn.getresponse()
+        data = res.read()
+
+        decoded = data.decode("utf-8")
+        word = decoded.split('"word":"')[1][0:5]
+        try_again=not word.isalpha()
+
+
+
+    new_word = Word(word=word, length=5)
+    db.session.add(new_word)
+    db.session.commit()
+    return ({'word':word}, 200)

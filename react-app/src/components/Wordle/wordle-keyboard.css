@@ -4,7 +4,7 @@
 .special-key {
     display: flex;
     background-color: var(--off-black);
-    font-size: 28px;
+    font-size: 24px;
 }
 
 #wordle-keyboard {

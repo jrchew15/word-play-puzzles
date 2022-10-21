@@ -21,6 +21,9 @@ def seed():
     seed_wordles()
     # Add other seed functions here
 
+@seed_commands.command('wordles_only')
+def seed_wordles_only():
+    seed_wordles()
 
 # Creates the `flask seed undo` command
 @seed_commands.command('undo')

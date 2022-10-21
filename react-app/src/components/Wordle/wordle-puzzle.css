@@ -8,7 +8,7 @@
     padding: 0.8em;
     height: max-content;
     width: 100%;
-    height: calc(100vh - var(--nav-height));
+    min-height: calc(100vh - var(--nav-height));
 }
 
 #wordle-form {
@@ -36,4 +36,25 @@
 
 #wordle-errors.on {
     opacity: 1;
+}
+
+#wordle-rows {
+    position: relative;
+}
+
+#wordle-rows>#wordle-lost-display {
+    background-color: white;
+    box-sizing: border-box;
+    color: var(--off-black);
+    font-size: 24px;
+    position: absolute;
+    width: 110px;
+    left: calc(50% - 55px);
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 12px;
+    top: -20px;
+    z-index: 1;
+    border: 2px solid var(--off-black);
 }
