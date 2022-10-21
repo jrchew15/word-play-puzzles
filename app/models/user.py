@@ -44,6 +44,7 @@ class User(db.Model, UserMixin):
             response['email'] = self.email
             response['theme'] = self.theme
             response['openSessions'] = [ session.id for session in self.sessions if not session.completed]
+            response['openWordles'] = [ session.wordle.id for session in self.wordle_sessions if not session.completed]
         if total:
             response['totalPuzzlesSolved'] = len([session for session in self.sessions if session.completed])
         return response

@@ -9,13 +9,12 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import Homepage from './Homepage';
-import BadRoute from './components/BadRoute'
-import PuzzlesOfTheDay from './components/Carousels/PuzzlesOfTheDay';
-import PuzzlesByDifficulty from './components/Carousels/PuzzlesByDifficulty';
+import BadRoute from './components/BadRoute';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
 import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
 import SignUpPrompt from './components/auth/SignUpPrompt';
+import WordleTodayRedirect from './components/Carousels/WordleTodayRedirect';
 
 import WordlePuzzle from './components/Wordle/WordlePuzzle';
 import WordleRow from './components/Wordle/WordleRow';
@@ -73,10 +72,8 @@ function App() {
               <UnregisteredPuzzle />
             }
           </Route>
-          <Route path='/wordles/test' exact>
-            <WordleRow word='elect' guess='steed' />
-            <WordleRow word='elect' guess='event' />
-            <WordleRow word='elect' guess='' />
+          <Route path='/wordles/today' exact>
+            <WordleTodayRedirect />
           </Route>
           <Route path='/wordles/:wordleId' exact>
             {currentUser && <WordlePuzzle />}
