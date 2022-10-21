@@ -34,3 +34,7 @@ def undo():
     undo_comments()
     undo_wordles()
     # Add other undo functions here
+
+@seed_commands.command('undo_wordles)only')
+def undo_wordles_only():
+    undo_wordles()
