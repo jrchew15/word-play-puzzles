@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import { checkWordsTable } from "../../utils/wordChecks";
+import { authenticate } from "../../store/session";
 import WordleRow, { CurrentRow } from "./WordleRow";
 import WordleKeyboard from "./WordleKeyboard";
 import WordleLoader from "./WordleLoader";
@@ -12,6 +14,7 @@ import './wordle-puzzle.css';
 export default function WordlePuzzle() {
     const puzzleId = useParams().wordleId
     let history = useHistory();
+    let dispatch = useDispatch();
 
     const [guesses, setGuesses] = useState([])
     const [currentGuess, setCurrentGuess] = useState('')
@@ -63,6 +66,7 @@ export default function WordlePuzzle() {
                     { method: 'POST' }
                 );
                 const newData = await newRes.json();
+                await dispatch(authenticate())
                 setSession(newData)
                 return
             }
