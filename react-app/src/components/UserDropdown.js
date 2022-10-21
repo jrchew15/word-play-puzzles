@@ -23,15 +23,25 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
             <li onClick={() => { setShowModal(true); closeDropdowns() }}>My Profile</li>
             <div className="navbar-sep" />
             <li id='puzzle-select'>
-                {currentUser.openSessions.length < 1 ? <span>No Open Puzzles</span> :
-                    (<>Open Puzzles
+                {currentUser.openSessions.length < 1 ? <span>No Open Wordgons</span> :
+                    (<><span style={{ marginBottom: 4 }}>Open Wordgons</span>
                         {currentUser.openSessions.map(sesh => (
-                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }}>
+                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={sesh.id}>
                                 <NavLink to={`/wordgons/${wordgons[sesh].puzzleId}`} >
                                     {wordgons[sesh].puzzleId}</NavLink>
                             </span>
-                        ))}</>)
-                }
+                        ))}
+                    </>)}
+                {currentUser.openWordles.length < 1 ? <span>No Open Wordles</span> :
+                    (<>
+                        <span style={{ marginBottom: 4 }}>Open Wordles</span>
+                        {currentUser.openWordles.map(wordleId => (
+                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={wordleId}>
+                                <NavLink to={`/wordles/${wordleId}`} >
+                                    {wordleId}</NavLink>
+                            </span>))}
+                    </>
+                    )}
             </li>
             <div className="navbar-sep" />
             <LogoutButton loggingOut={loggingOut} setLoggingOut={setLoggingOut} />

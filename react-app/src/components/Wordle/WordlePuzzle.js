@@ -166,9 +166,7 @@ export default function WordlePuzzle() {
 
     return session ? (
         <div id='wordle-page' onClick={focusForm}>
-            {/* <div id='wordle-topbar'> */}
             <h2 style={{ color: 'white', position: 'absolute', left: 50, top: 50 }}>Wordle</h2>
-            {/* </div> */}
             <div id='wordle-rows'>
                 {session.completed && !won && <div id='wordle-lost-display'>{puzzle.word.toUpperCase()}</div>}
                 {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}

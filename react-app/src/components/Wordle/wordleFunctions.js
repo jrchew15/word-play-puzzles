@@ -21,6 +21,16 @@ export function checkWordleGuess(word, guess) {
 }
 
 export async function makeRandomWordle(history, setGuesses, setSession) {
+    // first try table of wordles for an unopened puzzle
+    const existingRes = await fetch('/api/wordles/random')
+    if (existingRes.ok) {
+        if (setSession) setSession(null)
+        if (setGuesses) setGuesses([])
+        const { id: wordleId } = await existingRes.json();
+        history.push(`/wordles/${wordleId}`)
+        return
+    }
+
     const wordRes = await fetch('/api/words/random-wordle')
 
     if (wordRes.ok) {

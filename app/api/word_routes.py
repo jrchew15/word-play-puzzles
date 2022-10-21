@@ -72,7 +72,8 @@ def random_wordle_fetch():
 
         decoded = data.decode("utf-8")
         word = decoded.split('"word":"')[1][0:5]
-        try_again=not word.isalpha()
+        wordle = Wordle.query.filter(Wordle.word == word).one_or_none()
+        try_again = not word.isalpha() or wordle
 
 
 
