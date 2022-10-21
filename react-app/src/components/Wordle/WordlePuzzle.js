@@ -68,6 +68,7 @@ export default function WordlePuzzle() {
                 const newData = await newRes.json();
                 await dispatch(authenticate())
                 setSession(newData)
+                setCompleted(false)
                 return
             }
             history.push('/404')
