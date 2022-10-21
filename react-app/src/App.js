@@ -17,6 +17,9 @@ import { thunkLoadWordgonSessions } from './store/wordgon';
 import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
 import SignUpPrompt from './components/auth/SignUpPrompt';
 
+import WordlePuzzle from './components/Wordle/WordlePuzzle';
+import WordleRow from './components/Wordle/WordleRow';
+
 import './index.css'
 
 function App() {
@@ -69,6 +72,14 @@ function App() {
               <Puzzle /> :
               <UnregisteredPuzzle />
             }
+          </Route>
+          <Route path='/wordles/test' exact>
+            <WordleRow word='elect' guess='steed' />
+            <WordleRow word='elect' guess='event' />
+            <WordleRow word='elect' guess='' />
+          </Route>
+          <Route path='/wordles/:wordleId' exact>
+            {currentUser && <WordlePuzzle />}
           </Route>
           <Route path='/' exact={true} >
             {currentUser ? <Homepage /> : <Redirect to='/welcome' />}

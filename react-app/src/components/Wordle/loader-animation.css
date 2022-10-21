@@ -1,0 +1,81 @@
+#wordle-loader>.dot {
+    content: '';
+    margin: 0 0.2em;
+    min-width: 0.4em;
+    min-height: 0.4em;
+    background-color: white;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+#wordle-loader>.dot.load1 {
+    animation-name: loading1;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+}
+
+#wordle-loader>.dot.load2 {
+    animation-name: loading2;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+}
+
+#wordle-loader>.dot.load3 {
+    animation-name: loading3;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes loading2 {
+    from {
+        opacity: 0;
+    }
+
+    33% {
+        opacity: 1;
+    }
+
+    67% {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes loading3 {
+    from {
+        opacity: 0;
+    }
+
+    33% {
+        opacity: 0;
+    }
+
+    67% {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes loading1 {
+    from {
+        opacity: 1;
+    }
+
+    33% {
+        opacity: 0;
+    }
+
+    67% {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

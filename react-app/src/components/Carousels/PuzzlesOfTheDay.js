@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { ListableBoxAndLetters, DetailsByStatus } from "../WordGon/WordGonBox";
 import PuzzleCarousel from "./PuzzleCarousel";
 import { puzzleDifficulty, dbDateToDateObj } from "../../utils/puzzleFunctions";
+import { makeRandomWordle } from "../Wordle/wordleFunctions";
 import '../WordGon/wordgon-list.css';
 import './carousel.css'
 
@@ -27,14 +28,25 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
     return (
         <>
             {puzzles.length > 0 && <div id='the-pod'>
-                <h2 style={{ color: 'whitesmoke' }}>Today's Puzzle:</h2>
-                <div className="puzzle-card" onClick={() => history.push(`/wordgons/${puzzles[0].id}`)} >
-                    <div className='puzzle-title' >
-                        <span style={{ margin: '5px 0' }}>{parseDate(puzzles[0].puzzleDay)}</span>
+                <h2 style={{ color: 'whitesmoke' }}>Today's Puzzles:</h2>
+                <div id='pod-cards'>
+                    <div className="puzzle-card wordle" onClick={() => history.push(`/wordles/today`)}>
+                        <h2>Wordle of the Day</h2>
+                        <img src='/static/images/alpha-wordle-icon.png' alt='wordle' />
                     </div>
-                    <div style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <ListableBoxAndLetters letters={puzzles[0].letters} puzzleId={puzzles[0].id} difficulty={puzzleDifficulty(puzzles[0])} />
-                        <DetailsByStatus puzzleId={puzzles[0].id} />
+                    <div className="puzzle-card" onClick={() => history.push(`/wordgons/${puzzles[0].id}`)} >
+                        <div className='puzzle-title' >
+                            <span style={{ margin: '5px 0' }}>{parseDate(puzzles[0].puzzleDay)}</span>
+                        </div>
+                        <div style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <ListableBoxAndLetters letters={puzzles[0].letters} puzzleId={puzzles[0].id} difficulty={puzzleDifficulty(puzzles[0])} />
+                            <DetailsByStatus puzzleId={puzzles[0].id} />
+                        </div>
+                    </div>
+                    <div className="puzzle-card wordle" onClick={() => makeRandomWordle(history)}>
+                        <h2>Random wordle</h2>
+                        <i class="far fa-question-circle"></i>
+                        <img src='/static/images/alpha-wordle-icon.png' alt='wordle' style={{ opacity: '0.5' }} />
                     </div>
                 </div>
             </div>}

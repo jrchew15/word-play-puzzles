@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     sessions = db.relationship("WordGonSession", back_populates="user")
     puzzles = db.relationship("WordGon", back_populates='user')
     comments = db.relationship("Comment", back_populates='user')
+    wordle_sessions = db.relationship("WordleSession", back_populates="user")
 
     @property
     def password(self):
