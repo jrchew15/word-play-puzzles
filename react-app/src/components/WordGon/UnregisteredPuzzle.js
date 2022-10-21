@@ -9,6 +9,7 @@ import CompleteModal from "./CompletedModal";
 import FailModal from "./FailModal";
 import { defaultImg } from "../../store/utils/image_urls";
 import { parseDate } from "../Carousels/PuzzlesOfTheDay";
+import RulesModal from "./RulesModal";
 import './puzzle-modal.css'
 
 import './wordgon.css';
@@ -25,6 +26,7 @@ export default function UnregisteredPuzzle() {
     const [showFailModal, setShowFailModal] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [showInvalidWord, setShowInvalidWord] = useState(false)
+    const [showRulesModal, setShowRulesModal] = useState(false)
 
     const today_date = new Date();
 
@@ -144,16 +146,24 @@ export default function UnregisteredPuzzle() {
     return (
         <>
             <div id='session-container' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
-                <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
-                <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />
+                {completed ?
+                    <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={completed} />
+                    : <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />}
                 <FailModal showModal={showFailModal} setShowModal={setShowFailModal} />
+                <RulesModal showModal={showRulesModal} setShowModal={setShowRulesModal} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} onError={e => e.target.src = defaultImg} />
                         By {puzzle.user.username}
+                        <div className="puzzle-topbar-sep" style={{ marginLeft: 15 }} />
+                        <div onClick={() => setShowRulesModal(true)} id='rules-button'>Rules</div>
+                        <div className="puzzle-topbar-sep" />
                     </div>
-                    <div>{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : parseDate(puzzle.puzzleDay)}</div>
-                    <div id='restart-button' onClick={deleteHandler}>Restart</div>
+                    <div >{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : 'Puzzel of the Day: ' + parseDate(puzzle.puzzleDay)}</div>
+                    <div style={{ height: '100%', display: 'flex', position: 'absolute', right: 0 }}>
+                        <div className="puzzle-topbar-sep" />
+                        <div id='restart-button' onClick={deleteHandler}>Restart</div>
+                    </div>
                 </div>
                 <div id='guesses-puzzles'>
                     <div id='guesses-container'>

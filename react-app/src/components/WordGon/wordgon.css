@@ -1,10 +1,13 @@
 #puzzle-topbar {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     background-color: white;
-    /* height: 50px; */
+    height: var(--nav-height);
+    min-height: var(--nav-height);
     align-items: center;
+    justify-content: center;
     padding: 0px 0 0 20px;
+    position: relative;
 }
 
 #puzzle-author img {
@@ -23,7 +26,8 @@
     padding: 0 35px;
 }
 
-#restart-button:hover {
+#restart-button:hover,
+#rules-button:hover {
     background-color: var(--highlight-color);
     color: white;
 }
@@ -127,6 +131,10 @@
     display: flex;
     align-items: center;
     background-color: white;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    left: 0;
 }
 
 #guesses-container {
@@ -176,4 +184,19 @@
     top: -20px;
     text-shadow: -1px 1px 0 black, 1px 1px 0 black, 1px -1px 0 black,
         -1px -1px 0 black;
+}
+
+.puzzle-topbar-sep {
+    content: '';
+    width: 1px;
+    background-color: #e2e2e2;
+    height: 100%;
+}
+
+#rules-button {
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 }

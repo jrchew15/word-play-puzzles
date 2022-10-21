@@ -29,7 +29,8 @@ export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) 
                         <div style={{ fontSize: '1.2em', width: '400px', textAlign: 'center' }}>
                             <span style={{ width: '300px' }}>
                                 Use all the letters around the square before you run out of words.
-                                Two letters on the same side cannot be used back-to-back!
+                                You can use letters more than once, but two letters on the same side
+                                cannot be used back-to-back!
                                 {!currentUser && "\n Since you don't have an account, your progress will not be saved."}
                             </span>
                         </div>

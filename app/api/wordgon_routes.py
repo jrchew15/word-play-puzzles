@@ -6,7 +6,7 @@ from ..forms.comment_form import CommentForm
 from ..forms.wordgon_form import WordGonForm
 from ..forms.wordgon_session_form import WordGonSessionForm
 from .utils import validation_errors_to_error_messages, db_date_to_datetime, not_future_day
-from random import shuffle
+from random import shuffle, sample
 
 from datetime import date
 
@@ -55,11 +55,14 @@ def get_puzzles_of_the_day():
 def get_puzzles_by_difficulty(diff):
     reader = {'easy':6,'medium':7}
     if diff == 'hard':
-        puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts >= 8, WordGon.puzzle_day == None)).limit(30)
+        puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts >= 8, WordGon.puzzle_day == None))
     else:
-        puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts == reader[diff], WordGon.puzzle_day == None)).limit(30)
+        puzzles = WordGon.query.filter(db.and_(WordGon.num_attempts == reader[diff], WordGon.puzzle_day == None))
     puzzles_list = [puzzle.to_dict() for puzzle in puzzles]
-    shuffle(puzzles_list)
+    if len(puzzles_list) >= 30:
+        puzzles_list = sample(puzzles_list, 30)
+    else:
+        shuffle(puzzles_list)
     return {'puzzles':puzzles_list}
 
 @wordgon_routes.route('/<id>')
@@ -80,7 +83,7 @@ def add_session(id):
     puzzle = WordGon.query.get(id)
 
     if puzzle is None:
-        return {'errors':['Puzzle not found']}, 401
+        return {'errors':['Puzzle not found']}, 404
 
     new_session = WordGonSession(
         puzzle_id=id,

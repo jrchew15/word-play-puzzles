@@ -14,6 +14,7 @@ import CommentsContainer from "../Comments/CommentsContainer";
 import { color_dict, puzzleDifficulty } from '../../utils/puzzleFunctions';
 import { defaultImg } from "../../store/utils/image_urls";
 import { parseDate } from "../Carousels/PuzzlesOfTheDay";
+import RulesModal from "./RulesModal";
 
 import './wordgon.css';
 
@@ -33,6 +34,7 @@ export default function Puzzle() {
     const [submitting, setSubmitting] = useState(false)
     const [showComments, setShowComments] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
+    const [showRulesModal, setShowRulesModal] = useState(false)
 
     const sessions = useSelector(state => state.wordgon)
 
@@ -195,13 +197,20 @@ export default function Puzzle() {
                     <CompleteModal numGuesses={guesses.length} numAttempts={puzzle.numAttempts} showModal={showModal} setShowModal={setShowModal} completed={session.completed} />
                     : <StartPuzzleModal showModal={showModal} setShowModal={setShowModal} puzzleId={puzzleId} />}
                 <FailModal guesses={guesses} setCurrentGuess={setCurrentGuess} showModal={showFailModal} setShowModal={setShowFailModal} deleteHandler={deleteHandler} />
+                <RulesModal showModal={showRulesModal} setShowModal={setShowRulesModal} />
                 <div id='puzzle-topbar'>
                     <div id='puzzle-author'>
                         <img src={puzzle.user.profilePicture} alt={puzzle.user.username} onError={e => e.target.src = defaultImg} />
                         By {puzzle.user.username}
+                        <div className="puzzle-topbar-sep" style={{ marginLeft: 15 }} />
+                        <div onClick={() => setShowRulesModal(true)} id='rules-button'>Rules</div>
+                        <div className="puzzle-topbar-sep" />
                     </div>
-                    <div>{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : parseDate(puzzle.puzzleDay)}</div>
-                    <div id='restart-button' onClick={deleteHandler}>Restart</div>
+                    <div >{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : 'Puzzel of the Day: ' + parseDate(puzzle.puzzleDay)}</div>
+                    <div style={{ height: '100%', display: 'flex', position: 'absolute', right: 0 }}>
+                        <div className="puzzle-topbar-sep" />
+                        <div id='restart-button' onClick={deleteHandler}>Restart</div>
+                    </div>
                 </div>
                 {isLoaded && <div id='guesses-puzzles' onClick={giveFocus}>
                     <div id='guesses-container'>
