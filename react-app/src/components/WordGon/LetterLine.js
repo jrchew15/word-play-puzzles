@@ -9,7 +9,7 @@ export default function LetterLine({ twoIndices, backgroundColor }) {
     const xEnd = coordsEnd[0];
     const yEnd = coordsEnd[1];
 
-    const length = Math.round(Math.sqrt((x - xEnd) ** 2 + (y - yEnd) ** 2))
+    const length = Math.sqrt((x - xEnd) ** 2 + (y - yEnd) ** 2)
 
     const angle = Math.atan((yEnd - y) / (xEnd - x)) + (xEnd >= x ? 0 : Math.PI);
 

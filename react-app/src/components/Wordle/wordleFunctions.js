@@ -1,6 +1,6 @@
 export function checkWordleGuess(word, guess) {
     let mutableWordArr = word.split('');
-    let colors = new Array(5)
+    let colors = new Array(5);
     for (let i = 0; i < 5; i++) {
         if (mutableWordArr[i] === guess[i]) {
             colors[i] = 'green';

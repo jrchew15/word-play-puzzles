@@ -206,7 +206,7 @@ export default function Puzzle() {
                         <div onClick={() => setShowRulesModal(true)} id='rules-button'>Rules</div>
                         <div className="puzzle-topbar-sep" />
                     </div>
-                    <div >{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : 'Puzzel of the Day: ' + parseDate(puzzle.puzzleDay)}</div>
+                    <div >{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : 'Puzzle of the Day: ' + parseDate(puzzle.puzzleDay)}</div>
                     <div style={{ height: '100%', display: 'flex', position: 'absolute', right: 0 }}>
                         <div className="puzzle-topbar-sep" />
                         <div id='restart-button' onClick={deleteHandler}>Restart</div>

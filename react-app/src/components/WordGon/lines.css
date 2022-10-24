@@ -3,10 +3,27 @@
     position: absolute;
     height: 1em;
     background-color: black;
-    width: 50em;
+    /* width: 50em; */
     transform-origin: center left;
 }
 
 #puzzle-square {
     overflow: hidden;
+}
+
+.letter-line.animated {
+    animation-name: letter-line-animation;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    animation-duration: 1s;
+}
+
+@keyframes letter-line-animation {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 70em;
+    }
 }

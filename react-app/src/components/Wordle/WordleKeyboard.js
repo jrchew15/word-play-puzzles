@@ -41,26 +41,27 @@ export default function WordleKeyboard({ word, guesses, currentGuess, setCurrent
     return <div id='wordle-keyboard' onClick={keyboardClickHandle}>
         <div className="row 1">
             {row1.split('').map(char => (
-                <div className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
+                <div key={char.toLowerCase() + ',keyboard'} className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
                     {char}
                 </div>
             ))}
         </div>
         <div className="row 2">
             {row2.split('').map(char => (
-                <div className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
+                <div key={char.toLowerCase() + ',keyboard'} className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
                     {char}
                 </div>
-            ))}
-        </div>
+            ))
+            }
+        </div >
         <div className="row 3">
             <div className="special-key" onClick={enterKey}>Enter</div>
             {row3.split('').map(char => (
-                <div className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
+                <div key={char.toLowerCase() + ',keyboard'} className={'keyboard-letter ' + (colorObj[char.toLowerCase()] || '')}>
                     {char}
                 </div>
             ))}
             <div className="special-key" onClick={backspaceKey}><i className="fas fa-backspace" /></div>
-        </div>
-    </div>
+        </div >
+    </div >
 }
