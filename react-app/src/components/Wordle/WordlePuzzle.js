@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { checkWordsTable } from "../../utils/wordChecks";
 import { authenticate } from "../../store/session";
-import WordleRow, { CurrentRow } from "./WordleRow";
+import WordleRow, { CurrentRow, AnimatedRow } from "./WordleRow";
 import WordleKeyboard from "./WordleKeyboard";
 import WordleLoader from "./WordleLoader";
 import { Modal } from "../../context/Modal";
@@ -80,7 +80,6 @@ export default function WordlePuzzle() {
         if (session && session.guesses.length) {
             let guessArr = session.guesses.split(',')
             setGuesses(guessArr)
-            console.log('won?', session.completed && guessArr[guessArr.length - 1] === puzzle.word)
             setWon(session.completed && guessArr[guessArr.length - 1] === puzzle.word)
         }
     }, [session])
@@ -103,11 +102,14 @@ export default function WordlePuzzle() {
 
                 if (res.ok) {
                     let data = await res.json()
-                    setGuesses(arr => [...arr, currentGuess.toLowerCase()])
-                    setCurrentGuess('')
                     if (data.completed) {
                         setCompleted(true)
+                        setWon(currentGuess.toLowerCase() === puzzle.word)
+                        setShowModal(true)
                     }
+                    setGuesses(arr => [...arr, currentGuess.toLowerCase()])
+                    setCurrentGuess('')
+
                 } else {
                     let errData = await res.json();
                     setErrors(errData.errors);
@@ -117,19 +119,20 @@ export default function WordlePuzzle() {
                 // if invalid word, display error for 3 seconds
                 setErrors(['Not a valid word'])
                 setTimeout(() => { setErrors([]) }, 2000)
+                // end submission timeout
             }
-
-            // end submission timeout in all cases
             setSubmitting(false)
+
         })()
 
     }, [submitting])
 
-    useEffect(() => {
-        if (!completed) return
-        setWon(guesses[guesses.length - 1] === puzzle.word);
-        setShowModal(true)
-    }, [completed])
+
+    // useEffect(() => {
+    //     if (!completed) return
+    //     setWon(guesses[guesses.length - 1] === puzzle.word);
+    //     setShowModal(true)
+    // }, [completed])
 
     if (!puzzle) return null
 
@@ -174,31 +177,35 @@ export default function WordlePuzzle() {
             <h2 style={{ color: 'white', position: 'absolute', left: 50, top: 50 }}>Wordle</h2>
             <div id='wordle-rows'>
                 {session.completed && !won && <div id='wordle-lost-display'>{puzzle.word.toUpperCase()}</div>}
-                {guesses.map(guess => <WordleRow guess={guess} word={puzzle.word} />)}
-                {guesses.length < 6 && <CurrentRow guess={currentGuess} word={puzzle.word} />}
-                {emptyRows.map(empty => <WordleRow word={puzzle.word} />)}
+                {guesses.map((guess, idx) => <AnimatedRow guess={guess} word={puzzle.word} row={idx} />)}
+                {guesses.length < 6 && (
+                    <CurrentRow guess={currentGuess} />
+                )}
+                {emptyRows.map((empty, i) => <WordleRow word={puzzle.word} row={i} />)}
             </div>
             <div id='wordle-message-container'>
                 <div id='wordle-errors' className={errors.length > 0 ? 'on' : 'off'}>
-                    {errors.map(err => <span>{err}</span>)}
+                    {errors.map((err, i) => <span key={`error,${i}`} > {err}</span>)}
                 </div>
                 {submitting && !errors.length && <WordleLoader />}
             </div>
-            {!completed && <form id='wordle-form' onSubmit={handleSubmit}>
-                <input
-                    type='text'
-                    name='wordle'
-                    onChange={handleChange}
-                    onKeyDown={handleKey}
-                    autoFocus
-                    autoComplete="off"
-                    ref={formRef}
-                    value={currentGuess}
-                />
-            </form>}
+            {
+                !completed && <form id='wordle-form' onSubmit={handleSubmit}>
+                    <input
+                        type='text'
+                        name='wordle'
+                        onChange={handleChange}
+                        onKeyDown={handleKey}
+                        autoFocus
+                        autoComplete="off"
+                        ref={formRef}
+                        value={currentGuess}
+                    />
+                </form>
+            }
             <WordleKeyboard word={puzzle.word} guesses={guesses} currentGuess={currentGuess} setCurrentGuess={setCurrentGuess} setSubmitting={setSubmitting} />
             <EndModal />
-        </div>
+        </div >
     ) : null
 
     function EndModal() {

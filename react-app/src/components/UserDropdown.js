@@ -22,6 +22,8 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
         <ul id='user-dropdown' className="unselectable">
             <li onClick={() => { setShowModal(true); closeDropdowns() }}>My Profile</li>
             <div className="navbar-sep" />
+            <LogoutButton loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
+            <div className="navbar-sep" />
             <li id='puzzle-select'>
                 {currentUser.openSessions.length < 1 ? <span>No Open Wordgons</span> :
                     (<><span style={{ marginBottom: 4 }}>Open Wordgons</span>
@@ -43,8 +45,6 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
                     </>
                     )}
             </li>
-            <div className="navbar-sep" />
-            <LogoutButton loggingOut={loggingOut} setLoggingOut={setLoggingOut} />
         </ul >
         : null)
 }

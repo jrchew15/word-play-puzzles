@@ -3,10 +3,167 @@
     position: absolute;
     height: 1em;
     background-color: black;
-    width: 50em;
+    /* width: 50em; */
     transform-origin: center left;
 }
 
 #puzzle-square {
     overflow: hidden;
+}
+
+/* .letter-line.animated {
+    animation-name: letter-line-animation;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+} */
+
+@keyframes letter-line-animation {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 50em;
+    }
+}
+
+.letter-line.animated {
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    width: 50em;
+}
+
+.letter-line.animated-1-1 {
+    animation-name: letter-line-animation-1-1;
+    animation-duration: 0.226s;
+}
+
+.letter-line.animated-1-2 {
+    animation-name: letter-line-animation-1-2;
+    animation-duration: 0.431s;
+}
+
+.letter-line.animated-1-3 {
+    animation-name: letter-line-animation-1-3;
+    animation-duration: 0.660s;
+}
+
+.letter-line.animated-2-2 {
+    animation-name: letter-line-animation-2-2;
+    animation-duration: 0.566s;
+}
+
+.letter-line.animated-2-3 {
+    animation-name: letter-line-animation-2-3;
+    animation-duration: 0.755s;
+}
+
+.letter-line.animated-3-3 {
+    animation-name: letter-line-animation-3-3;
+    animation-duration: 0.905s;
+}
+
+.letter-line.animated-0 {
+    animation-name: letter-line-animation-0;
+    animation-duration: 0.8s;
+}
+
+.letter-line.animated-1 {
+    animation-name: letter-line-animation-1;
+    animation-duration: 0.835s;
+}
+
+.letter-line.animated-2 {
+    animation-name: letter-line-animation-2;
+    animation-duration: 0.933s;
+}
+
+@keyframes letter-line-animation-1-1 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 11.314em;
+    }
+}
+
+@keyframes letter-line-animation-1-2 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 21.541em;
+    }
+}
+
+@keyframes letter-line-animation-1-3 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 32.985em;
+    }
+}
+
+@keyframes letter-line-animation-2-2 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 28.284em;
+    }
+}
+
+@keyframes letter-line-animation-2-3 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 37.736em;
+    }
+}
+
+@keyframes letter-line-animation-3-3 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 45.255em;
+    }
+}
+
+@keyframes letter-line-animation-0 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 40em;
+    }
+}
+
+@keyframes letter-line-animation-1 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 41.761em;
+    }
+}
+
+@keyframes letter-line-animation-2 {
+    from {
+        width: 0em;
+    }
+
+    to {
+        width: 46.684em;
+    }
 }

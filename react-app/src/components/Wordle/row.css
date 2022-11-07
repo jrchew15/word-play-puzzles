@@ -26,8 +26,6 @@
 
 .wordle-letter {
     background-color: var(--off-black);
-    transition-property: background-color;
-    transition-duration: 2s;
 }
 
 .wordle-letter.gray {

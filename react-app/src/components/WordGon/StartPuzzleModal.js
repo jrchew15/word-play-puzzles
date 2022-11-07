@@ -1,7 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { NonClickModal } from "../../context/Modal";
-import { authenticate } from "../../store/session";
+import { authenticate, login } from "../../store/session";
 import { thunkAddWordgonSession } from "../../store/wordgon";
 
 import './puzzle-modal.css'
@@ -20,12 +20,18 @@ export default function StartPuzzleModal({ showModal, setShowModal, puzzleId }) 
         setShowModal(false)
     }
 
+    async function demoLogin(e) {
+        await dispatch(login('Demo', 'password'));
+        history.push('/')
+    }
+
     return (
         <>
             {showModal && (
                 <NonClickModal >
                     <div>
                         <h2>Word-Gon</h2>
+                        {!currentUser && <div className='modal-button demo-login' onClick={demoLogin} style={{ position: 'absolute', right: 25, top: 40 }} >Login as demo user</div>}
                         <div style={{ fontSize: '1.2em', width: '400px', textAlign: 'center' }}>
                             <span style={{ width: '300px' }}>
                                 Use all the letters around the square before you run out of words.

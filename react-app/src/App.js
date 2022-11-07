@@ -15,9 +15,7 @@ import { thunkLoadWordgonSessions } from './store/wordgon';
 import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
 import SignUpPrompt from './components/auth/SignUpPrompt';
 import WordleTodayRedirect from './components/Carousels/WordleTodayRedirect';
-
 import WordlePuzzle from './components/Wordle/WordlePuzzle';
-import WordleRow from './components/Wordle/WordleRow';
 
 import './index.css'
 
@@ -45,7 +43,7 @@ function App() {
         dispatch(thunkLoadWordgonSessions())
       }
     })()
-  }, [currentUser])
+  }, [currentUser, dispatch])
 
   if (!loaded) {
     return null;
