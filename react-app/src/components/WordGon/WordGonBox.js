@@ -39,7 +39,6 @@ export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor,
                 <LineMaker allLetters={letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={backgroundColor} />
                 {animating && <AnimatedLineMaker2 allLetters={letters} currentGuess={currentGuess} setAnimating={setAnimating} />}
             </div>
-            <button onClick={() => setAnimating(true)}>{animating ? 'ANIMATING' : 'START ANIMATION'}</button>
         </div>
     )
 }
