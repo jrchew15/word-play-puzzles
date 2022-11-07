@@ -9,7 +9,7 @@ import './lines.css';
 import './gridareas.css';
 import './wordgon.css';
 
-export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor }) {
+export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor, animating, setAnimating }) {
     let letterClasses = ['u1', 'u2', 'u3', 'r1', 'r2', 'r3', 'd1', 'd2', 'd3', 'l1', 'l2', 'l3'];
 
     function usedLetter(char) {
@@ -25,7 +25,7 @@ export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor 
         return activeLetter(char) || usedLetter(char)
     }
 
-    const [animating, setAnimating] = useState(false)
+    // const [animating, setAnimating] = useState(false)
 
     return (
         <div id='puzzle-container'>

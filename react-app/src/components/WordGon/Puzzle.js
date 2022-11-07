@@ -28,6 +28,9 @@ export default function Puzzle() {
     const [currentGuess, setCurrentGuess] = useState('')
     const [showInvalidWord, setShowInvalidWord] = useState(false)
 
+    const [animating, setAnimating] = useState(false)
+    const [validWord, setValidWord] = useState(false)
+
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [showFailModal, setShowFailModal] = useState(false)
@@ -37,6 +40,7 @@ export default function Puzzle() {
     const [showRulesModal, setShowRulesModal] = useState(false)
 
     const sessions = useSelector(state => state.wordgon)
+    const currentUser = useSelector(state => state.session.user)
 
     const guessRef = useRef(null);
 
@@ -56,8 +60,9 @@ export default function Puzzle() {
 
     // find session
     useEffect(() => {
+        console.log('in use effect: sessions', puzzle, sessions);
         (async () => {
-            if (!puzzle) return
+            if (!puzzle || !currentUser) return
             let foundSession
             for (let key in sessions) {
                 if (sessions[key].puzzleId === +puzzleId) {
@@ -85,6 +90,59 @@ export default function Puzzle() {
         setCurrentGuess('')
     }, [session])
 
+    useEffect(() => {
+        if (!animating && !submitting) return
+        if (animating) {
+            (async () => {
+                // Check internal table, then if not found check WordsAPI.
+                // this operation should be concurrent with animation
+                const valid = await checkWordsTable(currentGuess)
+                setValidWord(valid)
+            })()
+            return
+        }
+        if (!animating && submitting) {
+            // update session when animation finished
+            (async () => {
+
+                if (validWord) {
+                    const allGuesses = [...guesses, currentGuess];
+                    let completed = true;
+
+                    // Check if puzzle complete
+                    for (let i = 0; i < puzzle.letters.length; i++) {
+                        let char = puzzle.letters[i];
+                        if (!allGuesses.join('').includes(char)) {
+                            completed = false;
+                            // If any character is not among guesses, then break loop; no need to keep checking
+                            break
+                        }
+                    }
+
+                    if (!completed && allGuesses.length >= puzzle.numAttempts) {
+                        setShowFailModal(true)
+                        setSubmitting(false)
+                        return
+                    }
+                    // Update the user's session
+                    await dispatch(thunkUpdateWordgonSession({
+                        puzzleId,
+                        sessionId: session.id,
+                        guesses: allGuesses,
+                        completed
+                    }))
+                    await dispatch(authenticate())
+
+                } else {
+                    setShowInvalidWord(true)
+                    setTimeout(() => { setShowInvalidWord(false) }, 3000)
+                }
+                // Reset submitting status regardless of validity of word
+                setSubmitting(false)
+            })()
+        }
+    }, [animating])
+
     // Submission of new guess happens in useEffect triggered by submitting boolean
     useEffect(() => {
         // break useEffect if running on initial render
@@ -92,46 +150,7 @@ export default function Puzzle() {
             if (session && session.completed) { setShowModal(true); setShowComments(true) }
             return
         }
-
-        (async () => {
-            // Check internal table, then if not found check WordsAPI.
-            const valid = await checkWordsTable(currentGuess)
-
-            if (valid) {
-                const allGuesses = [...guesses, currentGuess];
-                let completed = true;
-
-                // Check if puzzle complete
-                for (let i = 0; i < puzzle.letters.length; i++) {
-                    let char = puzzle.letters[i];
-                    if (!allGuesses.join('').includes(char)) {
-                        completed = false;
-                        // If any character is not among guesses, then break loop; no need to keep checking
-                        break
-                    }
-                }
-
-                if (!completed && allGuesses.length >= puzzle.numAttempts) {
-                    setShowFailModal(true)
-                    setSubmitting(false)
-                    return
-                }
-                // Update the user's session
-                await dispatch(thunkUpdateWordgonSession({
-                    puzzleId,
-                    sessionId: session.id,
-                    guesses: allGuesses,
-                    completed
-                }))
-                await dispatch(authenticate())
-
-            } else {
-                setShowInvalidWord(true)
-                setTimeout(() => { setShowInvalidWord(false) }, 3000)
-            }
-            // Reset submitting status regardless of validity of word
-            setSubmitting(false)
-        })()
+        setAnimating(true)
     }, [submitting])
 
     if (!puzzle) return null
@@ -187,7 +206,7 @@ export default function Puzzle() {
     }
 
     function giveFocus() {
-        guessRef.current.focus()
+        if (guessRef.current) guessRef.current.focus()
     }
 
     return (
@@ -239,7 +258,7 @@ export default function Puzzle() {
                             {guesses.map(x => x.toUpperCase()).join('-')}
                         </div>
                     </div>
-                    <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} />
+                    <BoxAndLetters letters={puzzle.letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={color_dict[puzzleDifficulty(puzzle)]} animating={animating} setAnimating={setAnimating} />
                 </div>}
                 {/* <div style={{ display: (session && session.completed) ? 'flex' : 'none' }}> */}
                 <CommentsContainer puzzleId={puzzleId} setShowComments={setShowComments} showComments={showComments} />

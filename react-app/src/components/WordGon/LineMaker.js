@@ -88,12 +88,11 @@ export function AnimatedLineMaker2({ allLetters, currentGuess, setAnimating }) {
 
     for (let i = 1; i < currentGuess.length; i++) {
         let indices = [lettersObj[currentGuess[i - 1]], lettersObj[currentGuess[i]]];
-        console.log('indices', indices)
+
         const coordsStart = letterIndexToCoord[indices[0]];
         const coordsEnd = letterIndexToCoord[indices[1]];
 
         animations.push(lineAnimations[indices.sort((a, b) => a - b).join('-')]);
-        console.log('indices sorted', indices)
 
         const x = coordsStart[0];
         const y = coordsStart[1];
