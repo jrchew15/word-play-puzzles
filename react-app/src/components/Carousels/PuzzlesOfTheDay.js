@@ -12,6 +12,8 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
     const history = useHistory();
     const now = new Date();
 
+    const [makingWordle, setMakingWordle] = useState(false);
+
     useEffect(() => {
         (async () => {
             const res = await fetch('/api/wordgons/puzzles_of_the_day');
@@ -24,6 +26,15 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
             }
         })()
     }, [setPuzzles])
+
+    useEffect(() => {
+        if (makingWordle) {
+            (async () => {
+                await makeRandomWordle(history);
+                setMakingWordle(false)
+            })()
+        }
+    }, [makingWordle])
 
     return (
         <>
@@ -43,7 +54,7 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                             <DetailsByStatus puzzleId={puzzles[0].id} />
                         </div>
                     </div>
-                    <div className="puzzle-card wordle" onClick={() => makeRandomWordle(history)}>
+                    <div className="puzzle-card wordle" onClick={() => setMakingWordle(true)}>
                         <h2>Random wordle</h2>
                         <i class="far fa-question-circle"></i>
                         <img src='/static/images/alpha-wordle-icon.png' alt='wordle' style={{ opacity: '0.5' }} />

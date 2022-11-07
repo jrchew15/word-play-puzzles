@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
 import { color_dict, puzzleDifficulty } from "../../utils/puzzleFunctions";
 import { checkWordsTable } from "../../utils/wordChecks";
@@ -7,6 +8,7 @@ import StartPuzzleModal from "./StartPuzzleModal";
 import { BoxAndLetters } from "./WordGonBox";
 import CompleteModal from "./CompletedModal";
 import FailModal from "./FailModal";
+import { login } from "../../store/session";
 import { defaultImg } from "../../store/utils/image_urls";
 import { parseDate } from "../Carousels/PuzzlesOfTheDay";
 import RulesModal from "./RulesModal";
@@ -17,6 +19,7 @@ import './wordgon.css';
 export default function UnregisteredPuzzle() {
     const puzzleId = useParams().wordgonId
     const history = useHistory();
+    const dispatch = useDispatch();
     const [puzzle, setPuzzle] = useState(null)
 
     const [guesses, setGuesses] = useState([])
@@ -49,6 +52,11 @@ export default function UnregisteredPuzzle() {
             }
         })()
     }, [puzzleId])
+
+    async function demoLogin(e) {
+        await dispatch(login('Demo', 'password'));
+        history.push('/')
+    }
 
     // Submission of new guess happens in useEffect triggered by submitting boolean
     useEffect(() => {
@@ -161,6 +169,8 @@ export default function UnregisteredPuzzle() {
                     </div>
                     <div >{puzzle.puzzleDay === 'None' ? `Word-Gon #${puzzle.id}` : 'Puzzel of the Day: ' + parseDate(puzzle.puzzleDay)}</div>
                     <div style={{ height: '100%', display: 'flex', position: 'absolute', right: 0 }}>
+                        <div className="puzzle-topbar-sep" />
+                        <div id="restart-button" onClick={demoLogin}>Demo Login</div>
                         <div className="puzzle-topbar-sep" />
                         <div id='restart-button' onClick={deleteHandler}>Restart</div>
                     </div>
