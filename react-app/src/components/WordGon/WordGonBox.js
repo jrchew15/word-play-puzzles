@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { color_dict } from "../../utils/puzzleFunctions";
 
-import LineMaker, { AnimatedLineMaker } from "./LineMaker";
+import LineMaker, { AnimatedLineMaker, AnimatedLineMaker2 } from "./LineMaker";
 
 import './lines.css';
 import './gridareas.css';
@@ -37,9 +37,9 @@ export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor 
             ))}
             <div id='puzzle-square'>
                 <LineMaker allLetters={letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={backgroundColor} />
-                {animating && <AnimatedLineMaker allLetters={letters} currentGuess={currentGuess} setAnimating={setAnimating} />}
+                {animating && <AnimatedLineMaker2 allLetters={letters} currentGuess={currentGuess} setAnimating={setAnimating} />}
             </div>
-            <button onClick={() => setAnimating(true)}>ANIMATE</button>
+            <button onClick={() => setAnimating(true)}>{animating ? 'ANIMATING' : 'START ANIMATION'}</button>
         </div>
     )
 }
