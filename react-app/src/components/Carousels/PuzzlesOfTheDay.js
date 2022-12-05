@@ -70,6 +70,7 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
 
 export function parseDate(date) {
     const dateObj = new Date(...date.split('-'));
+    console.log(date, dateObj.getMonth())
     const months = {
         '1': 'Jan',
         '2': 'Feb',
@@ -82,7 +83,8 @@ export function parseDate(date) {
         '9': 'Sep',
         '10': 'Oct',
         '11': 'Nov',
-        '12': 'Dec'
+        '12': 'Dec',
+        '0': 'Dec'
     }
     // return dateObj.toUTCString().slice(0, 17)
     return `${months[dateObj.getMonth()]} ${dateObj.getDate()}, ${dateObj.getFullYear()}`
