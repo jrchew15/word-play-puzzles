@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom';
 import { signUp } from '../../store/session';
 
 import { defaultImg } from '../../store/utils/image_urls';
+
+import './dragDrop.css'
 
 const SignUpForm = () => {
   const theme = 'light';
@@ -14,13 +16,43 @@ const SignUpForm = () => {
   const [profilePicture, setProfilePicture] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [preview, setPreview] = useState('');
-  const [previewError, setPreviewError] = useState(false);
 
-  function refreshPreview(e) {
-    setPreview(profilePicture);
-    setPreviewError(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [dragging, setDragging] = useState(false);
+  const addFileRef = useRef(null);
+
+  const dragOverHandler = (e) => {
+    e.preventDefault()
+    setDragging(true)
   }
+
+  const dragEnterHandler = (e) => {
+    e.preventDefault()
+    if (e.target.id == 'drag-container') {
+      setDragging(true);
+    }
+  }
+  const dragLeaveHandler = (e) => {
+    e.preventDefault()
+    if (e.target.id == 'drag-container' && e.relatedTarget.id != 'drag-border') {
+      setDragging(false);
+    }
+  }
+  const dropHandler = (e) => {
+    e.preventDefault()
+    if (e.dataTransfer.items && e.dataTransfer.items[0]) {
+      setImageFile(e.dataTransfer.items[0].getAsFile())
+    }
+    setDragging(false);
+  }
+
+  // const [preview, setPreview] = useState('');
+  // const [previewError, setPreviewError] = useState(false);
+
+  // function refreshPreview(e) {
+  //   setPreview(profilePicture);
+  //   setPreviewError(false);
+  // }
 
   const user = useSelector(state => state.session.user);
   const dispatch = useDispatch();
@@ -62,7 +94,7 @@ const SignUpForm = () => {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', height: '100%' }}>
       <form onSubmit={onSignUp} className='auth-form'>
         <div className='errors-container'>
           {errors.map((error, ind) => (
@@ -89,7 +121,7 @@ const SignUpForm = () => {
             value={email}
           ></input>
         </div>
-        <div>
+        {/* <div>
           <label>Profile Picture <span id='preview-image-clicker' onClick={refreshPreview}>(preview)</span></label>
           <input
             type='text'
@@ -98,7 +130,7 @@ const SignUpForm = () => {
             onChange={updateProfilePicture}
             value={profilePicture}
           ></input>
-        </div>
+        </div> */}
         <div>
           <label className='required'>Password</label>
           <input
@@ -124,7 +156,7 @@ const SignUpForm = () => {
         <div className={'sep ' + theme}><span>or</span></div>
         <NavLink to='/login'>I already have an account</NavLink>
       </form>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 15 }}>
+      {/* <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 15 }}>
         {previewError ? <>
           <span>Default image:</span>
           <img src={defaultImg} className='preview-image' />
@@ -134,6 +166,33 @@ const SignUpForm = () => {
             <img src={preview} onError={() => setPreviewError(true)} className='preview-image' />
           </>
         }
+      </div> */}
+      <div id='drag-container'
+        // onDragEnter={dragEnterHandler}
+        onDragLeave={dragLeaveHandler}
+        onDragOver={dragOverHandler}
+        onDrop={dropHandler}
+        onClick={(e) => {
+          // e.preventDefault()
+          addFileRef.current.click()
+        }}
+        className={dragging ? 'dragging' : ''}
+      >
+        <div id='drag-border' className={imageFile ? 'has-file' : 'hasnt-file'} onDrop={dropHandler}>
+          {!imageFile ? <span>Drag Files Here</span> :
+            <>
+              <i className='fas fa-check-circle' />
+              <p>{imageFile.name}</p>
+            </>}
+        </div>
+        <input
+          ref={addFileRef}
+          type='file'
+          id='hidden-file-input'
+          onChange={(e) => {
+            setImageFile(e.target.files[0])
+          }}
+        />
       </div>
     </div>
   );
