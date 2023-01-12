@@ -94,18 +94,19 @@ export const editUserThunk = (userId, username, email, profilePicture) => async 
   }
 }
 
-export const signUp = (username, email, password, profilePicture) => async (dispatch) => {
+export const signUp = (payload) => async (dispatch) => {
+
+  const formData = new FormData()
+
+  for (let field in payload) {
+    if (payload[field]) {
+      formData.append(field, payload[field])
+    }
+  }
+
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      username,
-      email,
-      password,
-      profilePicture
-    }),
+    body: formData
   });
 
   if (response.ok) {
