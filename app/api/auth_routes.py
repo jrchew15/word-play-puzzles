@@ -54,15 +54,17 @@ def sign_up():
     Creates a new user and logs them in
     """
     profile_image=request.files['image']
+    upload = None
 
-    if not allowed_file(profile_image.filename):
-        return {"errors": ['Profile picture must be a '+', '.join(ALLOWED_EXTENSIONS)]}, 400
+    if profile_image:
+        if not allowed_file(profile_image.filename):
+            return {"errors": ['Profile picture must be a '+', '.join(ALLOWED_EXTENSIONS)]}, 400
+        else:
+            profile_image.filename = get_unique_filename(profile_image.filename)
+            upload=upload_file_to_s3(profile_image)
 
-    profile_image.filename = get_unique_filename(profile_image.filename)
-    upload=upload_file_to_s3(profile_image)
-
-    if 'url' not in upload:
-        return upload, 400
+            if 'url' not in upload:
+                return upload, 400
 
     form = SignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
