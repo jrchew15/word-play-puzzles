@@ -60,7 +60,6 @@ export default function Puzzle() {
 
     // find session
     useEffect(() => {
-        console.log('in use effect: sessions', puzzle, sessions);
         (async () => {
             if (!puzzle || !currentUser) return
             let foundSession

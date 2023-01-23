@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom';
 import { signUp } from '../../store/session';
@@ -18,8 +18,11 @@ const SignUpForm = () => {
   const [repeatPassword, setRepeatPassword] = useState('');
 
   const [imageFile, setImageFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
   const [dragging, setDragging] = useState(false);
   const addFileRef = useRef(null);
+
+  // const reader = new FileReader();
 
   const dragOverHandler = (e) => {
     e.preventDefault()
@@ -89,6 +92,12 @@ const SignUpForm = () => {
     setRepeatPassword(e.target.value);
   };
 
+  useEffect(() => {
+    if (imageFile) {
+      setImageUrl(URL.createObjectURL(imageFile))
+    }
+  }, [imageFile])
+
   if (user) {
     return <Redirect to='/' />;
   }
@@ -121,16 +130,6 @@ const SignUpForm = () => {
             value={email}
           ></input>
         </div>
-        {/* <div>
-          <label>Profile Picture <span id='preview-image-clicker' onClick={refreshPreview}>(preview)</span></label>
-          <input
-            type='text'
-            name='ProfilePicture'
-            placeholder='https:// ... { .jpg, .jpeg, .png, .gif, .tiff }'
-            onChange={updateProfilePicture}
-            value={profilePicture}
-          ></input>
-        </div> */}
         <div>
           <label className='required'>Password</label>
           <input
@@ -156,17 +155,6 @@ const SignUpForm = () => {
         <div className={'sep ' + theme}><span>or</span></div>
         <NavLink to='/login'>I already have an account</NavLink>
       </form>
-      {/* <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 15 }}>
-        {previewError ? <>
-          <span>Default image:</span>
-          <img src={defaultImg} className='preview-image' />
-        </>
-          : <>
-            <span>Preview of image:</span>
-            <img src={preview} onError={() => setPreviewError(true)} className='preview-image' />
-          </>
-        }
-      </div> */}
       <div id='drag-container'
         // onDragEnter={dragEnterHandler}
         onDragLeave={dragLeaveHandler}
@@ -178,13 +166,9 @@ const SignUpForm = () => {
         }}
         className={dragging ? 'dragging' : ''}
       >
-        <div id='drag-border' className={imageFile ? 'has-file' : 'hasnt-file'} onDrop={dropHandler}>
-          {!imageFile ? <span>Drag Files Here</span> :
-            <>
-              <i className='fas fa-check-circle' />
-              <p>{imageFile.name}</p>
-            </>}
-        </div>
+        {imageFile ? <img src={imageUrl} /> : <div id='drag-border' onDrop={dropHandler}>
+          <i className='far fa-file-image' />
+        </div>}
         <input
           ref={addFileRef}
           type='file'
@@ -193,6 +177,8 @@ const SignUpForm = () => {
             setImageFile(e.target.files[0])
           }}
         />
+        <span style={{ left: 0, top: 0, fontSize: '1.3em' }}>Profile Picture (optional)</span>
+        <span style={{ right: 0, bottom: 0 }}>Drag an image file or click</span>
       </div>
     </div>
   );

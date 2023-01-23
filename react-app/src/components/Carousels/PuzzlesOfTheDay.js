@@ -70,7 +70,6 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
 
 export function parseDate(date) {
     const dateObj = new Date(...date.split('-'));
-    console.log(date, dateObj.getMonth())
     const months = {
         '1': 'Jan',
         '2': 'Feb',
