@@ -3,7 +3,8 @@ from flask_login import login_required, current_user
 from app.models import db, User
 from ..forms.signup_form import EditUserForm
 from .utils import validation_errors_to_error_messages
-from .aws import get_unique_filename, allowed_file, upload_file_to_s3, ALLOWED_EXTENSIONS
+from .aws import get_unique_filename, allowed_file, upload_file_to_s3, delete_file_from_s3, ALLOWED_EXTENSIONS
+import os
 
 user_routes = Blueprint('users', __name__)
 
@@ -58,10 +59,17 @@ def edit_user(id):
         user = User.query.get(id)
         user.username = form.username.data
         user.email = form.email.data
+
+        old_image = user.profile_picture
         if profile_image:
             user.profile_picture = upload['url']
         db.session.commit()
-        return user.to_dict(current=True)
+        if profile_image and old_image.startswith(f'https://{os.environ.get("BUCKET_NAME")}'):
+            message = delete_file_from_s3(key=old_image.split(sep='/')[-1])
+            if 'errors' in message:
+                errors.append(message['errors'])
+        if len(errors) == 0:
+            return user.to_dict(current=True)
     errors.extend(validation_errors_to_error_messages(form.errors))
     return {'errors': errors}, 401
 
