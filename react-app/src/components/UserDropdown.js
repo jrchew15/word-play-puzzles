@@ -16,7 +16,7 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
             history.push('/')
         }
 
-    }, [loggingOut])
+    }, [loggingOut, history])
 
     return (currentUser ?
         <ul id='user-dropdown' className="unselectable">

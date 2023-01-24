@@ -10,7 +10,6 @@ import './carousel.css'
 export default function PuzzlesOfTheDay({ setLoaded }) {
     const [puzzles, setPuzzles] = useState([])
     const history = useHistory();
-    const now = new Date();
 
     const [makingWordle, setMakingWordle] = useState(false);
 
@@ -20,12 +19,12 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
             const data = await res.json()
 
             if (res.ok) {
-                let pastPuzzles = data.puzzles.filter(puzzle => dbDateToDateObj(puzzle.puzzleDay) < now)
+                let pastPuzzles = data.puzzles.filter(puzzle => dbDateToDateObj(puzzle.puzzleDay) < new Date())
                 setPuzzles(pastPuzzles)
                 setLoaded(true)
             }
         })()
-    }, [setPuzzles])
+    }, [setPuzzles, setLoaded])
 
     useEffect(() => {
         if (makingWordle) {
@@ -34,7 +33,7 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                 setMakingWordle(false)
             })()
         }
-    }, [makingWordle])
+    }, [makingWordle, history])
 
     return (
         <>

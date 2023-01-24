@@ -1,5 +1,5 @@
-import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import UserDropdown from './UserDropdown';
 import { Modal } from '../context/Modal';
@@ -51,15 +51,15 @@ const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, 
       <div id='right-nav' onClick={developerDropdownToggle}>
         <span >About the Developer</span>
         {(showDeveloperDropdown) && <ul id='developer-dropdown' onClick={() => setShowDeveloperDropdown(false)}>
-          <a href='https://github.com/jrchew15/word-play-puzzles/' target='_blank'>
+          <a href='https://github.com/jrchew15/word-play-puzzles/' target='_blank' rel='noreferrer'>
             Project Github
             <img src='/static/images/icon_square.svg' alt='project_github' />
           </a>
-          <a href='https://github.com/jrchew15' target='_blank'>
+          <a href='https://github.com/jrchew15' target='_blank' rel='noreferrer'>
             Dev Github
             <img src='/static/images/GitHub-Mark-64px.png' alt='github' />
           </a>
-          <a href='https://www.linkedin.com/in/jason-r-chew/' target='_blank'>
+          <a href='https://www.linkedin.com/in/jason-r-chew/' target='_blank' rel='noreferrer'>
             Dev LinkedIn
             <img src='https://cdn-icons-png.flaticon.com/512/49/49408.png' alt='linkedin' />
           </a>

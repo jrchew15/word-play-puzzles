@@ -56,7 +56,7 @@ export default function Puzzle() {
             }
             history.push('/404')
         })()
-    }, [puzzleId])
+    }, [puzzleId, history])
 
     // find session
     useEffect(() => {
@@ -76,7 +76,7 @@ export default function Puzzle() {
             }
             setIsLoaded(true)
         })()
-    }, [puzzle, sessions, dispatch, puzzleId])
+    }, [puzzle, sessions, dispatch, puzzleId, currentUser])
 
     useEffect(() => {
         if (session && session.guesses.length) {
@@ -91,7 +91,7 @@ export default function Puzzle() {
 
     useEffect(() => {
         if (!animating && !submitting) return
-        if (animating) {
+        if (animating && currentGuess.length > 1) {
             (async () => {
                 // Check internal table, then if not found check WordsAPI.
                 // this operation should be concurrent with animation
@@ -150,7 +150,7 @@ export default function Puzzle() {
             return
         }
         setAnimating(true)
-    }, [submitting])
+    }, [submitting, session])
 
     if (!puzzle) return null
 

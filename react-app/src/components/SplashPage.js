@@ -3,7 +3,6 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { parseDate } from "./Carousels/PuzzlesOfTheDay";
 import { ListableBoxAndLetters, DetailsByStatus } from "./WordGon/WordGonBox";
-import { color_dict } from "../utils/puzzleFunctions";
 
 export default function SplashPage() {
     const currentUser = useSelector(state => state.session.user);
@@ -12,9 +11,8 @@ export default function SplashPage() {
     const [puzzle, setPuzzle] = useState(null)
     const history = useHistory();
 
-    const today_date = new Date();
-
     useEffect(() => {
+        const today_date = new Date();
         (async () => {
             const res = await fetch(`/api/wordgons/by_date/${today_date.getFullYear()}-${today_date.getUTCMonth() + 1}-${today_date.getDate()}`);
             const data = await res.json()
@@ -24,7 +22,7 @@ export default function SplashPage() {
 
             setIsLoaded(true)
         })()
-    }, [setPuzzle])
+    }, [setPuzzle, setIsLoaded])
 
     if (!isLoaded || !puzzle) {
         return null

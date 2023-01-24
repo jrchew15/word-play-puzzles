@@ -31,10 +31,10 @@ export default function UnregisteredPuzzle() {
     const [showInvalidWord, setShowInvalidWord] = useState(false)
     const [showRulesModal, setShowRulesModal] = useState(false)
 
-    const today_date = new Date();
 
     useEffect(() => {
         (async () => {
+            const today_date = new Date();
             let res = await fetch(`/api/wordgons/${puzzleId}`);
             let data = await res.json();
 
@@ -42,7 +42,7 @@ export default function UnregisteredPuzzle() {
                 let puzzleDate = data.puzzleDay
 
                 let [year, month, day] = puzzleDate.split('-')
-                let notToday = day != today_date.getDate() || month != today_date.getMonth() + 1 || year != today_date.getFullYear();
+                let notToday = day !== today_date.getDate() || month !== today_date.getMonth() + 1 || year !== today_date.getFullYear();
                 if (notToday) {
                     history.push('/unauthorized')
                 }
@@ -51,7 +51,7 @@ export default function UnregisteredPuzzle() {
                 return
             }
         })()
-    }, [puzzleId])
+    }, [puzzleId, history])
 
     async function demoLogin(e) {
         await dispatch(login('Demo', 'password'));
@@ -99,7 +99,7 @@ export default function UnregisteredPuzzle() {
             // Reset submitting status regardless of validity of word
             setSubmitting(false)
         })()
-    }, [submitting])
+    }, [submitting, completed, currentGuess, guesses, puzzle,])
 
     if (!puzzle) return null
 

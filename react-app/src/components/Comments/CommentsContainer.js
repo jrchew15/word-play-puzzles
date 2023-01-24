@@ -101,10 +101,10 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
     }
 
     function checkLength(e) {
-        if (commentBody.length > 255 && !(e.key == 'Enter' || e.key == 'Backspace')) {
+        if (commentBody.length > 255 && !(e.key === 'Enter' || e.key === 'Backspace')) {
             e.preventDefault()
         }
-        if (commentBody.length > 255 && e.key == 'Enter') {
+        if (commentBody.length > 255 && e.key === 'Enter') {
             e.preventDefault()
             setShowCommentError(true)
             setTimeout(() => {

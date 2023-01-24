@@ -14,7 +14,7 @@ export default function WordleTodayRedirect() {
             const data = await res.json()
             setWordle(data)
         })()
-    }, [])
+    }, [dateString])
 
     return wordle ? <Redirect to={`/wordles/${wordle.id}`} /> : null
 }

@@ -5,16 +5,15 @@ import { letterIndexToCoord, lineAnimations } from "../../utils/lineFunctions";
 export default function LineMaker({ allLetters, guesses, currentGuess, backgroundColor }) {
     let lettersObj = {}
     allLetters.split('').forEach((char, idx) => lettersObj[char] = idx);
-    let allCoords = Object.values(letterIndexToCoord)
 
     return (<>
         {guesses.length > 0 && guesses.map(guess => {
             return guess.split('').slice(1).map((char, letterIdx) => (
-                <LetterLine twoIndices={[lettersObj[guess[letterIdx]], lettersObj[guess[letterIdx + 1]]]} backgroundColor={backgroundColor + '70'} />
+                <LetterLine key={`${guess}${letterIdx}->${letterIdx + 1}`} twoIndices={[lettersObj[guess[letterIdx]], lettersObj[guess[letterIdx + 1]]]} backgroundColor={backgroundColor + '70'} />
             ))
         })}
         {currentGuess.length > 1 && currentGuess.split('').slice(1).map((char, letterIdx) => (
-            <LetterLine twoIndices={[lettersObj[currentGuess[letterIdx]], lettersObj[currentGuess[letterIdx + 1]]]} backgroundColor={backgroundColor} />
+            <LetterLine key={`${currentGuess}${letterIdx}->${letterIdx + 1}`} twoIndices={[lettersObj[currentGuess[letterIdx]], lettersObj[currentGuess[letterIdx + 1]]]} backgroundColor={backgroundColor} />
         )
         )}
     </>)
@@ -114,7 +113,7 @@ export function AnimatedLineMaker2({ allLetters, currentGuess, setAnimating }) {
 
     return styles.map((style, idx) => (aninumber >= idx ?
         <div
-            className={'letter-line animated ' + `animated-${animations[idx]}`}
+            className={`letter-line animated animated-${animations[idx]}`}
             style={style}
             onAnimationEnd={sequenceAnimation}
             key={'letter-line-animated,' + idx}
