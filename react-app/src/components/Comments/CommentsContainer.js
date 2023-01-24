@@ -101,7 +101,6 @@ export default function CommentsContainer({ puzzleId, showComments, setShowComme
     }
 
     function checkLength(e) {
-        console.log(e.key, commentBody.length)
         if (commentBody.length > 255 && !(e.key == 'Enter' || e.key == 'Backspace')) {
             e.preventDefault()
         }

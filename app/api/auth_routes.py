@@ -4,6 +4,7 @@ from app.models import User, db
 from app.forms import LoginForm
 from app.forms import SignUpForm
 from flask_login import current_user, login_user, logout_user, login_required
+from .aws import get_unique_filename, allowed_file, upload_file_to_s3, ALLOWED_EXTENSIONS
 
 from .utils import validation_errors_to_error_messages
 
@@ -52,6 +53,19 @@ def sign_up():
     """
     Creates a new user and logs them in
     """
+    profile_image=request.files['image']
+    upload = None
+
+    if profile_image:
+        if not allowed_file(profile_image.filename):
+            return {"errors": ['Profile picture must be a '+', '.join(ALLOWED_EXTENSIONS)]}, 400
+        else:
+            profile_image.filename = get_unique_filename(profile_image.filename)
+            upload=upload_file_to_s3(profile_image)
+
+            if 'url' not in upload:
+                return upload, 400
+
     form = SignUpForm()
     form['csrf_token'].data = request.cookies['csrf_token']
     if form.validate_on_submit():
@@ -59,7 +73,7 @@ def sign_up():
             username=form['username'].data,
             email=form['email'].data,
             password=form['password'].data,
-            profile_picture=form['profilePicture'].data
+            profile_picture=upload['url']
         )
         db.session.add(user)
         db.session.commit()

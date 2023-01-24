@@ -1,0 +1,54 @@
+#drag-container {
+    width: 356px;
+    height: 356px;
+    padding: 10px;
+    margin-left: 20px;
+    box-sizing: border-box;
+    background-color: #e2e2e2;
+    cursor: pointer;
+    position: relative;
+}
+
+#drag-container.dragging {
+    box-shadow: var(--highlight-color) 10px;
+}
+
+#drag-border {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-width: 10px;
+    border-style: dashed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#drag-border {
+    border-color: var(--highlight-color);
+}
+
+#drag-border i {
+    color: var(--highlight-color);
+    font-size: 6em;
+}
+
+#hidden-file-input {
+    z-index: -1;
+    display: inline;
+    position: absolute;
+    top: 20%;
+}
+
+#drag-container img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+}
+
+#drag-container span {
+    background-color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    padding: 8px;
+    margin: 20px;
+}

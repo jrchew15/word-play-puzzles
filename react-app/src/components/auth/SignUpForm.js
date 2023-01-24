@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom';
 import { signUp } from '../../store/session';
+import ImageDragAndDrop from './ImageDragAndDrop';
 
 import { defaultImg } from '../../store/utils/image_urls';
+
+import './dragDrop.css'
 
 const SignUpForm = () => {
   const theme = 'light';
@@ -11,16 +14,10 @@ const SignUpForm = () => {
   const [errors, setErrors] = useState([]);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [profilePicture, setProfilePicture] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [preview, setPreview] = useState('');
-  const [previewError, setPreviewError] = useState(false);
 
-  function refreshPreview(e) {
-    setPreview(profilePicture);
-    setPreviewError(false);
-  }
+  const [imageFile, setImageFile] = useState(null);
 
   const user = useSelector(state => state.session.user);
   const dispatch = useDispatch();
@@ -28,7 +25,7 @@ const SignUpForm = () => {
   const onSignUp = async (e) => {
     e.preventDefault();
     if (password === repeatPassword) {
-      const data = await dispatch(signUp(username, email, password, profilePicture));
+      const data = await dispatch(signUp({ username, email, password, 'image': imageFile }));
       if (data) {
         setErrors(data)
       }
@@ -45,10 +42,6 @@ const SignUpForm = () => {
     setEmail(e.target.value);
   };
 
-  const updateProfilePicture = (e) => {
-    setProfilePicture(e.target.value)
-  };
-
   const updatePassword = (e) => {
     setPassword(e.target.value);
   };
@@ -62,7 +55,7 @@ const SignUpForm = () => {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', height: '100%' }}>
       <form onSubmit={onSignUp} className='auth-form'>
         <div className='errors-container'>
           {errors.map((error, ind) => (
@@ -90,16 +83,6 @@ const SignUpForm = () => {
           ></input>
         </div>
         <div>
-          <label>Profile Picture <span id='preview-image-clicker' onClick={refreshPreview}>(preview)</span></label>
-          <input
-            type='text'
-            name='ProfilePicture'
-            placeholder='https:// ... { .jpg, .jpeg, .png, .gif, .tiff }'
-            onChange={updateProfilePicture}
-            value={profilePicture}
-          ></input>
-        </div>
-        <div>
           <label className='required'>Password</label>
           <input
             type='password'
@@ -124,17 +107,7 @@ const SignUpForm = () => {
         <div className={'sep ' + theme}><span>or</span></div>
         <NavLink to='/login'>I already have an account</NavLink>
       </form>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginLeft: 15 }}>
-        {previewError ? <>
-          <span>Default image:</span>
-          <img src={defaultImg} className='preview-image' />
-        </>
-          : <>
-            <span>Preview of image:</span>
-            <img src={preview} onError={() => setPreviewError(true)} className='preview-image' />
-          </>
-        }
-      </div>
+      <ImageDragAndDrop imageFile={imageFile} setImageFile={setImageFile} />
     </div>
   );
 };

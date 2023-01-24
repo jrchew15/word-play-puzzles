@@ -56,7 +56,7 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                     </div>
                     <div className="puzzle-card wordle" onClick={() => setMakingWordle(true)}>
                         <h2>Random wordle</h2>
-                        <i class="far fa-question-circle"></i>
+                        <i className="far fa-question-circle"></i>
                         <img src='/static/images/alpha-wordle-icon.png' alt='wordle' style={{ opacity: '0.5' }} />
                     </div>
                 </div>
@@ -70,7 +70,6 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
 
 export function parseDate(date) {
     const dateObj = new Date(...date.split('-'));
-    console.log(date, dateObj.getMonth())
     const months = {
         '1': 'Jan',
         '2': 'Feb',

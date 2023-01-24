@@ -69,43 +69,47 @@ export const logout = () => async (dispatch) => {
   }
 };
 
-export const editUserThunk = (userId, username, email, profilePicture) => async (dispatch) => {
-  const res = await fetch(`/api/users/${userId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username,
-      email,
-      profilePicture
-    })
-  });
-  const data = await res.json();
+export const editUserThunk = (userId, payload) => async (dispatch) => {
+  const formData = new FormData()
 
-  if (res.ok) {
-    dispatch(setUser(data))
-    return null
+  for (let field in payload) {
+    if (payload[field]) {
+      formData.append(field, payload[field])
+    }
   }
-  if (data.errors) {
-    return data.errors
+
+  const response = await fetch(`/api/users/${userId}`, {
+    method: 'PUT',
+    body: formData
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    dispatch(setUser(data))
+    return null;
+  } else if (response.status < 500) {
+    const data = await response.json();
+    if (data.errors) {
+      return data.errors;
+    }
   } else {
-    return ['An error occurred. Please try again']
+    return ['An error occurred. Please try again.']
   }
 }
 
-export const signUp = (username, email, password, profilePicture) => async (dispatch) => {
+export const signUp = (payload) => async (dispatch) => {
+
+  const formData = new FormData()
+
+  for (let field in payload) {
+    if (payload[field]) {
+      formData.append(field, payload[field])
+    }
+  }
+
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      username,
-      email,
-      password,
-      profilePicture
-    }),
+    body: formData
   });
 
   if (response.ok) {
@@ -123,7 +127,6 @@ export const signUp = (username, email, password, profilePicture) => async (disp
 }
 
 export default function reducer(state = initialState, action) {
-  let newState
   switch (action.type) {
     case SET_USER:
       return { user: action.payload }
