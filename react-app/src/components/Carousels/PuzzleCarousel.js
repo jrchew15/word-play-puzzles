@@ -35,7 +35,7 @@ export default function PuzzleCarousel({ puzzles }) {
 
     return <div className="carousel-container">
         <div className="carousel" ref={carouselRef}>
-            {puzzles.map(puzzle => <div className='puzzle-card' onClick={() => history.push(`/wordgons/${puzzle.id}`)} >
+            {puzzles.map(puzzle => <div className='puzzle-card' key={`carousel-card-${puzzle.id}`} onClick={() => history.push(`/wordgons/${puzzle.id}`)} >
                 <div className='puzzle-title' style={{ backgroundColor: color_dict[puzzleDifficulty(puzzle)] }}>
                     <span style={{ margin: '5px 0' }}>{puzzle.puzzleDay !== 'None' ? parseDate(puzzle.puzzleDay) : 'Word-Gon #' + puzzle.id}</span>
                 </div>

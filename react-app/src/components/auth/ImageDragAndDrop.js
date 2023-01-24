@@ -5,6 +5,7 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
     // const [imageFile, setImageFile] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
     const [dragging, setDragging] = useState(false);
+    const [imageError, setImageError] = useState('');
     const addFileRef = useRef(null);
 
     const dragOverHandler = (e) => {
@@ -22,13 +23,19 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
     const dropHandler = (e) => {
         e.preventDefault()
         if (e.dataTransfer.items && e.dataTransfer.items[0]) {
-            setImageFile(e.dataTransfer.items[0].getAsFile())
+            let file = e.dataTransfer.items[0].getAsFile()
+            if (file.size > 1e6) {
+                setImageError('Image file must be less than 1MB in size')
+            } else {
+                setImageFile(file)
+            }
         }
         setDragging(false);
     }
 
     useEffect(() => {
         if (imageFile) {
+            setImageError('')
             setImageUrl(URL.createObjectURL(imageFile))
         }
     }, [imageFile])
@@ -50,10 +57,15 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
             type='file'
             id='hidden-file-input'
             onChange={(e) => {
-                setImageFile(e.target.files[0])
+                if (e.target.files[0] && e.target.files[0].size > 1e6) {
+                    setImageError('Image file must be less than 1MB in size')
+                } else {
+                    setImageFile(e.target.files[0])
+                }
             }}
         />
         <span style={{ left: 0, top: 0, fontSize: '1.3em' }}>Profile Picture (optional)</span>
         <span style={{ right: 0, bottom: 0 }}>Drag an image file or click</span>
+        {imageError && <span style={{ right: '35%', bottom: 50, color: 'red' }}>{imageError}</span>}
     </div>
 }

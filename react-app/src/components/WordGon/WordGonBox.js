@@ -63,8 +63,8 @@ export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
             <div id='puzzle-container' className="puzzle-list" onClick={PuzzleRedirect} style={{ fontSize: '3.5px', backgroundColor: color_dict[difficulty], cursor: 'pointer' }}>
                 {letters.split('').map((x, idx) => (
                     <>
-                        <span className={letterClasses[idx] + ' letter'} key={'letter' + x + idx} style={{ color: 'black' }}>{x.toUpperCase()}</span>
-                        <div className={letterClasses[idx] + ' circle'} key={'circle' + x + idx} />
+                        <span className={letterClasses[idx] + ' letter'} key={puzzleId + 'letter' + x + idx} style={{ color: 'black' }}>{x.toUpperCase()}</span>
+                        <div className={letterClasses[idx] + ' circle'} key={puzzleId + 'circle' + x + idx} />
                     </>
                 ))}
                 <div id='puzzle-square' >
