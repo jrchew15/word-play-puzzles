@@ -5,8 +5,11 @@ import { ModalProvider } from './context/Modal';
 import './index.css';
 import App from './App';
 import configureStore from './store';
+import dotenv from 'dotenv';
 
 const store = configureStore();
+dotenv.config()
+console.log('PROCESS', process.env)
 
 ReactDOM.render(
   <React.StrictMode>
