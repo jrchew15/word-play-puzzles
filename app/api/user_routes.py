@@ -24,11 +24,17 @@ def user(id):
         return user.to_dict(total=True)
     return {"errors":["Could not find user"]}
 
-@user_routes.route('/<int:id>/stats')
+@user_routes.route('/<int:id>/wordle_stats')
 def user_stats(id):
-    ct = db.session.execute(db.select(db.func.count(WordleSession.id),db.func.avg(WordleSession.num_guesses)).where(db.and_(WordleSession.user_id == id, WordleSession.completed == True))).first()
-    print(type(ct))
-    return str(ct)
+    stmt = db.select(db.func.count(WordleSession.id),db.func.round(db.func.avg(WordleSession.num_guesses),2))\
+        .where(db.and_(WordleSession.user_id == id, WordleSession.completed == True))
+    stats_as_row = db.session.execute(stmt).first()
+    stats = dict(stats_as_row)
+    return {
+        "wordleCount": stats['count'],
+        "wordleAvg": stats['round']
+    }
+
 
 @user_routes.route('/<int:id>',methods=['PUT'])
 @login_required
