@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import db, User
+from app.models import db, User, WordleSession
 from ..forms.signup_form import EditUserForm
 from .utils import validation_errors_to_error_messages
 from .aws import get_unique_filename, allowed_file, upload_file_to_s3, delete_file_from_s3, ALLOWED_EXTENSIONS
@@ -23,6 +23,12 @@ def user(id):
     if user is not None:
         return user.to_dict(total=True)
     return {"errors":["Could not find user"]}
+
+@user_routes.route('/<int:id>/stats')
+def user_stats(id):
+    ct = db.session.execute(db.select(db.func.count(WordleSession.id),db.func.avg(WordleSession.num_guesses)).where(db.and_(WordleSession.user_id == id, WordleSession.completed == True))).first()
+    print(type(ct))
+    return str(ct)
 
 @user_routes.route('/<int:id>',methods=['PUT'])
 @login_required
