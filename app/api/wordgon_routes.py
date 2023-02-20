@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
 
-from ..models import db, WordGon, WordGonSession, Comment
+from ..models import db, WordGon, WordGonSession, Comment, User
 from ..forms.comment_form import CommentForm
 from ..forms.wordgon_form import WordGonForm
 from ..forms.wordgon_session_form import WordGonSessionForm
@@ -12,30 +12,6 @@ from datetime import date
 
 wordgon_routes = Blueprint('wordgon',__name__)
 
-
-# @wordgon_routes.route('',methods=['POST'])
-# @login_required
-# def dev_create_wordgon():
-#     form = WordGonForm()
-#     form['csrf_token'].data = request.cookies['csrf_token']
-
-#     if form.validate_on_submit():
-#         data = form.data
-#         puzzle = WordGon(
-#             letters=data['letters'],
-#             user_id=data['userId'],
-#             shape=data['shape'],
-#             num_attempts=data['num_attempts'],
-#             puzzle_day=date(*data['puzzleDay'].split(','))
-#             )
-#         db.session.add(puzzle)
-#         db.session.commit()
-#     return {'errors': validation_errors_to_error_messages(form.errors)}, 401
-
-# @wordgon_routes.route('')
-# def all_wordgons():
-#     puzzles = WordGon.query.all()
-#     return {'puzzles':[puzzle.to_dict() for puzzle in puzzles]}
 @wordgon_routes.route('/by_date/<req_date>')
 def get_puzzle_by_date(req_date):
     req_day = [int(x) for x in req_date.split('-')]
@@ -152,3 +128,12 @@ def add_comment(puzzleId):
         return comment.to_dict(), 201
 
     return {'errors':validation_errors_to_error_messages(form.errors)}, 401
+
+@wordgon_routes.route('/leaders')
+def wordgon_leaders():
+    # top = WordGonSession.query.group_by(WordGonSession.user_id).all()
+    stmt = db.select(db.func.count(), WordGonSession.user_id).group_by(WordGonSession.user_id).where(WordGonSession.completed == True)
+    print('statement',stmt)
+    top = db.session.execute(stmt).all()
+    print(dict(top))
+    return {'list':'hello'}
