@@ -132,8 +132,11 @@ def add_comment(puzzleId):
 @wordgon_routes.route('/leaders')
 def wordgon_leaders():
     # top = WordGonSession.query.group_by(WordGonSession.user_id).all()
-    stmt = db.select(db.func.count(), WordGonSession.user_id).group_by(WordGonSession.user_id).where(WordGonSession.completed == True)
-    print('statement',stmt)
+    stmt = db.select(WordGonSession.user_id, db.func.count(), User.username, User.profile_picture)\
+        .join(User.sessions)\
+        .group_by(WordGonSession.user_id)\
+        .order_by(db.desc(db.func.count()))\
+        .where(WordGonSession.completed == True)\
+        .limit(3)
     top = db.session.execute(stmt).all()
-    print(dict(top))
-    return {'list':'hello'}
+    return {'leaders':[dict(x) for x in top]}

@@ -119,8 +119,12 @@ def delete_wordle_session(puzzleId, sessionId):
 
 @wordle_routes.route('/leaders')
 def wordle_leaders():
-    stmt = db.select( WordleSession.user_id,db.func.count()).group_by(WordleSession.user_id).order_by(db.desc(db.func.count())).where(WordleSession.completed == True)
-    # print('statement',stmt)
+    # stmt = db.select( WordleSession.user_id,db.func.count()).group_by(WordleSession.user_id).order_by(db.desc(db.func.count())).where(WordleSession.completed == True)
+    stmt = db.select(WordleSession.user_id, db.func.count(), User.username, User.profile_picture, db.func.avg(WordleSession.num_guesses))\
+        .join(User.wordle_sessions)\
+        .group_by(WordleSession.user_id)\
+        .order_by(db.desc(db.func.count()))\
+        .where(WordleSession.completed == True)\
+        .limit(3)
     top = db.session.execute(stmt).all()
-    # print(list(top))
-    return {'list':[dict(x) for x in top]}
+    return {'leaders':[dict(x) for x in top]}
