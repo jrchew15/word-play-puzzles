@@ -9,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import Homepage from './Homepage';
+import User from './components/User';
 import BadRoute from './components/BadRoute';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
@@ -81,6 +82,9 @@ function App() {
           </Route>
           <Route path='/welcome' exact>
             <SplashPage />
+          </Route>
+          <Route path='/user/:userId' exact>
+            <User />
           </Route>
           <Route path='/unauthorized' exact>
             <SignUpPrompt />
