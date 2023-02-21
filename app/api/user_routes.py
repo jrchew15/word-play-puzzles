@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import db, User, WordleSession, WordGonSession
+from app.models import db, User, WordleSession, WordGonSession, WordGon
 from ..forms.signup_form import EditUserForm
 from .utils import validation_errors_to_error_messages
 from .aws import get_unique_filename, allowed_file, upload_file_to_s3, delete_file_from_s3, ALLOWED_EXTENSIONS
@@ -39,13 +39,21 @@ def user_wordle_stats(id):
 @user_routes.route('/<int:id>/wordgon_stats')
 @login_required
 def user_wordgon_stats(id):
-    stmt = db.select(db.func.count(WordGonSession.id),db.func.round(db.func.avg(WordGonSession.num_guesses),2))\
+    stmt = db.select(db.func.count(WordGonSession.id),WordGon.num_attempts)\
+        .join(WordGon.sessions)\
+        .group_by(WordGon.num_attempts)\
         .where(db.and_(WordGonSession.user_id == id, WordGonSession.completed == True))
-    stats = dict(db.session.execute(stmt).first())
-    return {
-        "wordgonCount": stats['count'],
-        "wordgonAvg": stats['round']
-    }
+    stats = db.session.execute(stmt).all()
+    body = {'total': 0}
+    for x in stats:
+        if x['num_attempts'] == 6:
+            body['easy'] = x['count']
+        if x['num_attempts'] == 7:
+            body['medium'] = x['count']
+        if x['num_attempts'] >= 8:
+            body['hard'] = x['count']
+        body['total'] += x['count']
+    return body
 
 
 @user_routes.route('/<int:id>',methods=['PUT'])
