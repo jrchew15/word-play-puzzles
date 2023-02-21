@@ -11,10 +11,10 @@ export default function SplashPage() {
     const [puzzle, setPuzzle] = useState(null)
     const history = useHistory();
 
-    const today_date = new Date();
 
     useEffect(() => {
         (async () => {
+            const today_date = new Date();
             const res = await fetch(`/api/wordgons/by_date/${today_date.getFullYear()}-${today_date.getUTCMonth() + 1}-${today_date.getDate()}`);
             const data = await res.json()
             if (res.ok) {

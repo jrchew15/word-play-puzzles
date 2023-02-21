@@ -10,12 +10,12 @@ import './carousel.css'
 export default function PuzzlesOfTheDay({ setLoaded }) {
     const [puzzles, setPuzzles] = useState([])
     const history = useHistory();
-    const now = new Date();
 
     const [makingWordle, setMakingWordle] = useState(false);
 
     useEffect(() => {
         (async () => {
+            const now = new Date();
             const res = await fetch('/api/wordgons/puzzles_of_the_day');
             const data = await res.json()
 
@@ -25,7 +25,7 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                 setLoaded(true)
             }
         })()
-    }, [setPuzzles])
+    }, [setPuzzles, setLoaded])
 
     useEffect(() => {
         if (makingWordle) {
@@ -34,7 +34,7 @@ export default function PuzzlesOfTheDay({ setLoaded }) {
                 setMakingWordle(false)
             })()
         }
-    }, [makingWordle])
+    }, [makingWordle, history])
 
     return (
         <>

@@ -14,7 +14,7 @@ export default function PuzzlesByDifficulty({ difficulty, loaded, setLoaded }) {
                 setLoaded(true)
             }
         })()
-    }, [setPuzzles])
+    }, [setPuzzles, difficulty, setLoaded])
 
     return (
         <>
