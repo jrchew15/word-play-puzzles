@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { color_dict } from "../../utils/puzzleFunctions";
 
-import LineMaker, { AnimatedLineMaker, AnimatedLineMaker2 } from "./LineMaker";
+import LineMaker, { AnimatedLineMaker2 } from "./LineMaker";
 
 import './lines.css';
 import './gridareas.css';

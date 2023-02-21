@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { checkWordsTable } from "../../utils/wordChecks";
 import { authenticate } from "../../store/session";
-import WordleRow, { CurrentRow, AnimatedRow } from "./WordleRow";
+import { EmptyRow, CurrentRow, AnimatedRow } from "./WordleRow";
 import WordleKeyboard from "./WordleKeyboard";
 import WordleLoader from "./WordleLoader";
 import { Modal } from "../../context/Modal";
@@ -177,11 +177,11 @@ export default function WordlePuzzle() {
             <h2 style={{ color: 'white', position: 'absolute', left: 50, top: 50 }}>Wordle</h2>
             <div id='wordle-rows'>
                 {session.completed && !won && <div id='wordle-lost-display'>{puzzle.word.toUpperCase()}</div>}
-                {guesses.map((guess, idx) => <AnimatedRow guess={guess} word={puzzle.word} row={idx} />)}
+                {guesses.map((guess, idx) => <AnimatedRow guess={guess} word={puzzle.word} row={idx} key={`${guess}${idx}`} />)}
                 {guesses.length < 6 && (
                     <CurrentRow guess={currentGuess} />
                 )}
-                {emptyRows.map((empty, i) => <WordleRow word={puzzle.word} row={i} />)}
+                {emptyRows.map((empty, i) => <EmptyRow row={i} key={`empty-row-${i}`} />)}
             </div>
             <div id='wordle-message-container'>
                 <div id='wordle-errors' className={errors.length > 0 ? 'on' : 'off'}>

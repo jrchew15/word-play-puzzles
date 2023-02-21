@@ -5,7 +5,6 @@ import { letterIndexToCoord, lineAnimations } from "../../utils/lineFunctions";
 export default function LineMaker({ allLetters, guesses, currentGuess, backgroundColor }) {
     let lettersObj = {}
     allLetters.split('').forEach((char, idx) => lettersObj[char] = idx);
-    let allCoords = Object.values(letterIndexToCoord)
 
     return (<>
         {guesses.length > 0 && guesses.map((guess, guessIdx) => {
@@ -114,7 +113,7 @@ export function AnimatedLineMaker2({ allLetters, currentGuess, setAnimating }) {
 
     return styles.map((style, idx) => (aninumber >= idx ?
         <div
-            className={'letter-line animated ' + `animated-${animations[idx]}`}
+            className={`letter-line animated animated-${animations[idx]}`}
             style={style}
             onAnimationEnd={sequenceAnimation}
             key={'letter-line-animated,' + idx}

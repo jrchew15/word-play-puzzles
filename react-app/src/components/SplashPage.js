@@ -3,7 +3,6 @@ import { Redirect, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { parseDate } from "./Carousels/PuzzlesOfTheDay";
 import { ListableBoxAndLetters, DetailsByStatus } from "./WordGon/WordGonBox";
-import { color_dict } from "../utils/puzzleFunctions";
 
 export default function SplashPage() {
     const currentUser = useSelector(state => state.session.user);

@@ -3,18 +3,14 @@ import { checkWordleGuess } from './wordleFunctions'
 import './row.css'
 import './wordle-animation.css'
 
-export default function WordleRow({ guess, word, row }) {
-    let colors
-    if (guess) {
-        colors = checkWordleGuess(word, guess)
-    }
+export function EmptyRow({ row }) {
 
     return <div className="wordle-row" key={row + ',empty-row'}>
-        <div className="wordle-letter blank" key={'blank1'} />
-        <div className="wordle-letter blank" key={'blank2'} />
-        <div className="wordle-letter blank" key={'blank3'} />
-        <div className="wordle-letter blank" key={'blank4'} />
-        <div className="wordle-letter blank" key={'blank5'} />
+        <div className="wordle-letter blank" key={`${row}blank1`} />
+        <div className="wordle-letter blank" key={`${row}blank2`} />
+        <div className="wordle-letter blank" key={`${row}blank3`} />
+        <div className="wordle-letter blank" key={`${row}blank4`} />
+        <div className="wordle-letter blank" key={`${row}blank5`} />
     </div >
 }
 

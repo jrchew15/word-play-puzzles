@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import { editUserThunk } from "../store/session";
 
 import ImageDragAndDrop from "./auth/ImageDragAndDrop";
-import { defaultImg } from "../store/utils/image_urls";
 import './user.css'
 
 export default function UserSettings() {
