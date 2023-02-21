@@ -4,7 +4,7 @@ from .words import seed_words, undo_words
 from .wordgons import seed_wordgons, undo_wordgons, puzzles_of_the_day
 from .comments import seed_comments, undo_comments
 from .wordles import seed_wordles, undo_wordles
-from .delete_redundant_sessions import delete_redundant_wordles
+from .delete_redundant_sessions import delete_redundant_wordles, delete_redundant_wordgons
 
 # Creates a seed group to hold our commands
 # So we can type `flask seed --help`
@@ -43,3 +43,4 @@ def undo_wordles_only():
 @seed_commands.command('delete_redundant')
 def delete_redundant():
     delete_redundant_wordles()
+    delete_redundant_wordgons()
