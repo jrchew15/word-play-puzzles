@@ -1,10 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { Redirect, NavLink } from 'react-router-dom';
 import { signUp } from '../../store/session';
 import ImageDragAndDrop from './ImageDragAndDrop';
-
-import { defaultImg } from '../../store/utils/image_urls';
 
 import './dragDrop.css'
 

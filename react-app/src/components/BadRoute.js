@@ -8,7 +8,7 @@ export default function BadRoute() {
         const redirectTimeout = setTimeout(() => history.push('/'), 3000);
 
         return () => { clearTimeout(redirectTimeout) }
-    }, [])
+    }, [history])
 
     return (
         <>

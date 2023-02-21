@@ -28,7 +28,7 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
                 {currentUser.openSessions.length < 1 ? <span>No Open Wordgons</span> :
                     (<><span style={{ marginBottom: 4 }}>Open Wordgons</span>
                         {currentUser.openSessions.map(sesh => (
-                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={sesh.id}>
+                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={'wordgon' + sesh}>
                                 <NavLink to={`/wordgons/${wordgons[sesh].puzzleId}`} >
                                     {wordgons[sesh].puzzleId}</NavLink>
                             </span>
@@ -38,7 +38,7 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
                     (<>
                         <span style={{ marginBottom: 4 }}>Open Wordles</span>
                         {currentUser.openWordles.map(wordleId => (
-                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={wordleId}>
+                            <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={'wordle' + wordleId}>
                                 <NavLink to={`/wordles/${wordleId}`} >
                                     {wordleId}</NavLink>
                             </span>))}
