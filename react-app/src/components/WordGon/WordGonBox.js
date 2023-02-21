@@ -30,10 +30,10 @@ export function BoxAndLetters({ letters, guesses, currentGuess, backgroundColor,
     return (
         <div id='puzzle-container'>
             {letters.split('').map((x, idx) => (
-                <>
-                    <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
-                    <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} style={{ backgroundColor: usedLetter(x) ? backgroundColor : 'white' }} />
-                </>
+                <span className={letterClasses[idx] + ' letter ' + letterColor(x)} key={'letter' + x + idx}>{x.toUpperCase()}</span>
+            ))}
+            {letters.split('').map((x, idx) => (
+                <div className={letterClasses[idx] + ' circle ' + usedLetter(x)} key={'circle' + x + idx} style={{ backgroundColor: usedLetter(x) ? backgroundColor : 'white' }} />
             ))}
             <div id='puzzle-square'>
                 <LineMaker allLetters={letters} guesses={guesses} currentGuess={currentGuess} backgroundColor={backgroundColor} />
@@ -59,19 +59,17 @@ export function ListableBoxAndLetters({ letters, puzzleId, difficulty }) {
     }
 
     return (
-        <>
-            <div id='puzzle-container' className="puzzle-list" onClick={PuzzleRedirect} style={{ fontSize: '3.5px', backgroundColor: color_dict[difficulty], cursor: 'pointer' }}>
-                {letters.split('').map((x, idx) => (
-                    <>
-                        <span className={letterClasses[idx] + ' letter'} key={puzzleId + 'letter' + x + idx} style={{ color: 'black' }}>{x.toUpperCase()}</span>
-                        <div className={letterClasses[idx] + ' circle'} key={puzzleId + 'circle' + x + idx} />
-                    </>
-                ))}
-                <div id='puzzle-square' >
-                    {showLines && <LineMaker allLetters={letters} guesses={session.guesses.split(',')} currentGuess={''} backgroundColor={color_dict[difficulty]} />}
-                </div>
+        <div id='puzzle-container' className="puzzle-list" onClick={PuzzleRedirect} style={{ fontSize: '3.5px', backgroundColor: color_dict[difficulty], cursor: 'pointer' }}>
+            {letters.split('').map((x, idx) => (
+                <span className={letterClasses[idx] + ' letter'} key={puzzleId + 'letter' + x + idx} style={{ color: 'black' }}>{x.toUpperCase()}</span>
+            ))}
+            {letters.split('').map((x, idx) => (
+                <div className={letterClasses[idx] + ' circle'} key={puzzleId + 'circle' + x + idx} />
+            ))}
+            <div id='puzzle-square' >
+                {showLines && <LineMaker allLetters={letters} guesses={session.guesses.split(',')} currentGuess={''} backgroundColor={color_dict[difficulty]} />}
             </div>
-        </>
+        </div>
     )
 
     function PuzzleRedirect(e) {
