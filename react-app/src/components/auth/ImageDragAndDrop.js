@@ -15,7 +15,7 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
 
     const dragLeaveHandler = (e) => {
         e.preventDefault()
-        if (e.target.id == 'drag-container' && e.relatedTarget.id != 'drag-border') {
+        if (e.target.id === 'drag-container' && e.relatedTarget.id !== 'drag-border') {
             setDragging(false);
         }
     }
@@ -49,7 +49,7 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
         }}
         className={dragging ? 'dragging' : ''}
     >
-        {imageFile ? <img src={imageUrl} /> : <div id='drag-border' onDrop={dropHandler}>
+        {imageFile ? <img src={imageUrl} alt={'uploaded_file'} /> : <div id='drag-border' onDrop={dropHandler}>
             <i className='far fa-file-image' />
         </div>}
         <input

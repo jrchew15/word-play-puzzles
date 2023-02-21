@@ -84,7 +84,7 @@ export function DetailsByStatus({ puzzleId }) {
     const [session, setSession] = useState(null);
 
     useEffect(() => {
-        setSession(Object.values(wordgons).find(ele => ele.puzzleId == puzzleId));
+        setSession(Object.values(wordgons).find(ele => ele.puzzleId === puzzleId));
     }, [])
 
     if (!session) {
