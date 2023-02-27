@@ -53,6 +53,18 @@ def one_wordgon(id):
         return puzzle and puzzle.to_dict()
     return {'errors':['Puzzle not found']},404
 
+@wordgon_routes.route('/<int:id>/stats')
+def include_wordgon_stats(id):
+    puzzle = WordGon.query.get(id)
+    stats = {}
+    for session in puzzle.sessions:
+        # print(session.guesses,set(session.guesses))
+        if session.completed and len(set(session.guesses)) == 13:
+            stats[str(session.num_guesses)] = stats[str(session.num_guesses)] + 1 if str(session.num_guesses) in stats else 1
+    if len(stats)>0:
+        stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2)
+    return stats
+
 @wordgon_routes.route('/<int:id>/sessions', methods=['POST'])
 @login_required
 def add_session(id):

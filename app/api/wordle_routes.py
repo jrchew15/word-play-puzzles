@@ -87,8 +87,9 @@ def include_wordle_stats(id):
     stats = {}
     for session in wordle.sessions:
         if session.completed and session.guesses.split(',')[-1]==wordle.word:
-            stats[str(session.num_guesses)] = stats[session.num_guesses]+1 if str(session.num_guesses) in stats else 1
-    stats['average'] = round(sum(stats[key]*int(key) for key in stats)/len(stats), 2)
+            stats[str(session.num_guesses)] = stats[str(session.num_guesses)]+1 if str(session.num_guesses) in stats else 1
+    if len(stats)>0:
+        stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2)
     return stats
 
 @wordle_routes.route('/<int:puzzleId>/sessions/current')
