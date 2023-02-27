@@ -81,6 +81,16 @@ def add_wordle_session(id):
     db.session.commit()
     return new_session.to_dict()
 
+@wordle_routes.route('/<int:id>/stats', methods=['GET'])
+def include_wordle_stats(id):
+    wordle = Wordle.query.get(id)
+    stats = {}
+    for session in wordle.sessions:
+        if session.completed and session.guesses.split(',')[-1]==wordle.word:
+            stats[str(session.num_guesses)] = stats[session.num_guesses]+1 if str(session.num_guesses) in stats else 1
+    stats['average'] = round(sum(stats[key]*int(key) for key in stats)/len(stats), 2)
+    return stats
+
 @wordle_routes.route('/<int:puzzleId>/sessions/current')
 @login_required
 def get_users_wordle_session(puzzleId):

@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import db, User, WordleSession, WordGonSession, WordGon
+from app.models import db, User, WordleSession, WordGonSession, WordGon, Wordle
 from ..forms.signup_form import EditUserForm
 from .utils import validation_errors_to_error_messages
 from .aws import get_unique_filename, allowed_file, upload_file_to_s3, delete_file_from_s3, ALLOWED_EXTENSIONS
@@ -27,14 +27,16 @@ def user(id):
 @user_routes.route('/<int:id>/wordle_stats')
 @login_required
 def user_wordle_stats(id):
-    stmt = db.select(db.func.count(WordleSession.id),db.func.round(db.func.avg(WordleSession.num_guesses),2))\
-        .where(db.and_(WordleSession.user_id == id, WordleSession.completed == True))
-    stats_as_row = db.session.execute(stmt).first()
-    stats = dict(stats_as_row)
-    return {
-        "wordleCount": stats['count'],
-        "wordleAvg": stats['round']
-    }
+    sessions=WordleSession.query\
+        .join(WordleSession.wordle)\
+        .add_column(Wordle.word)\
+        .where(db.and_(WordleSession.user_id == id, WordleSession.completed == True)).all()
+    stats={}
+    for (session, word) in sessions:
+        if session.completed and session.guesses.split(',')[-1]==word:
+            stats[str(session.num_guesses)] = stats[str(session.num_guesses)]+1 if str(session.num_guesses) in stats else 1
+    stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2) if len(stats) > 0 else 0
+    return stats
 
 @user_routes.route('/<int:id>/wordgon_stats')
 @login_required
