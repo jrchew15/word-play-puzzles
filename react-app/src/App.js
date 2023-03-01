@@ -17,6 +17,7 @@ import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
 import SignUpPrompt from './components/auth/SignUpPrompt';
 import WordleTodayRedirect from './components/Carousels/WordleTodayRedirect';
 import WordlePuzzle from './components/Wordle/WordlePuzzle';
+import WordleWonModalContent from './components/Wordle/WordleWonModalContent';
 
 import './index.css'
 
@@ -85,6 +86,9 @@ function App() {
           </Route>
           <Route path='/user/:userId' exact>
             <User />
+          </Route>
+          <Route path='/wordle_test' exact>
+            <WordleWonModalContent wordle_id={5} num_guesses={4} />
           </Route>
           <Route path='/unauthorized' exact>
             <SignUpPrompt />

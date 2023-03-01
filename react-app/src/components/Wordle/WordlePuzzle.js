@@ -9,6 +9,7 @@ import WordleKeyboard from "./WordleKeyboard";
 import WordleLoader from "./WordleLoader";
 import { Modal } from "../../context/Modal";
 import { makeRandomWordle } from "./wordleFunctions";
+import WordleWonContent from "./WordleWonModalContent";
 import './wordle-puzzle.css';
 
 export default function WordlePuzzle() {
@@ -204,18 +205,17 @@ export default function WordlePuzzle() {
                 </form>
             }
             <WordleKeyboard word={puzzle.word} guesses={guesses} currentGuess={currentGuess} setCurrentGuess={setCurrentGuess} setSubmitting={setSubmitting} />
-            <EndModal />
+            <EndModal num_guesses={session.num_guesses} />
         </div >
     ) : null
 
-    function EndModal() {
+    function EndModal({ num_guesses }) {
 
         return showModal && (
             <Modal onClose={() => setShowModal(false)}>
                 <div id='complete-modal'>
                     {won ? <>
-                        <h2>Congratulations!</h2>
-                        <span> {`You used ${guesses.length} out of 6 guesses!`}</span>
+                        <WordleWonContent num_guesses={num_guesses} wordle_id={puzzleId} />
                     </> : <>
                         <h2>Sorry!</h2>
                         <span>{`you ran out of guesses. The word was "${puzzle.word.toUpperCase()}"`}</span>

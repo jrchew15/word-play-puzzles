@@ -58,3 +58,22 @@
     z-index: 1;
     border: 2px solid var(--off-black);
 }
+
+#modal-stats {
+    width: 300px;
+}
+
+#modal-stats>li {
+    padding: 0.6em 0px;
+}
+
+.statbar {
+    background-color: var(--wordle-gray);
+    height: 2em;
+    content: '';
+    display: inline-block;
+}
+
+.statbar.relevant {
+    background-color: var(--wordle-green);
+}
