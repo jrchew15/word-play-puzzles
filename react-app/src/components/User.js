@@ -38,7 +38,7 @@ function User({ userId, setShowModal }) {
   useEffect(() => {
     if (!stats || !stats.wordleStats) return
     let max = Math.max(...Object.values(stats.wordleStats));
-
+    
     for (let i = 1; i <= 6; i++) {
       if (stats.wordleStats[i]) {
         let width = Math.round(100 * stats.wordleStats[i] / max) + '%';
@@ -82,6 +82,7 @@ function User({ userId, setShowModal }) {
               )
             }
           </ul >
+          <span>Average: {stats.average}</span>
         </div>
       </div>}
     </div>
