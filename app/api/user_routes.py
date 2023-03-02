@@ -34,8 +34,8 @@ def user_wordle_stats(id):
     stats={}
     for (session, word) in sessions:
         if session.completed and session.guesses.split(',')[-1]==word:
-            stats[str(session.num_guesses)] = stats[str(session.num_guesses)]+1 if str(session.num_guesses) in stats else 1
-    stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2) if len(stats) > 0 else 0
+            stats[session.num_guesses] = stats[session.num_guesses]+1 if session.num_guesses in stats else 1
+    stats['average'] = round(sum(stats[key]*key for key in stats)/sum(stats[key] for key in stats), 2) if len(stats) > 0 else 0
     return stats
 
 @user_routes.route('/<int:id>/wordgon_stats')
