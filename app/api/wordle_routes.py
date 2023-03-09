@@ -25,7 +25,7 @@ def get_puzzle_by_date(req_date):
 def random_wordle():
     user = User.query.options(db.joinedload(WordleSession)).get(current_user.id)
     puzzle_ids = [session.wordle.id for session in user.wordle_sessions]
-    all_wordles = Wordle.query.filter(Wordle.puzzle_day is None)
+    all_wordles = Wordle.query.filter(Wordle.puzzle_day == None).all()
     wordle = None
     for puzzle in all_wordles:
         if puzzle.id not in puzzle_ids:
