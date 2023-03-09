@@ -206,17 +206,18 @@ export default function WordlePuzzle() {
             }
             <WordleKeyboard word={puzzle.word} guesses={guesses} currentGuess={currentGuess} setCurrentGuess={setCurrentGuess} setSubmitting={setSubmitting} />
             <EndModal num_guesses={session.num_guesses} />
+            <button onClick={() => setShowModal(true)}>For testing modal</button>
         </div >
     ) : null
 
-    function EndModal({ num_guesses }) {
+    function EndModal() {
 
         return showModal && (
             <Modal onClose={() => setShowModal(false)}>
                 <div id='complete-modal'>
-                    {won ? <>
-                        <WordleWonContent num_guesses={num_guesses} wordle_id={puzzleId} />
-                    </> : <>
+                    {won ? (
+                        <WordleWonContent wordle_id={puzzleId} />
+                    ) : <>
                         <h2>Sorry!</h2>
                         <span>{`you ran out of guesses. The word was "${puzzle.word.toUpperCase()}"`}</span>
                     </>}

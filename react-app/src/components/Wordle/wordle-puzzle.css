@@ -61,6 +61,14 @@
 
 #modal-stats {
     width: 300px;
+    border: 2px solid lightgray;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#modal-stats h4 {
+    margin: 5px;
 }
 
 #modal-stats>li {

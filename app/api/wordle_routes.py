@@ -85,11 +85,14 @@ def add_wordle_session(id):
 def include_wordle_stats(id):
     wordle = Wordle.query.get(id)
     stats = {}
+    total = 0
     for session in wordle.sessions:
         if session.completed and session.guesses.split(',')[-1]==wordle.word:
             stats[str(session.num_guesses)] = stats[str(session.num_guesses)]+1 if str(session.num_guesses) in stats else 1
-    if len(stats)>0:
+            total += 1
+    if total>0:
         stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2)
+    stats['total'] = total
     return stats
 
 @wordle_routes.route('/<int:puzzleId>/sessions/current')
