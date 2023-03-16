@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export default function WordleWonContent({ wordle_id }) {
+export default function WordleWonModalContent({ wordle_id }) {
     const [puzzleSession, setPuzzleSession] = useState(null);
     const [globalStats, setGlobalStats] = useState(null);
     const [userStats, setUserStats] = useState(null);
-    const [userStyles, setUserStyles] = useState(null);
+    const [userStatsStyles, setUserStatsStyles] = useState(null);
 
     const user = useSelector(state => state.session.user);
     useEffect(() => {
@@ -42,23 +42,23 @@ export default function WordleWonContent({ wordle_id }) {
                         styles[i] = { display: 'none' }
                     }
                 }
-                setUserStyles(styles)
+                setUserStatsStyles(styles)
             }
         })()
     }, [user, setGlobalStats, setUserStats, puzzleSession])
 
-    return (globalStats && userStats && userStyles && <div>
+    return (globalStats && userStats && userStatsStyles && <div>
         <h3>Congratulations!</h3>
         <p>You used {puzzleSession.num_guesses} out of 6 words, compared to the global average of {globalStats.average} guesses</p>
-        {globalStats['total'] > 1 && (<p>{globalStats[globalStats.min]} users found the word in {globalStats.min} guesses</p>)}
+        {globalStats['total'] > 1 && (<p>{globalStats[globalStats.min]} {globalStats[globalStats.min] === 1 ? 'user' : 'users'} found the word in {globalStats.min} guesses</p>)}
         <div id='modal-stats-separator' />
         < ul id={'modal-stats'} >
             <h4>Your Wordle Stats:</h4>
             {
-                [6, 5, 4, 3, 2, 1].map(num => (<li key={num} style={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
+                [6, 5, 4, 3, 2, 1].map(num => (<li key={num} style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', position: 'relative' }}>
                     <span>{num}:</span>
-                    <div className={'statbar' + (puzzleSession.num_guesses === num ? ' relevant' : '')} style={userStyles[num]} />
-                    <span>{userStats[num]}</span>
+                    <div className={'statbar' + (puzzleSession.num_guesses === num ? ' relevant' : '')} style={userStatsStyles[num]} />
+                    <span >{userStats[num]}</span>
                 </li>)
                 )
             }
