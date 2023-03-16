@@ -25,7 +25,7 @@ def get_puzzle_by_date(req_date):
 def random_wordle():
     user = User.query.options(db.joinedload(WordleSession)).get(current_user.id)
     puzzle_ids = [session.wordle.id for session in user.wordle_sessions]
-    all_wordles = Wordle.query.filter(Wordle.puzzle_day is None)
+    all_wordles = Wordle.query.filter(Wordle.puzzle_day == None).all()
     wordle = None
     for puzzle in all_wordles:
         if puzzle.id not in puzzle_ids:
@@ -81,6 +81,20 @@ def add_wordle_session(id):
     db.session.commit()
     return new_session.to_dict()
 
+@wordle_routes.route('/<int:id>/stats', methods=['GET'])
+def include_wordle_stats(id):
+    wordle = Wordle.query.get(id)
+    stats = {}
+    total = 0
+    for session in wordle.sessions:
+        if session.completed and session.guesses.split(',')[-1]==wordle.word:
+            stats[str(session.num_guesses)] = stats[str(session.num_guesses)]+1 if str(session.num_guesses) in stats else 1
+            total += 1
+    if total>0:
+        stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2)
+    stats['total'] = total
+    return stats
+
 @wordle_routes.route('/<int:puzzleId>/sessions/current')
 @login_required
 def get_users_wordle_session(puzzleId):
@@ -116,3 +130,15 @@ def delete_wordle_session(puzzleId, sessionId):
         db.session.commit()
         return {"message":"successfully deleted"}, 201
     return {"errors":["Unauthorized"]}, 405
+
+@wordle_routes.route('/leaders')
+def wordle_leaders():
+    # stmt = db.select( WordleSession.user_id,db.func.count()).group_by(WordleSession.user_id).order_by(db.desc(db.func.count())).where(WordleSession.completed == True)
+    stmt = db.select(WordleSession.user_id, db.func.count(), User.username, User.profile_picture, db.func.avg(WordleSession.num_guesses))\
+        .join(User.wordle_sessions)\
+        .group_by(WordleSession.user_id)\
+        .order_by(db.desc(db.func.count()))\
+        .where(WordleSession.completed == True)\
+        .limit(3)
+    top = db.session.execute(stmt).all()
+    return {'leaders':[dict(x) for x in top]}

@@ -9,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import SplashPage from './components/SplashPage';
 import Puzzle from './components/WordGon/Puzzle';
 import Homepage from './Homepage';
+import User from './components/User';
 import BadRoute from './components/BadRoute';
 import { authenticate } from './store/session';
 import { thunkLoadWordgonSessions } from './store/wordgon';
@@ -16,6 +17,7 @@ import UnregisteredPuzzle from './components/WordGon/UnregisteredPuzzle';
 import SignUpPrompt from './components/auth/SignUpPrompt';
 import WordleTodayRedirect from './components/Carousels/WordleTodayRedirect';
 import WordlePuzzle from './components/Wordle/WordlePuzzle';
+import WordleWonModalContent from './components/Wordle/WordleWonModalContent';
 
 import './index.css'
 
@@ -81,6 +83,12 @@ function App() {
           </Route>
           <Route path='/welcome' exact>
             <SplashPage />
+          </Route>
+          <Route path='/user/:userId' exact>
+            <User />
+          </Route>
+          <Route path='/wordle_test' exact>
+            <WordleWonModalContent wordle_id={5} num_guesses={4} />
           </Route>
           <Route path='/unauthorized' exact>
             <SignUpPrompt />
