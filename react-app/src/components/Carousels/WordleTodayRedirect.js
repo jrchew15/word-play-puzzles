@@ -6,7 +6,6 @@ export default function WordleTodayRedirect() {
     const now = new Date();
     const history = useHistory();
     let dateString = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
-    console.log('dateString', dateString)
     const [wordle, setWordle] = useState(null)
 
     useEffect(() => {

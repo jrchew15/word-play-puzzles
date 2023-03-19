@@ -29,7 +29,6 @@ def edit_comment(id):
 @comment_routes.route('/<int:id>', methods=['DELETE'])
 @login_required
 def delete_comment(id):
-    print('----------------------- in delete')
     comment = Comment.query.get(id)
     if comment.user_id is not current_user.id:
         return {'errors':['Unauthorized']}, 405

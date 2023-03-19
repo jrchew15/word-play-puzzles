@@ -40,12 +40,10 @@ def random_wordle():
 def make_new_wordle():
     form = WordleForm()
     form['csrf_token'].data = request.cookies['csrf_token']
-    # print('***********',form.data)
 
     if form.validate_on_submit():
         if form.isPuzzleDay.data:
             today = date.today()
-            print('*****************************************************',today)
             new_wordle = Wordle(word=form.word.data, puzzle_day=today)
         else:
             new_wordle = Wordle(word=form.word.data)

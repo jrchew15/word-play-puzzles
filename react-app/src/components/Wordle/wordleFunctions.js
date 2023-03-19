@@ -22,7 +22,6 @@ export function checkWordleGuess(word, guess) {
 
 export async function makeRandomWordle(history, setGuesses, setSession, daily = false) {
     // first try table of wordles for an unopened puzzle
-    console.log('daily passed in?', daily)
     if (!daily) {
         const existingRes = await fetch('/api/wordles/random')
         if (existingRes.ok) {
@@ -55,11 +54,8 @@ export async function makeRandomWordle(history, setGuesses, setSession, daily = 
                 return wordle
             }
             return
-        } else {
-            const x = await wordleRes.json()
-            console.log(x)  
         }
-        // history.push('/')
+        history.push('/')
     }
     history.push('/')
 }
