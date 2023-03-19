@@ -6,6 +6,7 @@ from flask_login import login_required, current_user
 from ..models import db, Wordle, WordleSession, User
 from .utils import validation_errors_to_error_messages
 from ..forms.wordle_session_form import WordleSessionForm
+from ..forms.wordle_form import WordleForm
 from datetime import date
 
 wordle_routes = Blueprint('wordle',__name__)
@@ -13,7 +14,6 @@ wordle_routes = Blueprint('wordle',__name__)
 @wordle_routes.route('/by_date/<req_date>')
 def get_puzzle_by_date(req_date):
     req_day = [int(x) for x in req_date.split('-')]
-    print('!!!!!!!!!!!!!!',req_day)
     puzzle = Wordle.query.filter(Wordle.puzzle_day == date(*req_day)).one_or_none()
 
     if puzzle is not None:
@@ -38,11 +38,15 @@ def random_wordle():
 @wordle_routes.route('', methods=['POST'])
 @login_required
 def make_new_wordle():
-    form = WordleSessionForm()
+    form = WordleForm()
     form['csrf_token'].data = request.cookies['csrf_token']
 
     if form.validate_on_submit():
-        new_wordle = Wordle(word=form.newGuess.data)
+        if form.isPuzzleDay.data:
+            today = date.today()
+            new_wordle = Wordle(word=form.word.data, puzzle_day=today)
+        else:
+            new_wordle = Wordle(word=form.word.data)
         db.session.add(new_wordle)
         db.session.commit()
         return new_wordle.to_dict()

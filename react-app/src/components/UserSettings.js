@@ -38,12 +38,12 @@ export default function UserSettings() {
             fetch(currentUser.profilePicture)
                 .then((res) => res.blob())
                 .then((blob) => setImageFile(blob))
-                .catch((e) => { console.log(e) })
+                .catch((e) => { setErrors([e]) })
         }
     }, [currentUser])
 
     return (
-        <div id='LOOKATME' style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <h2>User Settings</h2>
                 <div style={{ display: 'flex' }}>

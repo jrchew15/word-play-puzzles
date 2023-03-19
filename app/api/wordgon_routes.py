@@ -58,7 +58,6 @@ def include_wordgon_stats(id):
     puzzle = WordGon.query.get(id)
     stats = {}
     for session in puzzle.sessions:
-        # print(session.guesses,set(session.guesses))
         if session.completed and len(set(session.guesses)) == 13:
             stats[str(session.num_guesses)] = stats[str(session.num_guesses)] + 1 if str(session.num_guesses) in stats else 1
     if len(stats)>0:

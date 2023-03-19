@@ -20,15 +20,17 @@ export function checkWordleGuess(word, guess) {
     return colors
 }
 
-export async function makeRandomWordle(history, setGuesses, setSession) {
+export async function makeRandomWordle(history, setGuesses, setSession, daily = false) {
     // first try table of wordles for an unopened puzzle
-    const existingRes = await fetch('/api/wordles/random')
-    if (existingRes.ok) {
-        if (setSession) setSession(null)
-        if (setGuesses) setGuesses([])
-        const { id: wordleId } = await existingRes.json();
-        history.push(`/wordles/${wordleId}`)
-        return
+    if (!daily) {
+        const existingRes = await fetch('/api/wordles/random')
+        if (existingRes.ok) {
+            if (setSession) setSession(null)
+            if (setGuesses) setGuesses([])
+            const { id: wordleId } = await existingRes.json();
+            history.push(`/wordles/${wordleId}`)
+            return
+        }
     }
 
     const wordRes = await fetch('/api/words/random-wordle')
@@ -39,14 +41,18 @@ export async function makeRandomWordle(history, setGuesses, setSession) {
         const wordleRes = await fetch(`/api/wordles`, {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ newGuess: word })
+            body: JSON.stringify({ word, isPuzzleDay: daily })
         })
 
         if (wordleRes.ok) {
             if (setSession) setSession(null)
             if (setGuesses) setGuesses([])
-            const { id: wordleId } = await wordleRes.json();
-            history.push(`/wordles/${wordleId}`)
+            const wordle = await wordleRes.json();
+            if (!daily) {
+                history.push(`/wordles/${wordle.id}`)
+            } else {
+                return wordle
+            }
             return
         }
         history.push('/')
