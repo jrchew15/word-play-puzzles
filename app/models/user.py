@@ -32,10 +32,14 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password, password)
 
     def to_dict(self, comment=False, current=False, total=False):
+        wordgon_sessions = self.sessions
+        wordle_sessions = self.wordle_sessions
         response = {
             'id': self.id,
             'username': self.username,
             'profilePicture': self.profile_picture,
+            'totalWordgons': len([session for session in wordgon_sessions if session.completed]),
+            'totalWordles': len([session for session in wordle_sessions if session.completed])
         }
         if comment:
             return response
@@ -43,8 +47,6 @@ class User(db.Model, UserMixin):
         if current:
             response['email'] = self.email
             response['theme'] = self.theme
-            response['openSessions'] = [ session.id for session in self.sessions if not session.completed]
-            response['openWordles'] = [ session.wordle.id for session in self.wordle_sessions if not session.completed]
-        if total:
-            response['totalPuzzlesSolved'] = len([session for session in self.sessions if session.completed])
+            response['openSessions'] = [ session.id for session in wordgon_sessions if not session.completed]
+            response['openWordles'] = [ session.wordle.id for session in wordle_sessions if not session.completed]
         return response

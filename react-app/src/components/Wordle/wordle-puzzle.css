@@ -58,3 +58,47 @@
     z-index: 1;
     border: 2px solid var(--off-black);
 }
+
+#modal-stats {
+    width: 300px;
+    border: 2px solid lightgray;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#modal-stats h4 {
+    margin: 5px;
+}
+
+#modal-stats>li {
+    padding: 0.6em 0px;
+}
+
+#modal-stats span {
+    margin: 0px 5px;
+}
+
+.statbar {
+    background-color: var(--wordle-gray);
+    height: 2em;
+    content: '';
+    display: inline-block;
+}
+
+.statbar.relevant {
+    background-color: var(--wordle-green);
+}
+
+#view-stats-button {
+    position: absolute;
+    left: 70px;
+    top: 180px;
+    font-size: 24px;
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+#view-stats-button:hover {
+    background-color: var(--highlight-color);
+}

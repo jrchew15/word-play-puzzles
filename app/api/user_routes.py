@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_login import login_required, current_user
-from app.models import db, User
+from app.models import db, User, WordleSession, WordGonSession, WordGon, Wordle
 from ..forms.signup_form import EditUserForm
 from .utils import validation_errors_to_error_messages
 from .aws import get_unique_filename, allowed_file, upload_file_to_s3, delete_file_from_s3, ALLOWED_EXTENSIONS
@@ -23,6 +23,40 @@ def user(id):
     if user is not None:
         return user.to_dict(total=True)
     return {"errors":["Could not find user"]}
+
+@user_routes.route('/<int:id>/wordle_stats')
+@login_required
+def user_wordle_stats(id):
+    sessions=WordleSession.query\
+        .join(WordleSession.wordle)\
+        .add_column(Wordle.word)\
+        .where(db.and_(WordleSession.user_id == id, WordleSession.completed == True)).all()
+    stats={}
+    for (session, word) in sessions:
+        if session.completed and session.guesses.split(',')[-1]==word:
+            stats[str(session.num_guesses)] = stats[str(session.num_guesses)]+1 if str(session.num_guesses) in stats else 1
+    stats['average'] = round(sum(stats[key]*int(key) for key in stats)/sum(stats[key] for key in stats), 2) if len(stats) > 0 else 0
+    return stats
+
+@user_routes.route('/<int:id>/wordgon_stats')
+@login_required
+def user_wordgon_stats(id):
+    stmt = db.select(db.func.count(WordGonSession.id),WordGon.num_attempts)\
+        .join(WordGon.sessions)\
+        .group_by(WordGon.num_attempts)\
+        .where(db.and_(WordGonSession.user_id == id, WordGonSession.completed == True))
+    stats = db.session.execute(stmt).all()
+    body = {'total': 0}
+    for x in stats:
+        if x['num_attempts'] == 6:
+            body['easy'] = x['count']
+        if x['num_attempts'] == 7:
+            body['medium'] = x['count']
+        if x['num_attempts'] >= 8:
+            body['hard'] = x['count']
+        body['total'] += x['count']
+    return body
+
 
 @user_routes.route('/<int:id>',methods=['PUT'])
 @login_required
