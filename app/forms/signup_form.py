@@ -24,6 +24,12 @@ def username_exists(form, field):
     if user:
         raise ValidationError('Username is already in use.')
 
+def username_has_allowed_characters(form, field):
+    allowed_non_alnum = ['_','-','.']
+    username = ''.join([char for char in field.data if char not in allowed_non_alnum])
+    if not username.isalnum():
+        raise ValidationError('Username can only contain letters, numbers, "_", "-", or "."')
+
 def image_extensions(form, field):
     file = field.data
     allowed_extensions = ['.png','.jpg','.jpeg','.tiff','.gif']
@@ -34,7 +40,7 @@ def image_extensions(form, field):
 
 class SignUpForm(FlaskForm):
     username = StringField(
-        'username', validators=[DataRequired(message='Username is required'), Length(max=40, message='Username must be 40 characters or fewer'), username_exists])
+        'username', validators=[DataRequired(message='Username is required'), Length(max=40, message='Username must be 40 characters or fewer'), username_has_allowed_characters,username_exists])
     email = StringField('email', validators=[DataRequired(message='Email is required'), Email(), email_exists])
     password = StringField('password', validators=[DataRequired(message='Password is required'), Length(min=6, message='Password must be at least 6 characters long')])
     profilePicture = StringField('profile_picture', validators=[image_extensions])

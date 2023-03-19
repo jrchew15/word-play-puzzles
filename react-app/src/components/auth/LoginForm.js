@@ -10,7 +10,7 @@ const LoginForm = () => {
   const theme = 'light' // Will eventually use context
 
   const [errors, setErrors] = useState([]);
-  const [credential, setCredential] = useState('');
+  const [credential, setCredential] = useState(''); // can be username or email
   const [password, setPassword] = useState('');
   const user = useSelector(state => state.session.user);
   const dispatch = useDispatch();

@@ -20,12 +20,14 @@ export default function UserSettings() {
 
     async function submitUpdate(e) {
         e.preventDefault();
-        const data = await dispatch(editUserThunk(currentUser.id, {
-            username: username || currentUser.username,
-            email: email || currentUser.email,
-            image: imageFile
-        }
-        ))
+        // dispatch returns null or an error array
+        const data = await dispatch(
+            editUserThunk(currentUser.id, {
+                username: username || currentUser.username,
+                email: email || currentUser.email,
+                image: imageFile
+            })
+        )
         if (data) {
             setErrors(data)
             return
@@ -33,6 +35,7 @@ export default function UserSettings() {
         history.push('/')
     }
 
+    // load current profilePicture on render
     useEffect(() => {
         if (currentUser) {
             fetch(currentUser.profilePicture)

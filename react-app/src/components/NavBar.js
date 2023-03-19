@@ -12,24 +12,23 @@ const NavBar = ({ showUserDropdown, setShowUserDropdown, showDeveloperDropdown, 
   const history = useHistory()
 
   const [imageSrc, setImageSrc] = useState('/static/images/icon_1-cropped.svg')
-
   const [showModal, setShowModal] = useState(false)
+
+
 
   function userDropdownToggle(e) {
     setShowUserDropdown(x => !x)
     setShowDeveloperDropdown(false)
   }
   function developerDropdownToggle(e) {
-    // e.stopPropagation();
-
     setShowDeveloperDropdown(x => !x)
     setShowUserDropdown(false)
   }
-
   function closeDropdowns() {
     setShowDeveloperDropdown(false)
     setShowUserDropdown(false)
   }
+
 
   return (<>
     <nav id='my-nav'>

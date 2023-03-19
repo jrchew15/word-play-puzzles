@@ -52,7 +52,7 @@ def sign_up():
     """
     Creates a new user and logs them in
     """
-    profile_image=request.files['image']
+    profile_image = request.files['image'] if 'image' in request.files else None
     upload = None
 
     if profile_image:
@@ -72,7 +72,7 @@ def sign_up():
             username=form['username'].data,
             email=form['email'].data,
             password=form['password'].data,
-            profile_picture=upload['url']
+            profile_picture=upload['url'] if upload and 'url' in upload else None
         )
         db.session.add(user)
         db.session.commit()

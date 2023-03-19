@@ -2,24 +2,23 @@ import { useState, useRef, useEffect } from "react";
 import './dragDrop.css';
 
 export default function ImageDragAndDrop({ imageFile, setImageFile }) {
-    // const [imageFile, setImageFile] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
-    const [dragging, setDragging] = useState(false);
+    const [dragging, setDragging] = useState(false);    // used to give user feedback when they are dragging a file correctly
     const [imageError, setImageError] = useState('');
-    const addFileRef = useRef(null);
+    const addFileRef = useRef(null); // used to trigger file explorer
 
+
+    // Event handlers
     const dragOverHandler = (e) => {
         e.preventDefault()
         setDragging(true)
     }
-
     const dragLeaveHandler = (e) => {
         e.preventDefault()
         if (e.target.id === 'drag-container' && e.relatedTarget.id !== 'drag-border') {
             setDragging(false);
         }
     }
-
     const dropHandler = (e) => {
         e.preventDefault()
         if (e.dataTransfer.items && e.dataTransfer.items[0]) {
@@ -33,6 +32,8 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
         setDragging(false);
     }
 
+
+    // when receiving a new file, create url for it to display
     useEffect(() => {
         if (imageFile) {
             setImageError('')
@@ -49,9 +50,13 @@ export default function ImageDragAndDrop({ imageFile, setImageFile }) {
         }}
         className={dragging ? 'dragging' : ''}
     >
-        {imageFile ? <img src={imageUrl} alt={'uploaded_file'} /> : <div id='drag-border' onDrop={dropHandler}>
-            <i className='far fa-file-image' />
-        </div>}
+        {imageFile ?
+            <img src={imageUrl} alt={'uploaded_file'} />
+            : // placeholder when no image
+            <div id='drag-border' onDrop={dropHandler}>
+                <i className='far fa-file-image' />
+            </div>}
+        {/* hidden input element to receive file */}
         <input
             ref={addFileRef}
             type='file'

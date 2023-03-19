@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import LogoutButton from "./auth/LogoutButton";
 import { useHistory, NavLink } from "react-router-dom";
 
+// Dropdown menu displays a logout button, a profile view button, and all puzzles that user has begun
 export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerReload }) {
+    // need manual reload trigger to clear puzzle data when navigating between puzzles
     const currentUser = useSelector(state => state.session.user)
     const wordgons = useSelector(state => state.wordgon)
     const history = useHistory();
@@ -40,7 +42,8 @@ export default function UserDropdown({ setShowModal, closeDropdowns, setTriggerR
                         {currentUser.openWordles.map(wordleId => (
                             <span onClick={() => { closeDropdowns(); setTriggerReload(true) }} key={'wordle' + wordleId}>
                                 <NavLink to={`/wordles/${wordleId}`} >
-                                    {wordleId}</NavLink>
+                                    {wordleId}
+                                </NavLink>
                             </span>))}
                     </>
                     )}

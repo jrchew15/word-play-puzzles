@@ -3,15 +3,17 @@ import { useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { defaultImg } from '../store/utils/image_urls';
-import { wordGonStats, wordleStats } from '../utils/userStatFetches';
 import './user.css'
 
+// displays a user's profile picture, username, and total completed puzzles
 function User({ userId, setShowModal }) {
+  // userId can come from url parameter or can be passed as prop
   userId = useParams().userId || userId
   const [user, setUser] = useState(null);
   const currentUser = useSelector(state => state.session.user);
   const history = useHistory();
 
+  // wait for userId, then fetch user
   useEffect(() => {
     if (!userId) return
     (async () => {
@@ -23,20 +25,16 @@ function User({ userId, setShowModal }) {
     })()
   }, [userId])
 
-  function directToSettings() {
+  function directToSettingsOnClick() {
     if (setShowModal) {
       setShowModal(false)
     }
     history.push('/settings')
   }
 
-  if (!user) {
-    return null;
-  }
-
-  return (
+  return !user ? null : (
     <div id='user-details'>
-      <img src={user.profilePicture} alt={user.username} onError={(e) => e.target.src = defaultImg} />
+      <img src={user.profilePicture || defaultImg} alt={user.username} onError={(e) => { e.target.src = defaultImg; console.log('image error') }} />
       <span style={{ fontSize: '1.5em' }}>{user.username}</span>
       <div id='user-puzzle-count'>
         <span style={{ display: 'flex' }}><p style={{ width: 'min-content' }}>Total Wordles Solved</p>
@@ -46,7 +44,7 @@ function User({ userId, setShowModal }) {
           <p className='number-solved'>{user.totalWordgons}</p>
         </span>
       </div>
-      {currentUser.id === user.id && <button className='modal-button' onClick={directToSettings}>
+      {currentUser.id === user.id && <button className='modal-button' onClick={directToSettingsOnClick}>
         Edit Settings
       </button>}
     </div>
