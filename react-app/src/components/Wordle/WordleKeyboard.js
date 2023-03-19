@@ -1,10 +1,12 @@
 import './wordle-keyboard.css';
 
+// all props are necessary for event handling within keyboard
 export default function WordleKeyboard({ word, guesses, currentGuess, setCurrentGuess, setSubmitting }) {
     let row1 = 'QWERTYUIOP';
     let row2 = 'ASDFGHJKL';
     let row3 = 'ZXCVBNM';
 
+    // class names will be the values in colorObj assigned to character keys
     let colorObj = {};
 
     for (let guess of guesses) {
@@ -12,6 +14,7 @@ export default function WordleKeyboard({ word, guesses, currentGuess, setCurrent
         for (let i = 0; i < 5; i++) {
             if (mutableWordArr[i] === guess[i]) {
                 colorObj[guess[i]] = 'green';
+                // remove from word array because color should remain green regardless of other guesses
                 mutableWordArr[i] = null;
             }
         }
@@ -23,17 +26,17 @@ export default function WordleKeyboard({ word, guesses, currentGuess, setCurrent
         }
     }
 
+
+    //keyboard event handlers
     function keyboardClickHandle(e) {
         if (e.target.className.includes('keyboard-letter') && currentGuess.length < 5) {
             setCurrentGuess(word => word + e.target.innerText)
         }
     }
-
     function enterKey(e) {
         if (currentGuess.length < 5) return
         setSubmitting(true)
     }
-
     function backspaceKey(e) {
         if (currentGuess.length > 0) setCurrentGuess(word => word.slice(0, word.length - 1))
     }

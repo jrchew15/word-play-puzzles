@@ -10,6 +10,7 @@ export default function WordleWonModalContent({ wordle_id }) {
     const user = useSelector(state => state.session.user);
     useEffect(() => {
         (async () => {
+            // refetch session to ensure db has updated
             if (!puzzleSession) {
                 (async () => {
                     let sesh = await fetch(`/api/wordles/${wordle_id}/sessions/current`);
@@ -20,23 +21,30 @@ export default function WordleWonModalContent({ wordle_id }) {
                 })()
                 return
             }
-            const res = await fetch(`/api/wordles/${wordle_id}/stats`);
-            if (res.ok) {
-                const body = await res.json()
-                let min = Math.min(...Object.keys(body).map(n => +n || Infinity));
-                body.min = min;
-                setGlobalStats(body);
+
+            // after session is fetched, fetch stats
+            const resGlobalStats = await fetch(`/api/wordles/${wordle_id}/stats`);
+            if (resGlobalStats.ok) {
+                const globalStatsBody = await resGlobalStats.json()
+                // min is the fewest guesses taken by any user
+                let min = Math.min(...Object.keys(globalStatsBody).map(n => +n || Infinity));
+                globalStatsBody.min = min;
+                setGlobalStats(globalStatsBody);
             }
-            const res2 = await fetch(`/api/users/${user.id}/wordle_stats`);
-            if (res2.ok) {
-                const body2 = await res2.json()
-                delete body2['average']
-                setUserStats(body2)
-                let max = Math.max(...Object.values(body2));
+
+            const resUserStats = await fetch(`/api/users/${user.id}/wordle_stats`);
+            if (resUserStats.ok) {
+                const userBodyStats = await resUserStats.json()
+                // remove average for clean percentages
+                delete userBodyStats['average']
+                setUserStats(userBodyStats)
+                let max = Math.max(...Object.values(userBodyStats));
+
+                // set appropriate bar graph widths
                 const styles = {}
                 for (let i = 1; i <= 6; i++) {
-                    if (body2[i]) {
-                        let width = Math.round(100 * body2[i] / max) + '%';
+                    if (userBodyStats[i]) {
+                        let width = Math.round(100 * userBodyStats[i] / max) + '%';
                         styles[i] = { width }
                     } else {
                         styles[i] = { display: 'none' }
@@ -55,12 +63,13 @@ export default function WordleWonModalContent({ wordle_id }) {
         < ul id={'modal-stats'} >
             <h4>Your Wordle Stats:</h4>
             {
-                [6, 5, 4, 3, 2, 1].map(num => (<li key={num} style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', position: 'relative' }}>
-                    <span>{num}:</span>
-                    <div className={'statbar' + (puzzleSession.num_guesses === num ? ' relevant' : '')} style={userStatsStyles[num]} />
-                    <span >{userStats[num]}</span>
-                </li>)
-                )
+                [6, 5, 4, 3, 2, 1].map(num => (
+                    <li key={num} style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', position: 'relative' }}>
+                        <span>{num}:</span>
+                        <div className={'statbar' + (puzzleSession.num_guesses === num ? ' relevant' : '')} style={userStatsStyles[num]} />
+                        <span >{userStats[num]}</span>
+                    </li>
+                ))
             }
         </ul >
     </div >)

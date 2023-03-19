@@ -13,7 +13,7 @@ import WordleWonModalContent from "./WordleWonModalContent";
 import './wordle-puzzle.css';
 
 export default function WordlePuzzle() {
-    const puzzleId = useParams().wordleId
+    const puzzleId = useParams().wordleId;
     let history = useHistory();
     let dispatch = useDispatch();
 
@@ -26,6 +26,9 @@ export default function WordlePuzzle() {
     const [session, setSession] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [won, setWon] = useState(false)
+
+    // submitting boolean used in a useEffect dependency array
+    // prevents multiple submission
     const [submitting, setSubmitting] = useState(false)
 
     const formRef = useRef(null);
@@ -77,6 +80,7 @@ export default function WordlePuzzle() {
         })()
     }, [puzzle])
 
+    // display progress from found session
     useEffect(() => {
         if (session && session.guesses.length) {
             let guessArr = session.guesses.split(',')
@@ -85,6 +89,8 @@ export default function WordlePuzzle() {
         }
     }, [session])
 
+    // submission handler wrapped in useEffect
+    // prevents multiple submissions by watching for submitting boolean in dependency array
     useEffect(() => {
         if (!submitting || !formRef) return
 
@@ -110,37 +116,27 @@ export default function WordlePuzzle() {
                     }
                     setGuesses(arr => [...arr, currentGuess.toLowerCase()])
                     setCurrentGuess('')
-
                 } else {
+                    // if db update error
                     let errData = await res.json();
                     setErrors(errData.errors);
                     setTimeout(() => { setErrors([]) }, 2000);
                 }
             } else {
-                // if invalid word, display error for 3 seconds
+                // if invalid word, display error for 2 seconds
                 setErrors(['Not a valid word'])
                 setTimeout(() => { setErrors([]) }, 2000)
-                // end submission timeout
             }
+            // useEffect will not trigger again while above async fn is running
             setSubmitting(false)
-
         })()
 
     }, [submitting])
 
-
-    // useEffect(() => {
-    //     if (!completed) return
-    //     setWon(guesses[guesses.length - 1] === puzzle.word);
-    //     setShowModal(true)
-    // }, [completed])
-
     if (!puzzle) return null
-
 
     function handleSubmit(e) {
         e.preventDefault();
-
         setSubmitting(true)
     }
 
@@ -150,12 +146,12 @@ export default function WordlePuzzle() {
 
     function handleKey(e) {
         if (e.ctrlKey) {
+            // prevent pasting
             if (e.key.toLowerCase() === 'v') e.preventDefault()
             return
         }
         if (e.key === 'Enter' && currentGuess.length === 5) return
         e.preventDefault();
-
         if (e.key.length === 1 && e.key.match(/[a-z]/i) && currentGuess.length < 5) {
             setCurrentGuess(currentGuess + e.key.toUpperCase());
             return
@@ -164,16 +160,17 @@ export default function WordlePuzzle() {
             setCurrentGuess(currentGuess.slice(0, currentGuess.length - 1));
         }
     }
-
+    // focuses 'hidden' form element when clicking anywhere on puzzle
     function focusForm(e) {
         if (formRef?.current) {
             formRef.current.focus()
         }
     }
 
+    // initialize as many empty rows as needed
     let emptyRows = guesses.length < 6 ? new Array(5 - guesses.length).fill(null) : []
 
-    return session ? (
+    return !session ? null : ( // return null until session exists
         <div id='wordle-page' onClick={focusForm}>
             <h2 style={{ color: 'white', position: 'absolute', left: 50, top: 50 }}>Wordle</h2>
             <div id='wordle-rows'>
@@ -182,7 +179,7 @@ export default function WordlePuzzle() {
                 {guesses.length < 6 && (
                     <CurrentRow guess={currentGuess} />
                 )}
-                {emptyRows.map((empty, i) => <EmptyRow row={i} key={`empty-row-${i}`} />)}
+                {emptyRows.map((empty, i) => <EmptyRow key={`empty-row-${i}`} />)}
             </div>
             <div id='wordle-message-container'>
                 <div id='wordle-errors' className={errors.length > 0 ? 'on' : 'off'}>
@@ -208,10 +205,11 @@ export default function WordlePuzzle() {
             <EndModal num_guesses={session.num_guesses} />
             {completed && <button id='view-stats-button' onClick={() => setShowModal(true)}>View Stats</button>}
         </div >
-    ) : null
+    )
 
+    // displays when puzzle is completed
+    // nested to prevent prop drilling
     function EndModal() {
-
         return showModal && (
             <Modal onClose={() => setShowModal(false)}>
                 <div id='complete-modal'>

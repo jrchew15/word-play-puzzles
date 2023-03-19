@@ -3,18 +3,20 @@ import { checkWordleGuess } from './wordleFunctions'
 import './row.css'
 import './wordle-animation.css'
 
-export function EmptyRow({ row }) {
+export function EmptyRow() {
 
-    return <div className="wordle-row" key={row + ',empty-row'}>
-        <div className="wordle-letter blank" key={`${row}blank1`} />
-        <div className="wordle-letter blank" key={`${row}blank2`} />
-        <div className="wordle-letter blank" key={`${row}blank3`} />
-        <div className="wordle-letter blank" key={`${row}blank4`} />
-        <div className="wordle-letter blank" key={`${row}blank5`} />
+    return <div className="wordle-row" >
+        <div className="wordle-letter blank" />
+        <div className="wordle-letter blank" />
+        <div className="wordle-letter blank" />
+        <div className="wordle-letter blank" />
+        <div className="wordle-letter blank" />
     </div >
 }
 
 export function CurrentRow({ guess }) {
+
+    // squares extends guess to create empty slots when fewer than 5 characters in guess
     let squares = new Array(5).fill(null);
     for (let i = 0; i < guess.length; i++) {
         squares[i] = guess[i]
@@ -27,8 +29,10 @@ export function CurrentRow({ guess }) {
 }
 
 export function AnimatedRow({ guess, word, row }) {
-    let colors = checkWordleGuess(word, guess)
-    const [aninumber, setAninumber] = useState(-1)
+    let colors = checkWordleGuess(word, guess);
+    const [aninumber, setAninumber] = useState(-1);
+
+    // will be called onAnimationEnd of previous letter
     function sequenceAnimation(e) {
         if (aninumber <= 3) {
             setAninumber(num => num + 1)
@@ -41,7 +45,7 @@ export function AnimatedRow({ guess, word, row }) {
     }, [])
 
     return <div className='wordle-row' >
-        {guess.split('').map((char, i) => (aninumber >= i ?
+        {guess.split('').map((char, i) => (i <= aninumber ?
             <div
                 className={`wordle-letter ${colors[i]} animated`}
                 onAnimationEnd={sequenceAnimation}
