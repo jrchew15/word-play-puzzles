@@ -65,10 +65,9 @@ export default function WordlePuzzle() {
 
             if (valid) {
                 // update session
-                const errData = await updateWordleSession(puzzleId, session.id, currentGuess, setCompleted, setWon, setShowModal, setGuesses, setCurrentGuess);
+                const errData = await updateWordleSession(puzzle, session, currentGuess, setCompleted, setWon, setShowModal, setGuesses, setCurrentGuess);
                 if (errData) {
                     // if db update error
-                    let errData = await res.json();
                     setErrors(errData.errors);
                     setTimeout(() => { setErrors([]) }, 2000);
                 }

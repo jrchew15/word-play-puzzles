@@ -20,14 +20,14 @@ export default function FailModal({ deleteHandler, showModal, setShowModal }) {
                 <h2>Sorry, you ran out of words</h2>
                 <div id='fail-continues'>
                     <button className="modal-button" onClick={() => { setShowModal(false) }}>Continue</button>
-                    {currentUser ? <button className="modal-button" onClick={(e) => { deleteHandler(e); setShowModal(false) }}>Start Over</button> :
-                        <button className="modal-button" onClick={demoLogin}>Demo Login</button>}
+                    {currentUser ?
+                        <button className="modal-button" onClick={(e) => { deleteHandler(e); setShowModal(false) }}>Start Over</button>
+                        : <button className="modal-button" onClick={demoLogin}>Demo Login</button>}
                 </div>
                 <div id='choice-sep'>or</div>
-                {
-                    currentUser ?
-                        <button className="modal-button" onClick={() => history.push('/')}>Back to puzzles</button>
-                        : <button className="modal-button" onClick={() => history.push('/sign-up')}>Create an account</button>
+                {currentUser ?
+                    <button className="modal-button" onClick={() => history.push('/')}>Back to puzzles</button>
+                    : <button className="modal-button" onClick={() => history.push('/sign-up')}>Create an account</button>
                 }
             </div>
             <CloseButton setShowModal={setShowModal} />

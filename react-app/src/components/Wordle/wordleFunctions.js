@@ -83,7 +83,7 @@ export async function findWordlePuzzle(puzzleId, setPuzzle, history) {
 export async function findWordleSession(puzzle, dispatch, history, setSession, setCompleted) {
 
     if (!puzzle) return
-    const res = await fetch(`/api/wordles/${puzzleId}/sessions/current`)
+    const res = await fetch(`/api/wordles/${puzzle.id}/sessions/current`)
     const data = await res.json()
 
     if (res.ok) {
@@ -108,8 +108,8 @@ export async function findWordleSession(puzzle, dispatch, history, setSession, s
     history.push('/404')
 }
 
-export async function updateWordleSession(puzzleId, sessionId, currentGuess, setCompleted, setWon, setShowModal, setGuesses, setCurrentGuess) {
-    const res = await fetch(`/api/wordles/${puzzleId}/sessions/${session.id}`, {
+export async function updateWordleSession(puzzle, session, currentGuess, setCompleted, setWon, setShowModal, setGuesses, setCurrentGuess) {
+    const res = await fetch(`/api/wordles/${puzzle.id}/sessions/${session.id}`, {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ newGuess: currentGuess.toLowerCase() })

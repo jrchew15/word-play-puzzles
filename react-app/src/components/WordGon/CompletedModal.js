@@ -12,6 +12,9 @@ export default function CompleteModal({ numGuesses, numAttempts, showModal, setS
         await dispatch(login('Demo', 'password'));
         history.push('/')
     }
+    function continueHandler(e) {
+        setShowModal(false)
+    }
 
     return showModal && completed && (
         <Modal onClose={() => setShowModal(false)}>
@@ -32,7 +35,4 @@ export default function CompleteModal({ numGuesses, numAttempts, showModal, setS
             </div>
         </Modal>
     )
-    function continueHandler(e) {
-        setShowModal(false)
-    }
 }
