@@ -16,14 +16,8 @@ function User({ userId, setShowModal }) {
   // wait for userId, then fetch user
   useEffect(() => {
     if (!userId) return
-    (async () => {
-      let res = await fetch(`/api/users/${userId}`);
-      if (res.ok) {
-        let found = await res.json();
-        setUser(found);
-      }
-    })()
-  }, [userId])
+    findUser(userId, setUser)
+  }, [userId, setUser])
 
   function directToSettingsOnClick() {
     if (setShowModal) {
@@ -51,3 +45,11 @@ function User({ userId, setShowModal }) {
   )
 }
 export default User;
+
+async function findUser(userId, setUser) {
+  let res = await fetch(`/api/users/${userId}`);
+  if (res.ok) {
+    let found = await res.json();
+    setUser(found);
+  }
+}

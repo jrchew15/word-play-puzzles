@@ -3,12 +3,11 @@ import { useParams, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { checkWordsTable } from "../../utils/wordChecks";
-import { authenticate } from "../../store/session";
 import { EmptyRow, CurrentRow, AnimatedRow } from "./WordleRow";
 import WordleKeyboard from "./WordleKeyboard";
 import WordleLoader from "./WordleLoader";
 import { Modal } from "../../context/Modal";
-import { makeRandomWordle } from "./wordleFunctions";
+import { makeRandomWordle, findWordlePuzzle, findWordleSession, updateWordleSession } from "./wordleFunctions";
 import WordleWonModalContent from "./WordleWonModalContent";
 import './wordle-puzzle.css';
 
@@ -37,48 +36,13 @@ export default function WordlePuzzle() {
 
     //find puzzle
     useEffect(() => {
-        (async () => {
-            let res = await fetch(`/api/wordles/${puzzleId}`);
-
-            if (res.ok) {
-                let data = await res.json()
-                setPuzzle(data)
-                return
-            }
-            history.push('/404')
-        })()
+        findWordlePuzzle(puzzleId, setPuzzle, history)
     }, [puzzleId, setPuzzle])
 
-    //find session
+    //find session when puzzle is found
     useEffect(() => {
-        (async () => {
-            if (!puzzle) return
-            const res = await fetch(`/api/wordles/${puzzleId}/sessions/current`)
-            const data = await res.json()
-
-            if (res.ok) {
-                setSession(data)
-                setCompleted(data.completed)
-                return
-            }
-
-            if (data.errors.includes('session not found')) {
-
-                // If no session found, create a session
-                const newRes = await fetch(
-                    `/api/wordles/${puzzle.id}/sessions`,
-                    { method: 'POST' }
-                );
-                const newData = await newRes.json();
-                await dispatch(authenticate())
-                setSession(newData)
-                setCompleted(false)
-                return
-            }
-            history.push('/404')
-
-        })()
-    }, [puzzle])
+        findWordleSession(puzzle, dispatch, history, setSession, setCompleted)
+    }, [puzzle, dispatch, history, setSession, setCompleted])
 
     // display progress from found session
     useEffect(() => {
@@ -87,7 +51,7 @@ export default function WordlePuzzle() {
             setGuesses(guessArr)
             setWon(session.completed && guessArr[guessArr.length - 1] === puzzle.word)
         }
-    }, [session])
+    }, [session, setGuesses, setWon])
 
     // submission handler wrapped in useEffect
     // prevents multiple submissions by watching for submitting boolean in dependency array
@@ -101,22 +65,8 @@ export default function WordlePuzzle() {
 
             if (valid) {
                 // update session
-                const res = await fetch(`/api/wordles/${puzzleId}/sessions/${session.id}`, {
-                    method: 'PUT',
-                    headers: { 'content-type': 'application/json' },
-                    body: JSON.stringify({ newGuess: currentGuess.toLowerCase() })
-                })
-
-                if (res.ok) {
-                    let data = await res.json()
-                    if (data.completed) {
-                        setCompleted(true)
-                        setWon(currentGuess.toLowerCase() === puzzle.word)
-                        setShowModal(true)
-                    }
-                    setGuesses(arr => [...arr, currentGuess.toLowerCase()])
-                    setCurrentGuess('')
-                } else {
+                const errData = await updateWordleSession(puzzleId, session.id, currentGuess, setCompleted, setWon, setShowModal, setGuesses, setCurrentGuess);
+                if (errData) {
                     // if db update error
                     let errData = await res.json();
                     setErrors(errData.errors);
@@ -127,13 +77,13 @@ export default function WordlePuzzle() {
                 setErrors(['Not a valid word'])
                 setTimeout(() => { setErrors([]) }, 2000)
             }
-            // useEffect will not trigger again while above async fn is running
+
             setSubmitting(false)
         })()
 
     }, [submitting])
 
-    if (!puzzle) return null
+    if (!puzzle || !session) return null
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -170,7 +120,7 @@ export default function WordlePuzzle() {
     // initialize as many empty rows as needed
     let emptyRows = guesses.length < 6 ? new Array(5 - guesses.length).fill(null) : []
 
-    return !session ? null : ( // return null until session exists
+    return (
         <div id='wordle-page' onClick={focusForm}>
             <h2 style={{ color: 'white', position: 'absolute', left: 50, top: 50 }}>Wordle</h2>
             <div id='wordle-rows'>

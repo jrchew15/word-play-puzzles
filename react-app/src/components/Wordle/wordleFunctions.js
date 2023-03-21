@@ -1,3 +1,5 @@
+import { authenticate } from "../../store/session";
+
 export function checkWordleGuess(word, guess) {
     // assigns colors to each letter of guess
     let mutableWordArr = word.split('');
@@ -64,4 +66,65 @@ export async function makeRandomWordle(history, setGuesses = null, setSession = 
     }
     // return to home on failure
     history.push('/')
+}
+
+export async function findWordlePuzzle(puzzleId, setPuzzle, history) {
+
+    let res = await fetch(`/api/wordles/${puzzleId}`);
+
+    if (res.ok) {
+        let data = await res.json()
+        setPuzzle(data)
+        return
+    }
+    history.push('/404')
+}
+
+export async function findWordleSession(puzzle, dispatch, history, setSession, setCompleted) {
+
+    if (!puzzle) return
+    const res = await fetch(`/api/wordles/${puzzleId}/sessions/current`)
+    const data = await res.json()
+
+    if (res.ok) {
+        setSession(data)
+        setCompleted(data.completed)
+        return
+    }
+
+    if (data.errors.includes('session not found')) {
+
+        // If no session found, create a session
+        const newRes = await fetch(
+            `/api/wordles/${puzzle.id}/sessions`,
+            { method: 'POST' }
+        );
+        const newData = await newRes.json();
+        await dispatch(authenticate())
+        setSession(newData)
+        setCompleted(false)
+        return
+    }
+    history.push('/404')
+}
+
+export async function updateWordleSession(puzzleId, sessionId, currentGuess, setCompleted, setWon, setShowModal, setGuesses, setCurrentGuess) {
+    const res = await fetch(`/api/wordles/${puzzleId}/sessions/${session.id}`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ newGuess: currentGuess.toLowerCase() })
+    })
+
+    let data = await res.json()
+    if (res.ok) {
+        if (data.completed) {
+            setCompleted(true)
+            setWon(currentGuess.toLowerCase() === puzzle.word)
+            setShowModal(true)
+        }
+        setGuesses(arr => [...arr, currentGuess.toLowerCase()])
+        setCurrentGuess('')
+    } else {
+        return data
+    }
 }

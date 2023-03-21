@@ -9,8 +9,10 @@ export default function PuzzleCarousel({ puzzles }) {
     const history = useHistory();
     const carouselRef = useRef();
 
+    // set card width for clean intevals
     const cardWidth = 216;
 
+    // scrollPlace can be 'start', 'end', or '', used to toggle inactivity
     const [scrollPlace, setScrollPlace] = useState('start')
 
     function scrollLeftEvent(e) {
